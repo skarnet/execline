@@ -1,0 +1,28 @@
+execline - an interpreter-less scripting language
+-------------------------------------------------
+
+ execline is a scripting language unlike any other in that
+it has no resident interpreter. It reads a script, turns it
+into a single command line, and executes into that command
+line; control is performed by executables run inside the
+command line itself.
+
+ It is especially suited to very small and simple scripts
+for which a shell is overpowered.
+
+ See http://skarnet.org/software/execline/ for details.
+
+
+* Installation
+  ------------
+
+ See the INSTALL file.
+
+
+* Contact information
+  -------------------
+
+ Laurent Bercot <ska-skaware at skarnet.org>
+
+ Please use the <skaware at list.skarnet.org> mailing-list for
+questions about execline.

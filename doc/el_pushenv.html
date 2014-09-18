@@ -1,0 +1,173 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: pushing and popping the environment</title>
+    <meta name="Description" content="execline: pushing and popping the environment" />
+    <meta name="Keywords" content="execline environment push pop el_pushenv el_popenv" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> Pushing and popping the environment </h1>
+
+<p>
+ The <a href="execlineb.html">execlineb</a> launcher
+can store <em>positional
+parameters</em>, i.e. arguments given to your script, into the
+environment. The <tt>#</tt> variable contains the number of arguments;
+the <tt>0</tt> variable contains the name of your execline script;
+the <tt>1</tt> variable contains the first argument; and so on.
+</p>
+
+<p>
+ Up to execline-1.04, this could create problems with nested scripts:
+the inner script would overwrite the outer script's parameters, and
+there was no way to get them back. In particular, writing execline
+commands in the execline language via the
+<a href="runblock.html">runblock</a> command was impossible.
+</p>
+
+<a name="push" />
+
+<p>
+ To solve that issue, execline now implements a kind of <em>environment
+stack</em>. When execlineb reads the arguments, it does
+not overwrite the positional parameters, but <em>pushes</em> them on a
+stack:
+</p>
+
+<ul>
+ <li> <tt>#</tt> will be set to the current number of arguments </li>
+ <li> but if a variable named <tt>#</tt> existed before, it is renamed <tt>#:1</tt> </li>
+ <li> and if a variable named <tt>#:1</tt> also existed, it is renamed <tt>#:2</tt> </li>
+ <li> ... and so on until <tt>#:<em>n+1</em></tt> doesn't exist. </li>
+</ul>
+
+<p>
+ Same goes for the other <em>positional parameters</em>.
+</p>
+
+<p>
+ The script then runs; and commands such as
+<a href="elgetpositionals.html">elgetpositionals</a> use the current
+frame of positional parameters, without paying attention to the deeper
+levels.
+</p>
+
+<a name="pop" />
+
+<p>
+ When you are done with the arguments, it is advisable to <em>drop</em>
+the current frame, and <em>pop</em> the environment stack to get it back
+to its previous state:
+</p>
+
+<ul>
+ <li> <tt>#</tt> will be unset </li>
+ <li> but if <tt>#:1</tt> exists, it will be renamed <tt>#</tt> </li>
+ <li> and if <tt>#:2</tt> exists, it will be renamed <tt>#:1</tt> </li>
+ <li> ... and so on until <tt>#:<em>n+1</em></tt> doesn't exist. </li>
+</ul>
+
+<p>
+ Again, same goes for the other <em>positional parameters</em>. <br />
+The <a href="runblock.html">runblock</a> command will perform that
+<em>pop</em> operation automatically; the standard "manual" way to
+perform it is to use the <a href="emptyenv.html">emptyenv -P</a> command.
+</p>
+
+<h2> A pop example </h2>
+
+<p>
+ Suppose you want to run the long-lived program <em>prog</em> after
+printing the list of its arguments.
+</p>
+
+<pre>
+ #!/command/execlineb
+ elgetpositionals
+ foreground { echo $0 $@ }
+ prog $@
+</pre>
+
+<p>
+will work, but will pollute <em>prog</em>'s environment with a set of
+positional parameters that have no meaning to it. A better script is:
+</p>
+
+<pre>
+ #!/command/execlineb
+ elgetpositionals
+ foreground { echo $0 $@ }
+ emptyenv -P
+ prog $@
+</pre>
+
+<p>
+which will run <em>prog</em> with the same environment as the script's
+caller.
+</p>
+
+<a name="integrated" />
+
+<h2> Substituting positional parameters without touching the environment </h2>
+
+<p>
+ Most of the time, you just need to substitute the positional parameters
+in your execline script, and don't need to go through the whole
+<a href="elgetpositionals.html">elgetpositionals</a> and
+<a href="emptyenv.html">emptyenv</a> chain. execline comes with an
+integrated substitution mechanism, that does not touch the environment
+at all: the <tt>-S&nbsp;<em>n</em></tt> option.
+</p>
+
+<p>
+ Scripts beginning with:
+</p>
+
+<pre>
+#!/command/execlineb -S<em>n</em>
+<em>foobar...</em>
+</pre>
+
+<p>
+ are equivalent to:
+</p>
+
+<pre>
+#!/command/execlineb
+elgetpositionals -P<em>n</em>
+emptyenv -P
+<em>foobar...</em>
+</pre>
+
+<p>
+ So, to summarize, from most efficient (but less flexible) to least efficient
+(but more flexible):
+</p>
+
+<ul>
+ <li> Use <tt>execlineb -P</tt> if you don't need positional parameters
+at all; for instance, in
+<a href="http://skarnet.org/software/s6/">s6</a> or
+<a href="http://smarden.org/runit/">runit</a> <em>run scripts</em>. </li>
+ <li> Use <tt>execlineb -S<em>n</em></tt> if you need only simple
+positional parameter substitution in your script - no
+<a href="shift.html">shift</a> or <a href="elgetopt.html">elgetopt</a>,
+no <tt>import 1</tt>. </li>
+ <li> Use <tt>execlineb -p</tt>, then <tt>elgetpositionals</tt> if
+you don't mind overwriting the current stack of positional parameters. </li>
+ <li> Use <tt>execlineb</tt>, then <tt>elgetpositionals</tt>, then
+<tt>emptyenv -P</tt> if you need the full power of positional parameter
+handling. </li>
+</ul>
+
+</body>
+</html>

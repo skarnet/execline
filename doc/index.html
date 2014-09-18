@@ -1,0 +1,213 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: a small scripting language</title>
+    <meta name="Description" content="execline: a small scripting language" />
+    <meta name="Keywords" content="execline script scripting language shell embedded chain loading bernstein chaining unix" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> execline </h1>
+
+<h2> What is it&nbsp;? </h2>
+
+<p>
+ execline is a (non-interactive) scripting language, like <tt>sh</tt>&nbsp;;
+but its syntax is quite different from a traditional shell syntax.
+The <tt>execlineb</tt> program is meant to be used as an interpreter for a
+text file; the other commands are essentially useful inside an
+<tt>execlineb</tt> script.
+</p>
+
+<p>
+ execline is as powerful as a shell: it features
+<a href="loopwhilex.html">conditional loops</a>,
+<a href="elgetopt.html">getopt-style option handling</a>,
+<a href="elglob.html">filename globbing</a>, and more.
+ Meanwhile, its syntax is far more logic and predictable than the
+shell's syntax, and has no security issues.
+</p>
+
+<ul>
+<li> <a href="grammar.html">The execline design and grammar</a></li>
+<li> <a href="dieshdiedie.html">Why not just use <tt>/bin/sh</tt>&nbsp;?</a></li>
+</ul>
+
+<hr />
+
+<h2> Installation </h2>
+
+<h3> Requirements </h3>
+
+<ul>
+ <li> A POSIX-compliant system with a standard C development environment </li>
+ <li> GNU make, version 3.81 or later </li>
+ <li> <a href="http://skarnet.org/software/skalibs/">skalibs</a> version
+2.0.0.0 or later </li>
+</ul>
+
+<h3> Licensing </h3>
+
+<p>
+ execline is free software. It is available under the
+<a href="http://opensource.org/licenses/ISC">ISC license</a>.
+</p>
+
+<h3> Download </h3>
+
+<ul>
+ <li> The current execline version is <a href="execline-2.0.0.0.tar.gz">2.0.0.0</a>. </li>
+</ul>
+
+<h3> Compilation </h3>
+
+<ul>
+ <li> See the enclosed INSTALL file for installation details. </li>
+</ul>
+
+<h3> Upgrade notes </h3>
+
+<ul>
+ <li> <a href="upgrade.html">This page</a> lists the differences to be aware of between
+the previous versions of execline and the current one. </li>
+</ul>
+
+<hr />
+
+<h2> Special note </h2>
+
+<p>
+ Before version 2.0.0.0, execline used the slashpackage convention by default.
+ This is not the case anymore; nevertheless, the examples in this documentation
+still use <tt>#!/command/execlineb</tt> as their shebang line, and assume that
+the execline binaries are available in <tt>/command</tt>. Adapt them according
+to your installation: the shebang lines for your system might be something like
+<tt>#!/bin/execlineb</tt>, or <tt>#!/usr/bin/execlineb</tt>, or
+<tt>#!/usr/local/bin/execlineb</tt>, or something else entirely.
+</p>
+
+<hr />
+
+<h2> Reference </h2>
+<h3> Commands </h3>
+
+<p>
+ All these commands exit 111 if they encounter a temporary error, and
+100 if they encounter a permanent error - such as a misuse.
+</p>
+<p>
+ (Script parser / launcher)
+</p>
+<ul>
+<li><a href="execlineb.html">The <tt>execlineb</tt> program</a></li>
+</ul>
+<p>
+ (Process state control)
+</p>
+<ul>
+<li><a href="cd.html">The <tt>cd</tt> program</a></li>
+<li><a href="umask.html">The <tt>umask</tt> program</a></li>
+<li><a href="emptyenv.html">The <tt>emptyenv</tt> program</a></li>
+<li><a href="export.html">The <tt>export</tt> program</a></li>
+<li><a href="unexport.html">The <tt>unexport</tt> program</a></li>
+<li><a href="fdclose.html">The <tt>fdclose</tt> program</a></li>
+<li><a href="fdblock.html">The <tt>fdblock</tt> program</a></li>
+<li><a href="fdmove.html">The <tt>fdmove</tt> program</a></li>
+<li><a href="fdreserve.html">The <tt>fdreserve</tt> program</a></li>
+<li><a href="redirfd.html">The <tt>redirfd</tt> program</a></li>
+<li><a href="piperw.html">The <tt>piperw</tt> program</a></li>
+<li><a href="heredoc.html">The <tt>heredoc</tt> program</a></li>
+<li><a href="pipeline.html">The <tt>pipeline</tt> program</a></li>
+<li><a href="wait.html">The <tt>wait</tt> program</a></li>
+<li><a href="getpid.html">The <tt>getpid</tt> program</a></li>
+<li><a href="exec.html">The <tt>exec</tt> program</a></li>
+<li><a href="tryexec.html">The <tt>tryexec</tt> program</a></li>
+<li><a href="exit.html">The <tt>exit</tt> program</a></li>
+</ul>
+<p>
+ (<a href="el_semicolon.html">Basic block management</a>)
+</p>
+<ul>
+<li><a href="foreground.html">The <tt>foreground</tt> program</a></li>
+<li><a href="background.html">The <tt>background</tt> program</a></li>
+<li><a href="if.html">The <tt>if</tt> program</a></li>
+<li><a href="ifelse.html">The <tt>ifelse</tt> program</a></li>
+<li><a href="ifte.html">The <tt>ifte</tt> program</a></li>
+<li><a href="ifthenelse.html">The <tt>ifthenelse</tt> program</a></li>
+<li><a href="backtick.html">The <tt>backtick</tt> program</a></li>
+<li><a href="runblock.html">The <tt>runblock</tt> program</a></li>
+</ul>
+<p>
+ (<a href="el_substitute.html">Variable management</a>)
+</p>
+<ul>
+<li><a href="define.html">The <tt>define</tt> program</a></li>
+<li><a href="importas.html">The <tt>importas</tt> program</a></li>
+<li><a href="import.html">The <tt>import</tt> program</a></li>
+<li><a href="elglob.html">The <tt>elglob</tt> program</a></li>
+<li><a href="elgetpositionals.html">The <tt>elgetpositionals</tt> program</a></li>
+<li><a href="multidefine.html">The <tt>multidefine</tt> program</a></li>
+<li><a href="multisubstitute.html">The <tt>multisubstitute</tt> program</a></li>
+</ul>
+<p>
+ (Loops)
+</p>
+<ul>
+<li><a href="forx.html">The <tt>forx</tt> program</a></li>
+<li><a href="forbacktickx.html">The <tt>forbacktickx</tt> program</a></li>
+<li><a href="loopwhilex.html">The <tt>loopwhilex</tt> program</a></li>
+</ul>
+<p>
+ (Positional parameters and options management)
+</p>
+<ul>
+<li><a href="elgetopt.html">The <tt>elgetopt</tt> program</a></li>
+<li><a href="shift.html">The <tt>shift</tt> program</a></li>
+<li><a href="dollarat.html">The <tt>dollarat</tt> program</a></li>
+</ul>
+<p>
+ (Miscellaneous)
+</p>
+<ul>
+<li><a href="homeof.html">The <tt>homeof</tt> program</a></li>
+</ul>
+
+<h3> Provided scripts: example <tt>.profile</tt> replacement </h3>
+
+<ul>
+<li><a href="execline-shell.html">The <tt>execline-shell</tt> script</a></li>
+<li><a href="execline-startup.html">The <tt>execline-startup</tt> script</a></li>
+</ul>
+
+<h3> Fun stuff </h3>
+
+<ul>
+<li>An execline <a href="quine-jriou.txt">quine</a>. This was quinely provided by
+<a href="http://jriou.org/">Jo&euml;l Riou</a>. The only
+external command used is <tt>echo</tt>. </li>
+<li> Another <a href="quine-prj.txt">quine</a>, provided by
+<a href="http://code.dogmap.org/">Paul Jarc</a>. It is much shorter, but
+uses the external commands <tt>echo</tt> and <tt>env</tt>. Later, Paul rewrote
+it <a href="quine-prj-2.txt">using only <tt>echo</tt></a>, then
+<a href="quine-prj-3.txt">using only <tt>echo</tt> and the environment</a>. </li>
+<li> Another <a href="quine-dam.txt">quine</a>, provided by
+<a href="http://www.madore.org/~david/">David Madore</a>. It uses the
+external command <tt>printf</tt>. It is longer, but quite stylish. </li>
+</ul>
+
+<h2> Related resources </h2>
+
+<ul>
+ <li> <tt>execline</tt> is discussed on the
+<a href="http://skarnet.org/lists.html#skaware">skaware</a> mailing-list. </li>
+</ul>
+
+</body>
+</html>

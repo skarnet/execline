@@ -1,0 +1,204 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: value transformation</title>
+    <meta name="Description" content="execline: value transformation" />
+    <meta name="Keywords" content="execline value transformation el_transform crunch chomp split" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> Value transformation </h1>
+
+<p>
+ You can apply 3 kinds of transformations to a value which is to be
+<a href="el_substitute.html">substituted</a> for a variable:
+crunching, chomping and splitting. They
+always occur in that order.
+</p>
+
+
+<a name="delim">
+<h2> Delimiters </h2>
+</a>
+
+<p>
+ The transformations work around <em>delimiters</em>. Delimiters are
+the semantic bounds of the "words" in your value.
+ You can use any character (except the null character, which you cannot
+use in execline scripts) as a delimiter, by giving a string consisting
+of all the delimiters you want as the argument to the <tt>-d</tt> option
+used by substitution commands. By default, the string "<tt>&nbsp;\n\r\t</tt>"
+is used, which means that the default delimiters are spaces, newlines,
+carriage returns and tabs.
+</p>
+
+
+<a name="crunch">
+<h2> Crunching </h2>
+</a>
+
+<p>
+ You can tell the substitution command to merge sets of consecutive
+delimiters into a single delimiter. For instance, to replace
+three consecutive spaces, or a space and 4 tab characters, with a
+single space. This is called <em>crunching</em>, and it is done
+by giving the <tt>-C</tt> switch to the substitution command. The
+remaining delimiter will always be the first in the sequence.
+</p>
+
+<p>
+ Crunching is mainly useful when also <a href="#split">splitting</a>.
+</p>
+
+<a name="chomp">
+<h2> Chomping </h2>
+</a>
+
+<p>
+ Sometimes you don't want the last delimiter in a value.
+ <em>Chomping</em> deletes the last character of a value if it is a
+delimiter. It can be requested by giving the <tt>-n</tt> switch to the
+substitution command. Note that chomping always happens <em>after</em>
+crunching, which means you can use crunching+chomping to ignore, for
+instance, a set of trailing spaces.
+</p>
+
+
+<a name="split">
+<h2> Splitting </h2>
+</a>
+
+<p>
+ In a shell, when you write
+</p>
+
+<pre>
+ $ A='foo bar' ; echo $A
+</pre>
+
+<p>
+ the <tt>echo</tt> command is given two arguments, <tt>foo</tt>
+and <tt>bar</tt>. The <tt>$A</tt> value has been <em>split</em>,
+and the space between <tt>foo</tt> and <tt>bar</tt> acted as a
+<em>delimiter</em>.
+</p>
+
+<p>
+If you want to avoid splitting, you must write something like
+</p>
+
+<pre>
+ $ A='foo bar' ; echo "$A"
+</pre>
+
+<p>
+ The doublequotes "protect" the spaces. Unfortunately, it's easy
+to forget them and perform unwanted splits during script execution
+- countless bugs happen because of the shell's splitting behaviour.
+</p>
+
+<p>
+ <tt>execline</tt> provides a <em>splitting</em> facility, with
+several advantages over the shell's:
+</p>
+
+<ul>
+ <li> Splitting has to be explicitly requested, by specifying the
+<tt>-s</tt> option to commands that perform
+<a href="el_substitute.html">substitution</a>. By default,
+substitutions are performed as is, without interpreting the
+characters in the value. </li>
+ <li> Positional parameters are never split, so that execline
+scripts can handle arguments the way the user intended to. To
+split <tt>$1</tt>, for instance, you have to ask for it
+specifically:
+<pre>
+#!/command/<a href="execlineb.html">execlineb</a> -S1
+<a href="define.html">define</a> -sd" " ARG1S $1
+blah $ARG1S
+</pre>
+ and $ARG1S will be split using the space character as only delimiter.
+ </li>
+ <li> Any character can be a delimiter. </li>
+</ul>
+
+<h3> How it works </h3>
+
+<ul>
+ <li> A substitution command can request that the substitution value
+be split, via the <tt>-s</tt> switch. </li>
+ <li> The splitting function parses the value, looking for delimiters.
+It fills up a structure, marking the split points, and the number
+<em>n</em> of words the value is to be split into.
+ <ul>
+  <li> A word is a sequence of characters in the value <em>terminated
+by a delimiter</em>. The delimiter is not included in the word. </li>
+  <li> If the value begins with <em>x</em> delimiters, the word list
+will begin with <em>x</em> empty words. </li>
+  <li> The last sequence of characters in the value will be recognized
+as a word even if it is not terminated by a delimiter, unless you have
+requested <a href="#chomp">chomping</a> and there was no delimiter at
+the end of the value <em>before</em> the chomp operation - in which case
+that last sequence will not appear at all. </li>
+ </ul> </li>
+ <li> The substitution rewrites the argv. A non-split value will
+be written as one word in the argv; a split value will be written
+as <em>n</em> separate words. </li>
+ <li> Substitution of split values is
+<a href="el_substitute.html#recursive">performed recursively</a>. </li>
+</ul>
+
+
+<a name="netstrings">
+<h3> Decoding netstrings </h3>
+</a>
+
+<p>
+ <a href="http://cr.yp.to/proto/netstrings.txt">Netstrings</a> are
+a way to reliably encode strings containing arbitrary characters.
+<tt>execline</tt> takes advantage of this to offer a completely safe
+splitting mechanism. If a substitution command is given an empty
+delimiter string (by use of the <tt>-d&nbsp;""</tt> option), the
+splitting function will try to interpret the value as a sequence
+of netstrings, every netstring representing a word. For instance,
+in the following command line:
+</p>
+
+<pre>
+ $ define -s -d "" A '1:a,2:bb,0:,7:xyz 123,1: ,' echo '$A'
+</pre>
+
+<p>
+ the <tt>echo</tt> command will be given five arguments:
+</p>
+
+<ul>
+ <li> the "<tt>a</tt>" string </li>
+ <li> the "<tt>bb</tt>" string </li>
+ <li> the empty string </li>
+ <li> the "<tt>xyz 123</tt>" string </li>
+ <li> the "<tt> </tt>" string (a single space) </li>
+</ul>
+
+<p>
+ However, if the value is not a valid sequence of netstrings, the
+substitution command will die with an error message.
+</p>
+
+<p>
+ The <a href="dollarat.html">dollarat</a> command, for instance,
+can produce a sequence of netstrings (encoding all the arguments
+given to an execline script), meant to be decoded by a substitution
+command with the <tt>-d&nbsp;""</tt> option.
+</p>
+
+</body>
+</html>

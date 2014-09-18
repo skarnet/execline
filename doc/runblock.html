@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the runblock program</title>
+    <meta name="Description" content="execline: the runblock program" />
+    <meta name="Keywords" content="execline command runblock" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">www.skarnet.org</a>
+</p>
+
+<h1> The <tt>runblock</tt> program </h1>
+
+<p>
+<tt>runblock</tt>'s purpose is to help you write execline commands
+in the execline language. It can only be used inside an execline
+script. If the script has been given blocks as arguments, <tt>runblock</tt>
+allows you to execute one of the blocks individually.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     runblock [ -P ] [ -n <em>argshift</em> ] [ -r ] <em>n</em>
+</pre>
+
+<ul>
+ <li> <tt>runblock</tt> skips the first <em>argshift</em> positional
+parameters. It does that to allow you to design commands that take simple
+arguments <em>and</em> blocks. </li>
+ <li> Then <tt>runblock</tt> looks for and parses
+<a href="el_semicolon.html">blocks</a> in the positional parameters. </li>
+ <li> If the <tt>-r</tt> option is present: <tt>runblock</tt> skips
+<em>n</em> blocks and execs into the remaining arguments. </li>
+ <li> Else it skips <em>n</em>-1 blocks and execs into the <em>n</em>th
+one. </li>
+ <li> Normally <tt>runblock</tt> <a href="el_pushenv.html#pop">pops</a>
+its environment frame before executing. If the <tt>-P</tt> option has
+been given, it <em>does not</em> pop. </li>
+ <li> Of course, if the block structure doesn't match, <tt>runblock</tt>
+exits 100 with an error message. </li>
+</ul>
+
+<h2> Example: implementing the <a href="ifelse.html">ifelse</a> command </h2>
+
+<p>
+ Suppose that we want to implement the <a href="ifelse.html">ifelse</a> command as
+an execline script, using the <a href="ifte.html">ifte</a> command.
+<tt>runblock</tt> allows us to do it in a simple way:
+</p>
+
+<pre>
+ #!/command/execlineb
+ ifte { runblock 2 } { runblock -r 2 } runblock 1
+</pre>
+
+<p>
+ That's it.
+</p>
+
+<h2> Credits </h2>
+
+<p>
+ The <tt>runblock</tt> idea, as well as the <tt>ifelse</tt> idea, comes
+from <a href="http://code.dogmap.org/">Paul Jarc</a>.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: variable substitution</title>
+    <meta name="Description" content="execline: variable substitution" />
+    <meta name="Keywords" content="execline variable substitution el_substitute" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> Variable substitution </h1>
+
+<p>
+ In a shell, when you write
+</p>
+<pre>
+ $ A='foobar' ; echo $A
+</pre>
+<p>
+ the <tt>echo</tt> command is given the argument <tt>foobar</tt>.
+The <tt>foobar</tt> <em>value</em> has been substituted for the
+<tt>A</tt> <em>variable</em>.
+</p>
+<p>
+ Although <tt>execline</tt> maintains no state, and thus has no
+real variables, it provides such a <em>substitution</em> facility
+via <em>substitution commands</em>, namely:
+</p>
+<ul>
+ <li> <a href="define.html">define</a> </li>
+ <li> <a href="import.html">import</a> </li>
+ <li> <a href="importas.html">importas</a> </li>
+ <li> <a href="elglob.html">elglob</a> </li>
+ <li> <a href="elgetpositionals.html">elgetpositionals</a> </li>
+ <li> <a href="multidefine.html">multidefine</a> </li>
+ <li> <a href="multisubstitute.html">multisubstitute</a> </li>
+</ul>
+
+<p>
+ A substitution command takes a <em>key</em>, i.e. a string
+(which can contain any character but <tt>$</tt>, <tt>{</tt> and
+<tt>}</tt>, although it is recommended to use only alphanumerical
+characters), and a way to compute a <em>value</em>.
+</p>
+
+<h2> Basics </h2>
+
+<ul>
+ <li> If the substitution key is <em>foo</em>, then the substitution
+command will look for every occurrence of <tt>${<em>foo</em>}</tt> or
+<tt>$<em>foo</em></tt> in the rest of its argv. Note that
+<tt>${<em>foo</em>}bar</tt> matches, but <tt>$<em>foo</em>bar</tt>
+<strong>does not</strong>. To be safe, always use the syntax with
+braces, unless <tt>$<em>foo</em></tt> is a word on its own. </li>
+ <li> Every match is then replaced with the <em>value</em>. </li>
+</ul>
+
+<p>
+The simplest example is the following:
+</p>
+
+<pre>
+#!/command/execlineb
+define FOO blah
+echo $FOO
+</pre>
+
+<p>
+ which will replace the <tt>FOO</tt> key with the <tt>blah</tt> value,
+then execute the <tt>echo</tt> command. So that script will print
+<tt>blah</tt> on stdout.
+</p>
+
+<a name="quoting" />
+<h2> Quoting </h2>
+
+<p>
+ execline allows you to write literal <tt>${<em>foo</em>}</tt> constructs
+even when the <em>foo</em> variable is being substituted, thanks to a
+quoting mechanism.
+ Brace (pun intended) yourself: the following is the most complex part
+of the whole language.
+</p>
+
+<h3> Rationale </h3>
+
+<p>
+ If we want to be able to have a literal <tt>${<em>foo</em>}</tt>, then:
+</p>
+<ul>
+ <li> The <tt>${<em>foo</em>}</tt> sequence will mean one of two things:
+be substituted, or <em>don't</em> be substituted. </li>
+ <li> The default (unquoted) action should be: substitute. </li>
+ <li> A sequence that means "do not substitute" should be able
+to appear literally. The quote character should also be able to
+appear literally before a sequence that means "substitute". (Tricky, eh&nbsp;?) </li>
+ <li> There should be as few quote characters as possible, to avoid
+shell-like quoting nightmares. </li>
+</ul>
+
+<h3> Syntax </h3>
+
+<p>
+ Rule:
+</p>
+
+<ul>
+ <li> The backslash (<tt>\</tt>) is a quote character for substitution commands. </li>
+ <li> The following rule applies only if the <em>foo</em> key is
+explicitly used in a substitution command. If no command tries to
+substitute anything for <em>foo</em>, sequences like
+<tt>${<em>foo</em>}</tt> and preceding backslashes are left untouched. </li>
+ <li> (Substitute.) If <tt>${<em>foo</em>}</tt> is preceded by <tt>2*n</tt> backslashes
+(an <strong>even</strong> number), the whole sequence will be
+replaced with <tt>n</tt> backslashes, followed by the substituted value. </li>
+ <li> (Do not substitute.) If <tt>${<em>foo</em>}</tt> is preceded by <tt>2*n+1</tt> backslashes
+(an <strong>odd</strong> number), the whole sequence will be replaced
+with  <tt>n</tt> backslashes, followed by the literal <tt>${<em>foo</em>}</tt>. </li>
+</ul>
+
+<p>
+ And now, the catch: the <a href="execlineb.html">execlineb</a> launcher,
+as well as the shell,
+interprets backslashes as escape characters. To make a word that contains
+a backlash, you need to write <em>two</em> backslashes in your execline
+script or shell command line. That means that the whole number of backslashes
+you must write before your <tt>${<em>foo</em>}</tt> sequence must be doubled
+for the substitution command to read the proper number of backslashes and
+perform its work correctly. <br />
+ Once you keep that in mind, the quoting rule is logical.
+</p>
+
+<h3> Example </h3>
+
+<p>
+ The quoting rule is best illustrated with the following example, where
+the <tt>A</tt> key is substituted, and the <tt>$B</tt> sequences mean
+nothing special.
+</p>
+
+<pre>
+#!/command/execlineb
+define A val
+foreground { echo $A \\$A \\\\$A \\\\\\$A \\\\\\\\$A \\\\\\\\\\$A }
+             echo $B \\$B \\\\$B \\\\\\$B \\\\\\\\$B \\\\\\\\\\$B
+</pre>
+<p>
+ prints
+</p>
+<pre>
+val $A \val \$A \\val \\$A
+$B \$B \\$B \\\$B \\\\$B \\\\\$B
+</pre>
+
+<p>
+ Phew.
+</p>
+
+<a name="el_transform">
+<h2> Value transformations </h2>
+</a>
+
+<p>
+ A value can go through
+<a href="el_transform.html">several transformations</a> before it is
+substituted. It can be <a href="el_transform.html#crunch">crunched</a>,
+<a href="el_transform.html#chomp">chomped</a>, and/or
+<a href="el_transform.html#split">split</a>.
+</p>
+
+<a name="split">
+<h2> Substitution of split values </h2>
+</a>
+
+<p>
+ A <a href="el_transform.html">split</a> value for <tt>FOO</tt> means that
+a word containing <tt>${FOO}</tt> will be replaced by zero, one, or
+(usually) more than one word. The value actually means a
+<em>list</em> of values.
+</p>
+
+<p>
+ The rule is: substituting a list of values
+(<em>v1</em>, <em>v2</em>, <em>...</em>) for a key <em>A</em> is the
+same as listing the substitutions of every value <em>v<tt>i</tt></em>
+for <em>A</em>. <br />
+ For instance,
+</p>
+
+<pre>
+#!/command/execlineb
+define -s FOO "v1 v2 v3" echo prefix-${FOO}-postfix
+</pre>
+
+<p>
+ will substitute three values for <tt>$FOO</tt>: <tt>v1</tt>, <tt>v2</tt>
+and <tt>v3</tt>. So the <tt>echo</tt> command will be called with three
+arguments: <tt>prefix-v1-postfix</tt>, <tt>prefix-v2-postfix</tt>, and
+<tt>prefix-v3-postfix</tt>.
+</p>
+
+<p>
+(Implementation note: the fact that word prefixes are kept is
+what makes execline's subtitutions secure.
+<a href="el_semicolon.html">Blocks</a> are implemented via prefix
+space characters; a substitution occurring inside a block will always produce
+words beginning with the right amount of spaces, thus substituted
+values cannot prematurely terminate a block.)
+</p>
+
+<a name="recursive" />
+<h3> Recursive substitutions </h3>
+
+<p>
+ A direct consequence of that rule is that substitutions will be performed
+recursively if more than one key appears in one word and the values for
+those keys are split. Parallel substitutions are performed from left to
+right. For instance, in
+</p>
+
+<pre>
+#!/command/execlineb
+define -s B "1 2 3" echo ${B}x${B}
+</pre>
+<p>
+ the <tt>${B}x${B}</tt> word will be replaced with <em>nine</em> words:
+<tt>1x1</tt>, <tt>1x2</tt>, <tt>1x3</tt>, <tt>2x1</tt>, <tt>2x2</tt>,
+<tt>2x3</tt>, <tt>3x1</tt>, <tt>3x2</tt>, and <tt>3x3</tt>, in that order.
+<br /> Here is an example with two distinct substitutions in parallel:
+</p>
+
+<pre>
+#!/command/execlineb
+multisubstitute
+{
+  define -s A "a b c d"
+  define -s B "1 2 3"
+}
+echo ${A}x${B}
+</pre>
+
+<p>
+ The <tt>${A}x${B}</tt> word will be replaced with <em>twelve</em> words:
+<tt>ax1</tt>, <tt>ax2</tt>, <tt>ax3</tt>, <tt>bx1</tt>, <tt>bx2</tt>,
+<tt>bx3</tt>, <tt>cx1</tt>, <tt>cx2</tt>, <tt>cx3</tt>, <tt>dx1</tt>,
+<tt>dx2</tt>, and <tt>dx3</tt>, in that order. You can check that the
+order of the <tt>define</tt> directives in
+<a href="multisubstitute.html">multisubstitute</a> does not matter.
+</p>
+
+<p>
+If the left-to-right order does not suit you, then you should perform
+<em>serial</em> substitutions. For instance, the previous script can
+be replaced with
+</p>
+
+<pre>
+#!/command/execlineb
+define -s B "1 2 3"
+define -s A "a b c d"
+echo ${A}x${B}
+</pre>
+<p>
+ and will substitute <tt>${B}</tt> first, then <tt>${A}</tt>. So it
+will print
+</p>
+
+<pre>
+ax1 bx1 cx1 dx1 ax2 bx2 cx2 dx2 ax3 bx3 cx3 dx3
+</pre>
+
+<p>
+ in that order.
+</p>
+
+<a name="brainfsck"></a>
+<h2> Not for the faint of heart </h2>
+
+<p>
+ If you think you have mastered the art of execline substitution, then
+you can try to do better than these people:
+</p>
+
+<ul>
+ <li><a href="http://jriou.org/">Jo&euml;l Riou</a>
+wrote the <a href="quine-jriou.txt">first execlineb quine</a>, using
+only <tt>echo</tt> as non-execline external command. </li>
+ <li> Shortly after, <a href="http://code.dogmap.org/">Paul Jarc</a>
+wrote a <a href="quine-prj.txt">much shorter quine</a>, using
+<tt>echo</tt> and <tt>env</tt> as non-execline external commands. He
+also wrote a <a href="quine-prj-2.txt">revised version</a>, using only
+<tt>echo</tt>, and a shorter <a href="quine-prj-3.txt">definitive
+version</a>. The last one is probably very close to the shortest
+possible execline quine. </li>
+ <li> <a href="http://www.madore.org/~david/">David Madore</a>
+wrote <a href="quine-dam.txt">another quine</a>, using <tt>printf</tt>.
+His quine is longer than the other ones, but is well-commented and can
+be used as a tutorial on how to write quines. :) </li>
+</ul>
+
+</body>
+</html>

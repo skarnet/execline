@@ -1,0 +1,66 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the forx command</title>
+  <meta name="Description" content="execline: the forx command" />
+  <meta name="Keywords" content="execline command forx" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>forx</tt> program </h1>
+
+<p>
+<tt>forx</tt> runs a loop.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     forx [ -p | -x <em>breakcodes</em> ] <em>variable</em> { <em>args...</em> } <em>loop...</em>
+</pre>
+
+<ul>
+ <li> <tt>forx</tt> reads a
+<a href="el_semicolon.html">block</a> and unquotes it.
+That block contains a list of <em>args</em>. </li>
+ <li> For each argument <em>x</em> in <em>args...</em>,
+<tt>forx</tt> runs <em>loop</em> as a child process, with
+<em>variable</em>=<em>x</em> added to its environment. </li>
+ <li> <tt>forx</tt> then exits 0. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-p</tt>&nbsp;: run in parallel. Do not wait for an instance of
+<em>loop...</em> to exit before spawning the next one. <tt>forx</tt>
+will still wait for all instances of <em>loop</em> to terminate before
+exiting, though. </li>
+ <li> <tt>-x</tt>&nbsp;<em>breakcodes</em>&nbsp;: <em>breakcodes</em> must
+be a comma-separated list of exit codes. If the <tt>-p</tt> flag
+hasn't been given and <em>loop</em> exits with one of the codes in <em>breakcodes</em>,
+forx will not run the following instances of the loop, but exit immediately with the
+same exit code. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> You can start <em>loop</em> with "import <em>variable</em> unexport <em>variable</em>"
+if you want variable substitution. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the shift program</title>
+    <meta name="Description" content="execline: the shift program" />
+    <meta name="Keywords" content="execline command shift" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">www.skarnet.org</a>
+</p>
+
+<h1> The <tt>shift</tt> program </h1>
+
+<p>
+<tt>shift</tt> shifts the positional parameters of an execline script.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     shift [ -n <em>argn</em> ] [ -b <em>blockn</em> ] <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>shift</tt> shifts <em>argn</em> positional parameters,
+then <em>blockn</em> blocks. It then execs <em>prog...</em>. </li>
+ <li> By default, <em>argn</em> and <em>blockn</em> are both zero;
+but if neither the <tt>-n</tt> nor the <tt>-b</tt> option is given,
+then <em>argn</em> is 1 and <em>blockn</em> is 0. </li>
+</ul>
+
+<h2> Details </h2>
+
+<ul>
+ <li> <tt>shift</tt> reads the number of "positional parameters" in the
+<tt>#</tt> environment variable. Let <em>n</em> be that number. </li>
+ <li> If the <tt>#</tt> environment variable is not set or does not
+contain a valid number, or one of the <tt>0</tt>, <tt>1</tt>, ...,
+<tt><em>n</em></tt> environment variables is not set, <tt>shift</tt>
+exits 100 with an error message. </li>
+ <li> <tt>shift</tt> calculates a shift value <em>m</em>, corresponding
+to <em>argn</em> arguments followed by enough arguments to make
+<em>blockn</em> blocks. </li>
+ <li> It shifts the positional parameters <em>m</em> times: the
+value of the <tt><em>m</em>+1</tt> variable becomes the value of the
+<tt>1</tt> variable, <tt><em>m</em>+2</tt> becomes <tt>2</tt> and so on,
+and <tt>#</tt> is set to <em>n</em>-<em>m</em> (floored at zero). </li>
+ <li> <tt>shift</tt> then execs into <em>prog...</em>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>shift</tt> is a standard shell builtin. Be careful if you
+want to use it outside of an execline script. </li>
+ <li> The <tt>-b</tt> option is only useful to implement execline
+commands in the execline language. You shouldn't normally have to
+use it. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the multisubstitute command</title>
+  <meta name="Description" content="execline: the multisubstitute command" />
+  <meta name="Keywords" content="execline command multisubstitute" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>multisubstitute</tt> program </h1>
+
+<p>
+<tt>multisubstitute</tt> performs several substitutions at once in
+its <em>argv</em>, then executes another program.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     multisubstitute
+     {
+       [ <a href="define.html">define</a> [ -n ] [ -s ] [ -C | -c ] [ -d <em>delim</em> ] <em>variable</em> <em>value</em> ]
+       [ <a href="importas.html">importas</a> [ -i | -D <em>default</em> ] [ -n ] [ -s ] [ -C | -c ] [ -d <em>delim</em> ] <em>variable</em> <em>envvar</em> ]
+       [ <a href="import.html">import</a> [ -i | -D <em>default</em> ] [ -n ] [ -s ] [ -C | -c ] [ -d <em>delim</em> ] <em>envvar</em> ]
+       [ <a href="elglob.html">elglob</a> [ -v ] [ -w ] [ -s ] [ -m ] [ -e ] [ -0 ] <em>variable</em> <em>pattern</em> ]
+       [ <a href="elgetpositionals.html">elgetpositionals</a> [ -P <em>sharp</em> ] ]
+       [ <a href="multidefine.html">multidefine</a> <em>value</em> { <em>variable...</em> } ]
+       <em>...</em>
+     }
+     <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>multisubstitute</tt> reads a <a href="el_semicolon.html">block</a>
+containing a series of substitution commands. It performs all
+those <a href="el_substitute.html">substitutions</a> on
+<em>prog...</em> in parallel. Check the relevant documentation page
+to learn about the syntax of each substitution command. </li>
+ <li> <tt>multisubstitute</tt> then execs into the modified <em>prog...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> If a <tt>backtick</tt> directive was given with the <tt>-i</tt> option,
+and <em>command</em> crashes or exits nonzero, <tt>multisubstitute</tt> will
+also exit with the same exit code. </li>
+ <li> If an <tt>import</tt> or <tt>importas</tt> directive was given with the
+<tt>-i</tt> option, and the looked up variable is undefined,
+<tt>multisubstitute</tt> will exit 100. </li>
+</ul>
+
+<h2> Rationale </h2>
+
+<h3> Security </h3>
+
+<p>
+ <tt>multisubstitute</tt> can be used to avoid unwanted
+<em>serial substitutions</em>. Consider the following script:
+</p>
+
+<pre>
+ #!/command/execlineb
+ export A wrong
+ define B ${A}
+ import A
+ echo ${B}
+</pre>
+
+<p>
+ Running it will print <tt>wrong</tt>, because <tt>A</tt> is substituted
+<em>after</em> B. On the contrary, the following script:
+</p>
+
+<pre>
+ #!/command/execlineb
+ export A wrong
+ multisubstitute
+ {
+   define B ${A}
+   import A
+ }
+ echo ${B}
+</pre>
+
+<p>
+ will print <tt>${A}</tt>, because A and B are substituted at the same
+time. Serial substitution may be what you want - but when in doubt,
+always perform parallel substitution.
+</p>
+
+<h3> Efficiency </h3>
+
+<p>
+<a href="el_substitute.html">Substitution</a> is a costly mechanism:
+the whole <em>argv</em> is read three times and rewritten twice.
+Serial substitution multiplies the cost by the number of
+substitutions, whereas parallel substitution pays the price only once.
+</p>
+
+<h2> Credits </h2>
+
+<p>
+<a href="http://code.dogmap.org/">Paul Jarc</a> first originated the
+idea of the <tt>multisubstitute</tt> command and a possible syntax.
+</p>
+
+</body>
+</html>

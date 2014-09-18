@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the fdreserve program</title>
+    <meta name="Description" content="execline: the fdreserve program" />
+    <meta name="Keywords" content="execline command fdreserve file descriptor" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>fdreserve</tt> program </h1>
+
+<p>
+<tt>fdreserve</tt> updates the environment with file descriptors that
+are guaranteed safe to use, then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     fdreserve <em>n</em> <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>fdreserve</tt> tries to reserve <em>n</em> file descriptors. </li>
+ <li> <tt>fdreserve</tt> sets the <tt>FD0</tt>, <tt>FD1</tt>, ...,
+<tt>FD<em>n-1</em></tt> environment variables: each FD<em>i</em> contains a
+valid file descriptor, that can be safely opened. </li>
+ <li> <tt>fdreserve</tt> then execs into <em>prog</em> with its arguments.
+</ul>
+
+<h2> Common use </h2>
+
+<p>
+<tt>fdreserve</tt> can be used when you do not want to hardcode file
+descriptors in your scripts. For instance, to create a pipe, you could
+use:
+</p>
+
+<pre>
+ #!/command/execlineb
+ fdreserve 2
+ multisubstitute
+ {
+   importas fdr FD0
+   importas fdw FD1
+  }
+ piperw $fdr $fdw
+ <em>prog...</em>
+</pre>
+
+<p>
+ Warning: <tt>fdreserve</tt> does not allocate descriptors, it merely returns
+descriptors that are free at the time it is run. A program like
+</p>
+
+<pre>
+ #!/command/execlineb
+ fdreserve 3
+ multisubstitute
+ {
+   importas fdr FD0
+   importas fdw FD1
+ }
+ piperw $fdr $fdw
+ fdreserve 1
+ multisubstitute
+ {
+   importas oldfd FD2
+   importas newfd FD0
+ }
+ <em>prog...</em>
+</pre>
+
+<p>
+may fail, because <em>oldfd</em> and <em>newfd</em> may be the same.
+To avoid that, you should make sure that all descriptors returned by
+<tt>fdreserve</tt> are actually allocated before calling <tt>fdreserve</tt>
+again.
+(Thanks to <a href="http://code.dogmap.org/">Paul Jarc</a> for having
+spotted that case.)
+</p>
+
+</body>
+</html>

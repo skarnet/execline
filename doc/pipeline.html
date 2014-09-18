@@ -1,0 +1,67 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the pipeline command</title>
+  <meta name="Description" content="execline: the pipeline command" />
+  <meta name="Keywords" content="execline command pipeline" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>pipeline</tt> program </h1>
+
+<p>
+<tt>pipeline</tt> runs two commands with a pipe between them.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     pipeline [ -d ] [ -r | -w ] { <em>prog1...</em> } <em>prog2...</em>
+</pre>
+
+<ul>
+ <li> <tt>pipeline</tt> reads <em>prog1...</em> in a
+<a href="el_semicolon.html">block</a> and unquotes it. </li>
+ <li> It runs <em>prog1...</em> as a child process and execs into
+<em>prog2...</em>, with a pipe between <em>prog1</em>'s stdout and
+<em>prog2</em>'s stdin. </li>
+ <li> <em>prog1</em>'s pid is available in <em>prog2</em> as the !
+environment variable. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-d</tt>&nbsp;: run <em>prog1...</em>
+as a grandchild of <tt>pipeline</tt>. This is meant to prevent a zombie
+from hanging around if <em>prog2...</em> fails to wait for its children.</li>
+ <li> <tt>-r</tt>&nbsp;: make <em>prog1...</em> the writer and
+<em>prog2...</em> the reader. This is the default. </li>
+ <li> <tt>-w</tt>&nbsp;: make <em>prog1...</em> the reader and
+<em>prog2...</em> the writer. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> You can easily create a chain of pipes: <tt>pipeline a "" pipeline b "" c</tt>
+is roughly equivalent to
+<tt>sh -c 'exec a | b | c'</tt>, except that shells usually run <tt>c</tt>
+as a child process like <tt>a</tt> and <tt>b</tt>, and <tt>exec</tt> has no
+effect. </li>
+</ul>
+
+</body>
+</html>

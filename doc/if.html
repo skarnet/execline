@@ -1,0 +1,68 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the if command</title>
+  <meta name="Description" content="execline: the if command" />
+  <meta name="Keywords" content="execline command if" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>if</tt> program </h1>
+
+<p>
+<tt>if</tt> performs conditional execution.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     if [ -X ] [ -n ] [ -t | -x <em>exitcode</em> ] { <em>prog1...</em> } <em>prog2...</em>
+</pre>
+
+<ul>
+ <li> <tt>if</tt> reads <em>prog1...</em> in a
+<a href="el_semicolon.html">block</a>. It forks and executes it,
+then waits for it to complete. </li>
+ <li> If <em>prog1</em> crashes, <tt>if</tt> exits 1 with a special
+error message. </li>
+ <li> If <em>prog1</em> exits a non-zero status,
+<tt>if</tt> exits 1.</li>
+ <li> Else <tt>if</tt> execs into <em>prog2</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-X</tt>&nbsp;: treat a crash of <em>prog1</em> as a non-zero ("false") exit.
+ <li> <tt>-n</tt>&nbsp;: negate the test (exit on true, exec into <em>prog2</em> on false) </li>
+ <li> <tt>-x</tt>&nbsp;<em>exitcode</em>&nbsp;: exit <em>exitcode</em> instead of 1 if the test fails. </li>
+ <li> <tt>-t</tt>&nbsp;: exit 0 instead of 1 if the test fails.
+This is equivalent to <tt>-x 0</tt>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>if</tt> will exit if <em>prog1...</em> exits false. To use it in
+an execline script that must run <em>prog3...</em> no matter the result of
+the test, use a <tt>foreground</tt> wrapper:
+<pre> foreground { if { <em>prog1...</em> } <em>prog2...</em> } <em>prog3...</em> </pre>
+(in <a href="execlineb.html">execlineb</a> syntax) </li>
+ <li> <tt>if <em>prog1...</em> "" <em>prog2...</em></tt> is
+equivalent to <tt>sh -c '<em>prog1...</em> && exec <em>prog2...</em>'</tt>. </li>
+</ul>
+
+</body>
+</html>

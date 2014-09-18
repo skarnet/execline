@@ -1,0 +1,67 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the ifte command</title>
+  <meta name="Description" content="execline: the ifte command" />
+  <meta name="Keywords" content="execline command ifte" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>ifte</tt> program </h1>
+
+<p>
+<tt>ifte</tt> performs a conditional alternative.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     ifte [ -X ] [ -n ] { <em>progthen...</em> } { <em>progelse...</em> } <em>progif...</em>
+</pre>
+
+<ul>
+ <li> <tt>ifte</tt> reads <em>progthen...</em> and <em>progelse...</em> in two
+consecutive <a href="el_semicolon.html">blocks</a>. </li>
+ <li> <tt>ifte</tt> runs <em>progif...</em> as a child process
+and waits for it to complete. </li>
+ <li> If <em>progif...</em> crashes (i.e. is killed by a signal), <tt>ifte</tt>
+exits 1 with an error message. </li>
+ <li> If <em>progif...</em> exits zero, <tt>ifte</tt> execs into
+<em>progthen...</em>, else it execs into <em>progelse...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-X</tt>&nbsp;: do not exit if <em>progif</em> crashes; instead,
+proceed as if the test had returned false. </li>
+ <li> <tt>-n</tt>&nbsp;: negate the test. <em>progthen...</em> will be run
+iff <em>progif...</em> exits nonzero. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<p>
+ <tt>ifte</tt> is a simpler version of <a href="ifthenelse.html">ifthenelse</a>.
+It performs <em>only</em> conditional execution, not instruction sequence.
+</p>
+
+<p>
+"<tt>ifthenelse { progif } { progthen } { progelse } remainder</tt>" is the
+equivalent of "<tt>foreground { ifte { progthen } { progelse } progif } remainder</tt>".
+</p>
+
+</body>
+</html>

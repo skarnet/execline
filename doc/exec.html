@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the exec program</title>
+    <meta name="Description" content="execline: the exec program" />
+    <meta name="Keywords" content="execline command exec" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>exec</tt> program </h1>
+
+<p>
+<tt>exec</tt> executes the command line it is given.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     exec [ -c ] [ -l ] [ -a <em>argv0</em> ]<em>prog...</em>
+</pre>
+
+<p>
+<tt>exec</tt> execs into <em>prog...</em>. It does nothing else.
+<br /> Without options, <tt>exec</tt> can be seen as the execline NOP.
+</p>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-c</tt>&nbsp;: empty the environment. <em>prog</em> is executed with no environment variables. <strong>Warning:&nbsp;</strong><em>prog</em> will run with an empty PATH, so make sure it does not rely on it. </li>
+ <li> <tt>-l</tt>&nbsp;: login. Prepends <em>prog</em>'s argv[0] with a dash. </li>
+ <li> <tt>-a <em>argv0</em></tt>&nbsp;: argv0. Replace <em>prog</em>'s argv[0] with <em>argv0</em>. This is done <em>before</em> adding a dash, if the <tt>-l</tt> option is also present. </li>
+</ul>
+
+<p>
+The <tt>exec</tt> command, along with its options, is designed to emulate
+the standard <tt>exec</tt> shell builtin, which replaces the shell with the
+command it is given.
+</p>
+
+</body>
+</html>

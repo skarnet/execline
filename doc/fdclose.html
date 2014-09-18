@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the fdclose program</title>
+    <meta name="Description" content="execline: the fdclose program" />
+    <meta name="Keywords" content="execline command fdclose file descriptor close" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>fdclose</tt> program </h1>
+
+<p>
+<tt>fdclose</tt> closes a given file descriptor, then
+executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     fdclose <em>fd</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>fdclose</tt> closes the file descriptor number <em>fd</em>, then
+execs into <em>prog</em> with its arguments.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>fdclose <em>n</em> prog...</tt> is roughly equivalent to
+<tt>sh -c 'exec prog... <em>n</em>&lt;&amp;-'</tt></li>
+</ul>
+
+</body>
+</html>

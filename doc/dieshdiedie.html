@@ -1,0 +1,278 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: why execline and not sh</title>
+    <meta name="Description" content="execline: why execline and not sh" />
+    <meta name="Keywords" content="execline sh shell script language" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a><p />
+
+<h1> Why not just use <tt>/bin/sh</tt>&nbsp;? </h1>
+
+
+<a name="security">
+<h2> Security </h2></a>
+
+<p>
+ One of the most frequent sources of security problems in programs
+is <em>parsing</em>. Parsing is a complex operation, and it is easy to
+make mistakes while designing and implementing a parser. (See
+<a href="http://cr.yp.to/qmail/guarantee.html">what Dan Bernstein says
+on the subject</a>, section 5.)
+</p>
+
+<p>
+ But shells parse all the time. Worse, the <em>essence</em>
+of the shell is parsing: the parser and the runner are intimately
+interleaved and cannot be clearly separated, thanks to the
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">specification</a>.
+Even worse, the
+shell sometimes has to perform <em>double parsing</em>, for instance
+after parameter expansion. This can lead to atrocities like
+<pre>
+zork="foo ; echo bar"
+touch $zork
+</pre> not doing what you would like them to do, even in that simple
+case. (<a href="http://www.zsh.org/">zsh</a> has a sane behaviour by
+default, at the expense of explicitly breaking the spec.)
+</p>
+
+<p>
+<tt>execlineb</tt> parses the script only once: when
+reading it. The parser has been designed to be simple and systematic,
+to reduce the potential for bugs - which you just cannot do
+with a shell. After <tt>execlineb</tt> has split up the script into
+words, no other parsing phase will happen, unless the user explicitly
+requires it. Positional parameters, when
+used, are never split, even if they contain spaces or newlines, unless
+the user explicitly requires it. Users control exactly what
+is split, what is done, and how.
+</p>
+
+<a name="portability">
+<h2> Portability </h2></a>
+
+<p>
+ The shell language was designed to make scripts portable across various
+versions of Unix. But it is actually really hard to write a portable shell
+script. There are dozens of distinct
+<tt>sh</tt> flavours, not even counting the openly incompatible
+<tt>csh</tt> approach and its various <tt>tcsh</tt>-like followers.
+The <tt>ash</tt>, <tt>bash</tt>, <tt>ksh</tt> and <tt>zsh</tt> shells
+all exhibit a different behaviour, <em>even when they are
+run with the so-called compatibility mode</em>. From what I have
+seen on various experiments, only <tt>zsh</tt> is able to follow the
+specification to the letter, at the expense of being big and complex to
+configure. This is a source of endless problems for shell script writers,
+who <em>should</em> be able to assume that a script will run everywhere,
+but <em>cannot</em> in practice. Even a simple utility like <tt>test</tt>
+cannot be used safely with the normalized options, because most shells
+come with a builtin <tt>test</tt> that does <em>not</em> respect the
+specification to the letter. And let's not get started about <tt>echo</tt>,
+which has its own set of problems. Rich Felker has
+<a href="http://www.etalabs.net/sh_tricks.html">a page</a> listing tricks
+to use to write portable shell scripts. Writing a portable script should
+not be that hard.
+</p>
+
+<p>
+execline scripts are portable. There is no
+complex syntax with opportunity to have an undefined or nonportable
+behaviour. The execline package is portable across platforms:
+there is no reason for vendors or distributors to fork their own
+incompatible version.
+ Scripts will
+not break from one machine to another; if they do,
+it's not a "portability problem", it's a bug. You are then encouraged
+to find the program that is responsible for the different behaviour,
+and send a bug-report to the program author - including me, if the
+relevant program is part of the execline distribution.
+</p>
+
+<p>
+ A long-standing problem with Unix scripts is the shebang line, which
+requires an absolute path to the interpreter. Scripts are only portable
+as is if the interpreter can be found at the same absolute path on every
+system. With <tt>/bin/sh</tt>, it is <em>almost</em> the case (Solaris
+manages to get it wrong by having a non-POSIX shell as <tt>/bin/sh</tt>
+and requiring something like <tt>#!/usr/xpg4/bin/sh</tt> to get a POSIX
+shell to interpret your script). Other scripting languages are not so
+lucky: perl can be <tt>/bin/perl</tt>, <tt>/usr/bin/perl</tt>,
+<tt>/usr/local/bin/perl</tt> or something else entirely. For those cases,
+some people advocate the use of <tt>env</tt>: <tt>#!/usr/bin/env perl</tt>.
+But first, <tt>env</tt> can only find interpreters that can be found via the
+user's PATH environment variable, which defeats the purpose of having an
+absolute path in the shebang line in the first place; and second, this only
+displaces the problem: the <tt>env</tt> utility does not
+have a guaranteed absolute path. <tt>/usr/bin/env</tt> is the usual
+convention, but not a strong guarantee: it is valid for systems to have
+<tt>/bin/env</tt> instead, for instance.
+</p>
+
+<p>
+<tt>execline</tt> suffers from the same issues. <tt>#!/bin/execlineb</tt>&nbsp;?
+<tt>#!/usr/bin/execlineb</tt>&nbsp;? This is the only portability problem that
+you will find with execline, and it is common to every script language. 
+</p>
+
+<p>
+ The real solution to this portability problem is a convention that
+guarantees fixed absolute paths for executables, which the FHS does not do.
+The <a href="http://cr.yp.to/slashpackage.html">slashpackage</a> convention is
+such an initiative, and is well-designed; but as with every
+convention, it only works if everyone follows it, and unfortunately,
+slashpackage has not
+found many followers. Nevertheless, like every skarnet.org package, execline
+can be configured to follow the slashpackage convention.
+</p>
+
+<a name="simplicity">
+<h2> Simplicity </h2></a>
+
+<p>
+ I originally wanted a shell that could be used on an embedded system.
+Even the <tt>ash</tt> shell seemed big, so I thought of writing my
+own. Hence I had a look at the
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">sh
+specification</a>... and ran away screaming.
+This specification
+is <em>insane</em>. It goes against every good programming
+practice; it seems to have been designed only to give headaches
+to wannabe <tt>sh</tt> implementors.
+</p>
+
+<p>
+ POSIX cannot really be blamed for that: it only normalizes existing, historical
+behaviour. One can argue whether it is a good idea to normalize atrocious
+behaviour for historical reasons, as is the case with the infamous
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/gets.html">gets</a>
+function, but this is the way it is.
+</p>
+
+<p>
+ The fact remains that modern shells have to be compatible with that historical
+nonsense and that makes them big and complex at best, or incompatible and ridden
+with bugs at worst.
+An OpenBSD developer said to me, when asked about the OpenBSD <tt>/bin/sh</tt>:
+"It works, but it's far from not being a nightmare".
+</p>
+
+<p>
+ Nobody should have
+nightmare-like software on their system. Unix is simple. Unix
+was designed to be simple. And if, as Dennis Ritchie said, "it takes a
+genius to understand the simplicity", that's because incompetent people
+took advantage of the huge Unix flexibility to write insanely crappy or
+complex software. System administrators can only do a decent job when
+they understand how the programs they run are supposed to work. People
+are slowly starting to grasp this (or are they&nbsp;? We finally managed
+to get rid of sendmail and BIND, but GNU/Linux users seem happy to
+welcome the era of D-Bus and systemd. Will we ever learn&nbsp;?) - but even
+<tt>sh</tt>, a seemingly simple and basic Unix program, is hard to
+understand when you lift the cover.
+</p>
+
+<p>
+ So I decided to forego sh entirely and take a new approach. So far it
+has been working.
+ The <a href="grammar.html">execline specification</a> is simple, and,
+as I hope to have shown, easy to implement without too many bugs or
+glitches.
+</p>
+
+<a name="performance">
+<h2> Performance </h2></a>
+
+<p>
+ Since it was made to run on an embedded system, <tt>execline</tt> was
+designed to be light in memory usage. And it is.
+</p>
+
+<ul>
+ <li> No overhead due to interactive support. </li>
+ <li> No overhead due to unneeded features. Since every command performs
+its task then executes another command, all occupied resources are instantly
+freed. By contrast, a shell stays in memory during the whole execution
+time. </li>
+ <li> Very limited use of the C library. Only the C interface to the
+kernel's system calls, and some very basic functions like <tt>malloc()</tt>,
+are used in the C library. In addition to avoiding the horrible interfaces
+like <tt>stdio</tt> and the legacy libc bugs, this approach makes it easy
+to statically compile execline - you will want to do that on an embedded
+system, or just to gain performance. </li>
+</ul>
+
+<p>
+ You can have hundreds of execline scripts running simultaneously on an
+embedded box. Not exactly possible with a shell.
+</p>
+
+<p>
+ For scripts than do not require many computations that a shell can do
+without calling external programs,
+ <tt>execline</tt> is <em>faster</em> than the shell.
+Unlike <tt>sh</tt>'s
+one, the <tt>execline</tt> parser is simple and
+straightforward; actually, it's more of a lexer than a parser, because
+the execline language has been designed to be LL(1) - keep it simple,
+stupid.
+execline scripts get analysed and launched practically without a delay.
+</p>
+
+<a name="comparison" />
+<ul>
+ <li>
+ The best use case of execline is a linear, straightforward script, a
+simple command line that does not require the shell's processing power.
+In that case, execline will skip the shell's overhead and win big time
+on resource usage and execution speed. </li>
+ <li> For longer scripts that fork a few commands, with a bit of
+control flow, on average, an execline script will run at roughly the
+same speed as the equivalent shell script, while using less resources. </li>
+ <li> The worst use case of execline is when the shell is used as a
+programming language, and the script loops over complex internal constructs
+that execline is unable to replicate without forking. In that case,
+execline will waste a lot of time in fork/exec system calls that the
+shell does not have to perform, and be noticeably slower. execline has
+been designed as a <em>scripting</em> language, not as a <em>programming</em>
+language: it is efficient at being the glue that ties together programs
+doing a job, not at implementing a program's logic. </li>
+</ul>
+
+<a name="limitations">
+<h2> execline limitations </h2></a>
+
+<ul>
+ <li> <tt>execline</tt> can only handle scripts that fit in one <em>argv</em>.
+Unix systems have a limit on the <em>argv</em>+<em>envp</em> size;
+<tt>execline</tt> cannot execute scripts that are bigger than this limit.</li>
+ <li> <tt>execline</tt> commands do not perform signal handling. It is not
+possible to trap signals inside an execline script. If you want to trap
+signals, write a specific C program, or use a shell. </li>
+ <li> Due to the <tt>execline</tt> design, maintaining a state is
+difficult. Information has to transit via environment variables or
+temporary files, which makes commands like
+<a href="loopwhilex.html">loopwhilex</a> a bit painful to handle. </li>
+ <li> Despite all its problems, the main shell advantage (apart from
+being available on every Unix platform, that is) is that it
+is often <em>convenient</em>. Shell constructs can be terse and short,
+where <tt>execline</tt> constructs will be verbose and lengthy. </li>
+ <li> An execline script is generally heavier on <tt>execve()</tt> than
+the average shell script - notably in programs where the shell can
+use builtins. This can lead to a performance loss, especially when
+executed programs make numerous calls to the dynamic linker: the system
+ends up spending a lot of time resolving dynamic symbols. If it is a
+concern to you, you should try and <em>statically compile</em> the
+execline package, to eliminate the dynamic resolution costs. Unless
+you're heavily looping around <tt>execve()</tt>,
+the remaining costs will be negligible. </li>
+</ul>
+
+</body>
+</html>

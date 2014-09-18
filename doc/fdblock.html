@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the fdblock program</title>
+    <meta name="Description" content="execline: the fdblock program" />
+    <meta name="Keywords" content="execline command fdblock file descriptor blocking" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>fdblock</tt> program </h1>
+
+<p>
+<tt>fdblock</tt> sets or unsets the O_NONBLOCK flag on a given file descriptor
+(which makes reading or writing non-blocking or blocking), then executes
+a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     fdblock [ -n ] <em>fd</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>fdblock</tt> makes the file descriptor number <em>fd</em> blocking,
+no matter what its previous state was. It then execs into <em>prog</em>
+with its arguments.
+</p>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-n</tt>&nbsp;: non-blocking. Sets <em>fd</em> to non-blocking
+mode instead of blocking mode. If used on stdin (0) or stdout (1), this
+option will make a lot of command-line programs behave improperly, because
+most simple command-line programs only support blocking stdin and stdout.
+Make sure you know what you are doing. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>fdblock</tt> has no portable shell equivalent. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the backtick command</title>
+ <meta name="Description" content="execline: the backtick command" />
+ <meta name="Keywords" content="execline command backtick" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>backtick</tt> program </h1>
+
+<p>
+<tt>backtick</tt> runs a program and uses its output as the argument of
+another program.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     backtick [ -i ] [ -n ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
+</pre>
+
+<ul>
+ <li> <tt>backtick</tt> reads <em>prog1...</em> in a
+<a href="el_semicolon.html">block</a> and unquotes it. </li>
+ <li> It runs <em>prog1...</em> as a child process and saves its
+output in memory. This output must not contain a null character. </li>
+ <li><tt>backtick</tt> execs into the modified <em>prog2...</em>, with
+<em>variable</em> added to the environment with <em>prog1...</em>'s
+output as a value. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-i</tt>&nbsp;: insist. If <em>prog1</em> exits non-zero,
+<tt>backtick</tt> exits with the same exit code (or 111 if <em>prog1</em>
+crashed for some reason). Without this option, <tt>backtick</tt> execs into
+<em>prog2...</em> no matter what <em>prog1</em> does, with the null word as
+<em>variable</em>'s value if <em>prog1</em> didn't write anything before
+dying. </li>
+ <li> <tt>-n</tt>&nbsp;: chomp an ending newline off <em>prog1...</em>'s
+output. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> You can start <em>prog2...</em> with "import <em>variable</em> unexport <em>variable</em>"
+to perform variable substitution. </li>
+</ul>
+
+</body>
+</html>

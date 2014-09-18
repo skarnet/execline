@@ -1,0 +1,41 @@
+#!/command/execlineb
+
+# This execlineb script will sleep for 1 second, then print some
+# silly things on the standard output.
+
+
+foreground     # an unquoted string, evaluated to: foreground
+{              # A single opening brace, not included in the argv
+  sleep 1      # Two unquoted strings, evaluated to " sleep" and " 1"
+               # (without the quotation marks).
+}              # A single closing brace, evaluated to the empty word
+
+"echo"     # this is a quoted string. It will evaluate to the word: echo
+
+foo\ bar\ zoinx  # This is one word, since the spaces are escaped
+"foo bar zoinx"  # This is exactly the same word, written another way
+
+ " # this is not a comment, since it is inside a quoted string
+# This is not a comment either \" # nor is this " # but this is one
+
+"\0x41\66\0103D\n"   # This is the string ABCD followed by a newline.
+                     # Be careful: the newline will be part of the word.
+
+ \n   # this is not a newline, but the single word: n
+
+$23   # This will NOT be replaced by anything with execline-1.y, unless
+      # substitution is explicitly asked for in the script.
+      # The dollar is no special character for the execline binary.
+
+baz"$1"qux  # This will evaluate to the word baz$1qux
+baz\$1qux   # Same here
+baz$1qux    # Same here in execline-1.y
+
+${PATH}   # This will NOT be replaced by execline ; use the import command
+          # if you need the $PATH value.
+
+'this is not a string'  # it will be parsed as five separate words
+
+"\
+"        # This will be parsed as the empty word. A (backslash, newline)
+         # sequence inside a quoted string is entirely removed.

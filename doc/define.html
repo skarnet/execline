@@ -1,0 +1,42 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the define command</title>
+ <meta name="Description" content="execline: the define command" />
+ <meta name="Keywords" content="execline command define" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>define</tt> program </h1>
+
+<p>
+<tt>define</tt> replaces a literal with a value, then executes
+another program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     define [ -s ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>variable</em> <em>value</em> <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>define</tt> performs
+<a href="el_substitute.html">variable substitution</a> on
+<em>prog...</em>, using <em>variable</em> as key and
+<em>value</em> as value.
+<tt>define</tt>'s options are used to <a href="el_transform.html">control
+the substitution mechanism</a>. </li>
+ <li> <tt>define</tt> then execs into the modified <em>prog...</em>. </li>
+</ul>
+
+</body>
+</html>

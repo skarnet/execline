@@ -1,0 +1,53 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the wait command</title>
+  <meta name="Description" content="execline: the wait command" />
+  <meta name="Keywords" content="execline command wait" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>wait</tt> program </h1>
+
+<p>
+<tt>wait</tt> waits for a set of children, then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     wait [ -r ] { [ <em>pids...</em> ] } <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>wait</tt> reads a list of <em>pids</em> in a
+(possibly empty) <a href="el_semicolon.html">block</a>,
+and unquotes it. </li>
+ <li> <tt>wait</tt> waits for every child whose pid is
+listed in <em>pids...</em>. If <em>pids...</em> is an
+empty list, it waits for every child process it has. </li>
+ <li><tt>wait</tt> then execs into <em>prog...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-r</tt>&nbsp;: reap mode. Do not pause until a child has
+exited; only reap all pending zombies. The read block must be empty
+for that option to be effective. </li>
+</ul>
+
+</body>
+</html>

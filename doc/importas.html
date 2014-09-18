@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the importas program</title>
+    <meta name="Description" content="execline: the importas program" />
+    <meta name="Keywords" content="execline command importas import environment variable" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>importas</tt> program </h1>
+
+<p>
+<tt>importas</tt> replaces a literal with the value of an
+environment variable, then executes another program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     importas [ -i | -D default ] [ -s ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>variable</em> <em>envvar</em> <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>importas</tt> fetches the value of <em>envvar</em> in the
+environment. If neither the <em>-D</em> nor the <em>-i</em> option is given,
+and <em>envvar</em> is undefined, the <strong>null word</strong> is returned. </li>
+ <li> <tt>importas</tt> then performs
+<a href="el_substitute.html">variable substitution</a> on <em>prog...</em>,
+with <em>variable</em> as key and that string as value.
+ <li><tt>importas</tt> then execs into the modified <em>prog...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-D</tt>&nbsp;<em>default</em>&nbsp;: If <em>envvar</em> is
+undefined, and this option is not given, substitute zero word for
+<em>variable</em> instead of the empty word; and if it is given,
+substitute <em>default</em> instead. To substitute the empty word,
+use <tt>-D&nbsp;""</tt>. </li>
+ <li> <tt>-i</tt>&nbsp;: Insist. If <em>envvar</em> is undefined,
+<tt>importas</tt> will not do anything; instead, it will exit 100 with an
+error message. This has precedence over any <tt>-D</tt> option. </li>
+ <li> Other options are used to <a href="el_transform.html">control
+the substitution mechanism</a>. </li>
+</ul>
+
+</body>
+</html>

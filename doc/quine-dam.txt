@@ -1,0 +1,110 @@
+#! /command/execlineb -P
+# Public Domain.
+# See comments below.
+# (Search for "HERE".)
+#
+define -sCd "\n" lns "
+${p} ${bubble} is the end of the quine's data.
+${p} They represent the following code, with various quotations:
+${p} ${b} (backslash) is represented as ${d}${ob}b${cb}
+${p} ${q} (double quote) is represented as ${d}${ob}q${cb}
+${p} ${p} (sharp/pound/shibboleth/whatever) is represented as ${d}${ob}p${cb}
+${p} ${ob} (open brace) is represented as ${d}${ob}ob${cb}
+${p} ${cb} (closed brace) is represented as ${d}${ob}cb${cb}
+${p} ${d} (dollar) is represented as ${d}${ob}d${cb}
+${p} ${bubble} (the magic word) is represented as ${d}${ob}bubble${cb}
+${p} (The point of the magic word is to allow the reader
+${p} to conveniently skip over the large data section.)
+${p}
+${p} Now we have the quine's code!
+${p}
+${p} First, print the lines that come before the data.
+foreground ${ob} printf %s ${b}${p}${b}!${q} ${q} ${cb}
+foreground ${ob} printf %s${b}${b}n ${q}/command/execlineb -P${q} ${cb}
+foreground ${ob} printf %s${b}${b}n ${b}${p}${q} Public Domain.${q} ${cb}
+foreground ${ob} printf %s${b}${b}n ${b}${p}${q} See comments below.${q} ${cb}
+foreground ${ob} printf %s ${b}${p}${q} (Search for ${q} ${cb}
+foreground ${ob} printf %s${b}${b}n ${b}${q}${bubble}${b}${q}.) ${cb}
+foreground ${ob} printf %s${b}${b}n ${b}${p} ${cb}
+foreground ${ob} printf %s ${q}define -sCd ${b}${q}${b}${b}n${b}${q} lns ${b}${q}${q} ${cb}
+${p} Next, print the data themselves, as data.
+for lin ${ob} ${d}${ob}lns${cb} ${cb} ${ob}
+multisubstitute ${ob}
+define b ${d}${ob}b${cb}
+define q ${d}${ob}q${cb}
+define p ${d}${ob}p${cb}
+define ob ${d}${ob}ob${cb}
+define cb ${d}${ob}cb${cb}
+define d ${d}${ob}d${cb}
+define bubble ${d}${ob}bubble${cb}
+define intron ${d}${ob}intron${cb}
+${cb} printf ${b}${b}n%s ${d}${ob}lin${cb} ${cb}
+foreground ${ob} printf %s${b}${b}n ${b}${q} ${cb}
+${p} Finally, use the data to print the code!
+for lin ${ob} ${d}${ob}lns${cb} ${cb} ${ob}
+multisubstitute ${ob}
+define b ${b}${b}
+define q ${b}${q}
+define p ${b}${p}
+define ob ${b}${ob}
+define cb ${b}${cb}
+define d ${d}
+define bubble ${bubble}
+define intron ${q}${intron}${q}
+${cb} printf %s${b}${b}n ${d}${ob}lin${cb} ${cb}
+${p} That's all, folks! - Well, that wasn't so hard, was it?
+${p} (This quine was written by <david.madore@ens.fr> - see
+${p} <URL: http://www.eleves.ens.fr:8080/home/madore/computers/quine.html >
+${p} for more information on quines and how to write them.)"
+# HERE is the end of the quine's data.
+# They represent the following code, with various quotations:
+# \ (backslash) is represented as ${b}
+# " (double quote) is represented as ${q}
+# # (sharp/pound/shibboleth/whatever) is represented as ${p}
+# { (open brace) is represented as ${ob}
+# } (closed brace) is represented as ${cb}
+# $ (dollar) is represented as ${d}
+# HERE (the magic word) is represented as ${bubble}
+# (The point of the magic word is to allow the reader
+# to conveniently skip over the large data section.)
+#
+# Now we have the quine's code!
+#
+# First, print the lines that come before the data.
+foreground { printf %s \#\!" " }
+foreground { printf %s\\n "/command/execlineb -P" }
+foreground { printf %s\\n \#" Public Domain." }
+foreground { printf %s\\n \#" See comments below." }
+foreground { printf %s \#" (Search for " }
+foreground { printf %s\\n \"HERE\".) }
+foreground { printf %s\\n \# }
+foreground { printf %s "define -sCd \"\\n\" lns \"" }
+# Next, print the data themselves, as data.
+for lin { ${lns} } {
+multisubstitute {
+define b ${b}
+define q ${q}
+define p ${p}
+define ob ${ob}
+define cb ${cb}
+define d ${d}
+define bubble ${bubble}
+define intron ${intron}
+} printf \\n%s ${lin} }
+foreground { printf %s\\n \" }
+# Finally, use the data to print the code!
+for lin { ${lns} } {
+multisubstitute {
+define b \\
+define q \"
+define p \#
+define ob \{
+define cb \}
+define d $
+define bubble HERE
+define intron "NOTICE HOW THIS SENTENCE APPEARS ONLY ONCE IN THIS QUINE?"
+} printf %s\\n ${lin} }
+# That's all, folks! - Well, that wasn't so hard, was it?
+# (This quine was written by <david.madore@ens.fr> - see
+# <URL: http://www.eleves.ens.fr:8080/home/madore/computers/quine.html >
+# for more information on quines and how to write them.)

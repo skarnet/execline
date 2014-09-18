@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: how to upgrade</title>
+    <meta name="Description" content="execline: how to upgrade" />
+    <meta name="Keywords" content="execline installation upgrade" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+
+<h2> to 2.0.0.0 </h2>
+
+<ul>
+ <li> The build system has completely changed. It is now a standard
+<tt>./configure &amp;&amp; make &amp; &amp; sudo make install</tt>
+build system. See the enclosed INSTALL file for details. </li>
+ <li> slashpackage is not activated by default. </li>
+ <li> shared libraries are neither built nor used by default. </li>
+ <li> skalibs dependency bumped to 2.0.0.0 </li>
+ <li> The obsolete -E option to backtick, forx and forbacktickx is not
+supported anymore. </li>
+ <li> multisubstitute does not support the "backtick" directive
+anymore. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: language design and grammar</title>
+    <meta name="Description" content="execline: language design and grammar" />
+    <meta name="Keywords" content="execline language design grammar script shell" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>execline</tt> language design and grammar </h1>
+
+<a name="principles" />
+<h2> <tt>execline</tt> principles </h2>
+
+<p>
+ Here are some basic Unix facts:
+</p>
+
+<ul>
+ <li> Unix programs are started with the <tt>execve()</tt>
+system call, which takes 3 arguments: the command name (which
+we won't discuss here because it's redundant in most cases),
+the command line <em>argv</em>, which specifies the program name and its
+arguments, and the environment <em>envp</em>. </li>
+ <li> The <em>argv</em> structure makes it easy to read some
+arguments at the beginning of <em>argv</em>, perform some action,
+then <tt>execve()</tt> into the rest of <em>argv</em>. For
+instance, the <tt>nice</tt> command works that way:
+<pre> nice -10 echo blah </pre> will read <tt>nice</tt> and <tt>-10</tt>
+from the argv, change the process' <em>nice</em> value, then exec into
+the command <tt>echo blah</tt>. This is called
+<a href"http://en.wikipedia.org/wiki/Chain_loading">chain loading</a>
+by some people, and <a href="http://www.faqs.org/docs/artu/ch07s02.html">
+Bernstein chaining</a> by others. </li>
+ <li> The purpose of the environment is to preserve some state across
+<tt>execve()</tt> calls. This state is usually small: most programs
+keep their information in the filesystem. </li>
+ <li> A <em>script</em> is basically a text file whose meaning is a
+sequence of actions, i.e. calls to Unix programs, with some control
+over the execution flow. You need a program to interpret your script.
+Traditionally, this program is <tt>/bin/sh</tt>: scripts are written
+in the <em>shell</em> language. </li>
+ <li> The shell reads and interprets the script command after command.
+That means it must preserve a state, and stay in memory while the
+script is running. </li>
+ <li> Standard shells have lots of built-in features and commands, so
+they are big. Spawning (i.e. <tt>fork()</tt>ing then <tt>exec()</tt>ing)
+a shell script takes time, because the shell program itself must be
+initialized. For simple programs like <tt>nice -10 echo blah</tt>,
+a shell is overpowered - we only need a way to make an <em>argv</em>
+from the "<tt>nice -10 echo blah</tt>" string, and <tt>execve()</tt>
+into that <em>argv</em>. </li>
+ <li> Unix systems have a size limit for <em>argv</em>+<em>envp</em>,
+but it is high. POSIX states that this limit must not be inferior to
+4&nbsp;KB - and most simple scripts are smaller than that. Modern systems
+have a much higher limit: for instance, it is 64&nbsp;KB on FreeBSD-4.6,
+and 128&nbsp;KB on Linux. </li>
+</ul>
+
+<p>
+ Knowing that, and wanting lightweight and efficient scripts, I
+wondered: "Why should the interpreter stay in memory while the script
+is executing&nbsp;? Why not parse the script once and for all, put
+it all into one <em>argv</em>, and just execute into that <em>argv</em>,
+relying on external commands (which will be called from within the
+script) to control the execution flow&nbsp;?"
+</p>
+
+<p> <tt>execline</tt> was born. </p>
+
+<ul>
+ <li> <tt>execline</tt> is the first script language to rely
+<em>entirely</em> on chain loading. An execline script is a
+single <em>argv</em>, made of a chain of programs designed to
+perform their action then <tt>exec()</tt> into the next one. </li>
+ <li> The <a href="execlineb.html">execlineb</a> command is a
+<em>launcher</em>: it reads and parses a text file, converting it
+to an <em>argv</em>, then executes into that <em>argv</em>. It
+does nothing more. </li>
+ <li> Straightforward scripts like <tt>nice -10 echo blah</tt>
+will be run just as they are, without the shell overhead.
+Here is what the script could look like:
+<pre>
+#!/command/execlineb -P
+nice -10
+echo blah
+</pre>
+ </li>
+ <li> More complex scripts will include calls to other <tt>execline</tt>
+commands, which are meant to provide some control over the process state
+and execution flow from inside an <em>argv</em>. </li>
+</ul>
+
+<a name="grammar" />
+<h2> Grammar of an execline script </h2>
+
+<p>
+An execline script can be parsed as follows:
+</p>
+
+<pre>
+ &lt;instruction&gt; = &lt;&gt; | external options &lt;arglist&gt; &lt;instruction&gt; | builtin options &lt;arglist&gt; &lt;blocklist&gt; &lt;instruction&gt;
+ &lt;arglist&gt; = &lt;&gt; | arg &lt;arglist&gt;
+ &lt;blocklist&gt; = &lt;&gt; | &lt;block&gt; &lt;blocklist&gt;
+ &lt;block&gt; = { &lt;arglist&gt; } | { &lt;instrlist&gt; }
+ &lt;instrlist&gt; = &lt;&gt; | &lt;instruction&gt; &lt;instrlist&gt;
+</pre>
+
+<p>
+(This grammar is ambivalent, but much simpler to understand than the
+non-ambivalent ones.)
+</p>
+
+<ul>
+ <li> An execline script is valid if it reduces to an
+<em>instruction</em>. </li>
+ <li> The empty <em>instruction</em> is the same as the <tt>true</tt>
+command: when an execline component must exec into the empty
+instruction, it exits 0. </li>
+ <li> Basically, every non-empty <em>instruction</em>, be it
+"<em>builtin</em>" - an execline command - or "<em>external</em>"
+- a program such as <tt>echo</tt> or <tt>cp</tt> - takes a number of
+arguments, the <em>arglist</em>, then executes into a (possibly empty)
+<em>instruction</em>. </li>
+ <li> Some <em>builtin</em>s are special because they also take a
+non-empty <em>blocklist</em> after their <em>arglist</em>. For instance,
+the <a href="foreground.html">foreground</a> command takes an empty
+<em>arglist</em> and one <em>block</em>: <pre>
+ #!/command/execlineb -P
+ foreground { sleep 1 } echo blah
+</pre> is a valid <a href="execlineb.html">execlineb</a> script.
+The <a href="foreground.html">foreground</a> command uses the
+<tt>sleep&nbsp;1</tt> <em>block</em> then execs into the
+remaining <tt>echo&nbsp;blah</tt> <em>instruction</em>. </li>
+</ul>
+
+<a name="features"></a>
+<h2> execline features </h2>
+
+<p>
+ <tt>execline</tt> commands can perform some transformations on
+their <em>argv</em>, to emulate some aspects of a shell. Here are
+descriptions of these features:
+</p>
+
+<ul>
+ <li> <a href="el_semicolon.html">Block management</a> </li>
+ <li> <a href="el_substitute.html">Variable substitution</a> </li>
+</ul>
+
+</body>
+</html>

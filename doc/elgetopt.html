@@ -1,0 +1,60 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the elgetopt command</title>
+ <meta name="Description" content="execline: the elgetopt command" />
+ <meta name="Keywords" content="execline command elgetopt options arguments" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+<p />
+
+<h1> The <tt>elgetopt</tt> program </h1>
+
+<p>
+<tt>elgetopt</tt> performs <tt>getopt</tt>-style parsing on the
+arguments to an execline script.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     elgetopt <em>optstring</em> <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>elgetopt</tt> expects to find a valid number <em>n</em> of
+arguments in the <tt>#</tt> environment variable, and <em>n</em>+1
+environment variables <tt>0</tt>, <tt>1</tt>, ..., <tt><em>n</em></tt>.
+It exits 100 if it is not the case. </li>
+ <li> <tt>elgetopt</tt> <a href="el_pushenv.html">pushes</a>
+environment variables starting with <tt>ELGETOPT_</tt>. To get the
+previous values back, use
+<a href="emptyenv.html"><tt>emptyenv&nbsp;-o</tt></a>. </li>
+ <li> <tt>elgetopt</tt> looks into <tt>1</tt>, <tt>2</tt>... for options,
+as specified by <em>optstring</em>, which is a standard <tt>getopt</tt>
+string. </li>
+ <li> If the <tt>-<em>c</em></tt> switch is recognized, <tt>elgetopt</tt>
+sets the <tt>ELGETOPT_<em>c</em></tt> environment variable. The value
+of that variable is the argument to the <tt>-<em>c</em></tt> switch if
+it has one, and 1 otherwise. </li>
+ <li> After setting all recognized options, <tt>elgetopt</tt> makes
+new <tt>#</tt>, <tt>1</tt>, <tt>2</tt>... "positional parameters" with
+what remains. </li>
+ <li> <tt>elgetopt</tt> then execs into <em>prog...</em>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> GNU-style options are not supported. </li>
+</ul>
+
+</body>
+</html>

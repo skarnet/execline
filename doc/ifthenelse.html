@@ -1,0 +1,59 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the ifthenelse command</title>
+  <meta name="Description" content="execline: the ifthenelse command" />
+  <meta name="Keywords" content="execline command ifthenelse" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>ifthenelse</tt> program </h1>
+
+<p>
+<tt>ifthenelse</tt> performs a conditional alternative.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     ifthenelse [ -X ] [ -s ] { <em>progif...</em> } { <em>progthen...</em> } { <em>progelse...</em> } <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>ifthenelse</tt> reads
+<em>progif...</em>, <em>progthen...</em> and <em>progelse...</em> in 3
+consecutive <a href="el_semicolon.html">blocks</a>. </li>
+ <li> <tt>ifthenelse</tt> runs <em>progif...</em> as a child process
+and waits for it to complete. </li>
+ <li> If <em>progif...</em> crashes (i.e. is killed by a signal), <tt>ifthenelse</tt>
+exits 1 with an error message. </li>
+ <li> If <em>progif...</em> exits zero, <tt>ifthenelse</tt> runs
+<em>progthen...</em> as a child process, else it runs <em>progelse...</em>. </li>
+ <li> <tt>ifthenelse</tt> waits for its child to complete and puts the exit
+status in the <tt>?</tt> environment variable. It then
+execs into <em>prog...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-X</tt>&nbsp;: if <em>progif</em> crashes, do not exit; proceed
+as if it had returned false. </li>
+ <li> <tt>-s</tt>&nbsp;: magic scoping hack. This option does powerful but
+ugly things, and is left undocumented on purpose. </li>
+</ul>
+
+</body>
+</html>

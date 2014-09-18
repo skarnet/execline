@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the getpid program</title>
+    <meta name="Description" content="execline: the getpid program" />
+    <meta name="Keywords" content="execline command getpid process id variable" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>getpid</tt> program </h1>
+
+<p>
+<tt>getpid</tt> stores its process ID in a given environment variable,
+then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     getpid <em>var</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>getpid</tt> stores its PID in the <em>var</em> variable, then
+execs into <em>prog</em> with its arguments.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <em>var</em> must be given without a dollar&nbsp;! </li>
+ <li> <em>var</em> must not contain <tt>=</tt>. </li>
+</ul>
+
+</body>
+</html>

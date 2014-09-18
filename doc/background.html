@@ -1,0 +1,57 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the background command</title>
+ <meta name="Description" content="execline: the background command" />
+ <meta name="Keywords" content="execline command background" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>background</tt> program </h1>
+
+<tt>background</tt> launches a command in the background, then goes on
+with the execution flow.
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     background [ -d ] { <em>prog1...</em> } <em>prog2...</em>
+</pre>
+
+<ul>
+ <li> <tt>background</tt> reads a <em>prog1...</em> command in a
+<a href="el_semicolon.html">block</a> and unquotes it. </li>
+ <li> It spawns a child executing <em>prog1...</em>. </li>
+ <li> It sets the <tt>!</tt> environment
+variable to the pid of the <em>prog1...</em> process. </li>
+ <li> It then execs into <em>prog2...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-d</tt>&nbsp;: doublefork. If the <tt>-d</tt> option is set,
+<em>prog1...</em> will run as a grandchild of <tt>background</tt>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>background <em>prog1...</em> "" <em>prog2...</em></tt> is
+equivalent to <tt>sh -c '<em>prog1...</em> & ; exec <em>prog2...</em>'</tt>. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the execline-shell script</title>
+ <meta name="Description" content="execline: the execline-shell script" />
+ <meta name="Keywords" content="execline script execline-shell" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>execline-shell</tt> script </h1>
+
+<p>
+<tt>execline-shell</tt> executes <tt>$HOME/.execline-shell</tt>
+with the arguments it is given.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     /etc/execline-shell
+</pre>
+
+<ul>
+ <li> <tt>execline-shell</tt> transforms itself into
+<tt>${HOME}/.execline-shell $@</tt>. </li>
+ <li><tt>${HOME}/.execline-shell</tt> must be readable and
+executable by the user. It must exec into an interactive
+shell with <tt>$@</tt> as its argument.</li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>execline-shell</tt> is meant to be used as the <tt>SHELL</tt>
+environment variable value. It allows one to specify his favourite shell and
+shell configuration in any language, since the <tt>${HOME}/.execline-shell</tt>
+file can be any executable program. <tt>${HOME}/.execline-shell</tt> can be seen
+as a portable <tt>.<em>whatever</em>rc</tt> file. </li>
+ <li> As an administrator-modifiable configuration file, <tt>execline-shell</tt>
+provided in execline's <tt>etc/</tt> subdirectory, and should be copied by
+the administrator to <tt>/etc</tt>. </li>
+</ul>
+
+</body>
+</html>

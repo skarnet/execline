@@ -1,0 +1,69 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the multidefine command</title>
+  <meta name="Description" content="execline: the multidefine command" />
+  <meta name="Keywords" content="execline command multidefine" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>multidefine</tt> program </h1>
+
+<p>
+<tt>multidefine</tt> splits a value and defines several variables at once,
+then executes another program.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     multidefine [ -0 ] [ -r ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>value</em> { <em>variables...</em> } <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>multidefine</tt> reads a <a href="el_semicolon.html">block</a>
+containing a list of variables. </li>
+ <li> <tt>multidefine</tt> <a href="el_transform.html">splits</a>
+<em>value</em>, and performs other operations depending on the given
+options. </li>
+ <li> <tt>multidefine</tt> performs
+<a href="el_substitute.html">parallel substitution</a> on
+<em>prog...</em>, using all of the <em>variables</em> in the block as keys.
+The first word in the split <em>value</em> is assigned to the first
+<em>variable</em>, the second word is assigned to the second <em>variable</em>,
+and so on. Every <em>variable</em> is substituted with exactly one word. </li>
+ <li> If a <em>variable</em> is the empty word, then the word in the split
+<em>value</em> corresponding to its position is not substituted. So you can
+use empty words to pad the list of variables and only perform substition
+on the relevant fields. </li>
+ <li> <tt>multidefine</tt> then execs into the modified <em>prog...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-0</tt>&nbsp;: if there are more <em>variables</em> in the block than
+there are words in the split <em>value</em>, the excess variables
+will be replaced with zero word. Without this option, the excess variables are
+replaced with the empty word. </li>
+ <li> <tt>-r</tt>&nbsp;: behave similarly to the "read" shell command.
+If there are more words in the split <em>value</em> than there are
+<em>variables</em> in the block, the last variable will be replaced with all
+the remaining words (and will be split). Without this option, the last variable
+is replaced with a single word, and the excess words are lost. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+#!/command/execlineb
+define e "#!/command/execlineb
+define e $q${E}${q}
+env e=$e
+define q ${b}${q}
+define b ${b}${b}
+importas E e
+echo $e"
+env e=$e
+define q \"
+define b \\
+importas E e
+echo $e

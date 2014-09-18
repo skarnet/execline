@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the heredoc program</title>
+    <meta name="Description" content="execline: the heredoc program" />
+    <meta name="Keywords" content="execline command heredoc here document" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>heredoc</tt> program </h1>
+
+<p>
+<tt>heredoc</tt> runs a command with a certain string fed to a
+file descriptor.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     heredoc [ -d ] <em>fd</em> <em>string</em> <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>heredoc</tt> execs into <em>prog...</em> with
+<em>string</em> available on the <em>fd</em> file
+descriptor. </li>
+ <li> <em>string</em> must not contain a null character. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-d</tt>&nbsp;: run the process feeding <em>string</em> to <em>fd</em>
+as a grandchild of <tt>heredoc</tt>. This is meant to prevent a zombie
+from hanging around if <em>prog...</em> has read <em>string</em> and fails
+to wait for its children.</li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>heredoc</tt> is meant to be used in place of the shell
+<tt>&lt;&lt;</tt> construct, which includes <em>here-documents</em>
+into scripts. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+#!/command/execlineb
+define A "#!/command/execlineb"
+define B "fine G $ foreground { echo ${C} }
+echo -n foreground ${D} define C ${E}${C}${R}foreground
+${D} echo ${G}${D}A${H} ${H}${R}foreground
+${D} echo define A ${G}${D}C${H}${G}${D}A${H}${G}${D}C${H} ${H}${R}echo
+-n define B ${G}${D}C${H} ${H}${R}foreground
+${D} echo -n ${G}${D}B${H} ${H}${R}foreground
+${D} multisubstitute ${D} define C ${E}${C} define D ${E}${D}${R}define
+E ${E}${E}${R}define
+H ${E}${H} define R ${C}${R}${C} ${H} de } echo ${B}"
+foreground { define C \"
+foreground { echo ${A} }
+foreground { echo define A ${C}${A}${C} }
+echo -n define B ${C} }
+foreground { echo -n ${B} }
+foreground { multisubstitute { define C \" define D \{
+define E \\
+define H \} define R "
+" } define G $ foreground { echo ${C} }
+echo -n foreground ${D} define C ${E}${C}${R}foreground
+${D} echo ${G}${D}A${H} ${H}${R}foreground
+${D} echo define A ${G}${D}C${H}${G}${D}A${H}${G}${D}C${H} ${H}${R}echo
+-n define B ${G}${D}C${H} ${H}${R}foreground
+${D} echo -n ${G}${D}B${H} ${H}${R}foreground
+${D} multisubstitute ${D} define C ${E}${C} define D ${E}${D}${R}define
+E ${E}${E}${R}define
+H ${E}${H} define R ${C}${R}${C} ${H} de } echo ${B}

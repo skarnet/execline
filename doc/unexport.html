@@ -1,0 +1,46 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the unexport command</title>
+  <meta name="Description" content="execline: the unexport command" />
+  <meta name="Keywords" content="execline command unexport environment" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>unexport</tt> program </h1>
+
+<p>
+<tt>unexport</tt> removes a variable from the environment, then
+executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     unexport <em>var</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>unexport</tt> removes the <em>var</em> variable from the
+environment, then execs into <em>prog</em> with
+its arguments.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> Unsetting <em>var</em> is quite different from setting it to an
+empty value. Shell scripts usually won't make the distinction;
+execline does. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+20020610
+	packaging: corrected admin/ sticky bit
+20020615
+	bug: in execline.c, GETVAR couldn't read $1.
+          Fix: swap MARK and PUSH.
+	version: 0.11
+20020812
+	bug: in execline.c, no actual shiftval support for $#
+	  Fix: obvious.
+	bug: in wait.c, sizeof(unsigned int *) instead of sizeof(unsigned int)
+	  Fix: obvious.
+	ui: fdclose doesn't die anymore on invalid fd
+	ui: fixed error messages in import, export, for, forbacktick
+	ui: removed unexported commands (moved to skaembutils)
+	internal: updated libstddjb
+	internal: fixed <errno.h> inclusion (for __errno_location)
+	packaging: fixed package/compat, split package/compile
+	doc: fixed if.html
+	version: 0.12
+20020830
+	compat: package did not build on Solaris.
+	  Fix: suppress ln -f, add ||true sentinels
+	internal: added <unistd.h> to src/libstddjb/lock_*.c
+	internal: optimized emptyenv
+	packaging: revamped package/compile
+	version: 0.13
+20021001
+	deps: added btdep to skalibs, removed included libstddjb
+	code: added loopwhile
+20021002
+	bug: fixed getopt handling in wait.c
+	internal: misc code cleanups
+	version: 0.14
+20021108
+	internal: removed warnings
+	deps: moved to skalibs-0.14
+	internal: sgetopt unneeded - switched to subgetopt.
+	internal: pre-alloc'ed execline lex buffer to avoid reallocs
+	internal: simplified ifthenelse tests
+20021112
+	code: added pipe
+20021114
+	code: added fdget
+20021124
+	doc: fixed import/importas interface
+	doc: fixed forbacktick's -n option warning
+20030105
+	deps: moved to skalibs-0.17
+	code: added execlineb, documented it
+20030106
+	code: moved pipe to piperw, fdget to fdreserve
+	version: 0.15
+20030111
+	code: added emptyenv -c, shift, elgetopt, dollarat
+20030114
+	deps: moved to skalibs-0.19
+	code: rewrote execline(b) parser, new semantics
+20030218
+	code: wrote substalloc, el_substitute (that was the hard part)
+	internal: rewrote el_replace(s) to use el_substitute
+	ui: changed el_argv_make prototype
+	packaging: fixed package/upgrade
+20030219
+	ui: changed el_split prototype
+	code: wrote el_splitnetstring, rewrote dollarat
+	code: rewrote for, forbacktick
+	ui: discarded el_dollar
+	code: wrote elgetpositionals
+20030220
+	code: wrote multisubstitute
+	ui: rewrote execline-startup and execline-shell, moved them to .../etc
+20030310
+	doc: wrote all new doc
+20030315
+	code: added elglob, updated multisubstitute
+20030317
+	portability: FreeBSD-4.6 and glob() problem
+	  workaround: used shglob
+	deps: moved to skalibs-0.21
+20030320
+	version: 1.00
+20030322
+	internal: separated libexls1.a
+	code: removed el_replace*
+	code: rewrote multisubstitute et al.
+	version: 1.01
+20030330
+	deps: switched to skalibs-0.22 (fixed incompatible gen_alloc)
+20030407
+	internal: used gccattributes
+	doc: added quine
+	version: 1.02
+	bug: variable recognition too greedy
+	  fix: added 0-termination test
+	doc: added more quines
+	version: 1.03
+	ui: changed el_splitc behaviour (thx dam)
+	bug: substitution allowed empty keys
+	  fix: added checking code
+20030408
+	doc: added Paul's ultimate quine
+20030409
+	deps: moved to skalibs-0.23
+	version: 1.04
+20030502
+	deps: moved to skalibs-0.24
+20030514
+	code: added getpid, removed pid support in execline
+	doc: documented it
+	doc: added links to el_substitute.html and co
+	packaging: added conf-compile, moved import to it
+	code: added -x to redirfd
+20030519
+	bug: wrong optind in exls1_elglob
+	  fix: added "optind = 1" line
+20030615
+	deps: moved to skalibs-0.26
+	packaging: exported exec, exit, runblock
+20030620
+	deps: moved to skalibs-0.27 (sigh)
+	packaging: updated scripts
+	code: added pushenv, popenv, and friends
+20030725
+	deps: moved to skalibs-0.29
+	bug: possible bad pointer after realloc in substword()
+	  fix: rewrote substword() interface to use stralloc *, not char *
+	internal: merged subsualloc.c with el_substitute.c
+20030727
+	internal: removed execline's pre-alloc'ed lex buffer (useless)
+	doc: documented pushenv and friends (at last)
+	version: 1.05
+20031008
+	portability: reverted to old src/sys/print-ar.sh so that building
+	  works on OpenBSD. Re-added btdep to sysdeps. Sigh.
+	ui: removed deprecated el_argv_*
+	internal: merged exls1_import[as].c
+	internal: created libexlp.a
+	code: added -u option to import and importas
+	code: added -S option to execline(b)
+	doc: reflected changes
+20031107
+	code: added stricter numeric arg checking (scan_uint0)
+	deps: moved to skalibs-0.34
+20040102
+	deps: moved to skalibs-0.36
+20040229
+	doc: added el_transform.html, removed el_split.html
+	doc: modified el_substitute.html, propagated changes
+	deps: moved to skalibs-0.40
+	version: 1.06
+20041109
+	code: added homeof
+20070119
+        code: added support for runblock -r 0
+	ui: added -0 option to forbacktick and dollarat
+        ui: added -i option to import and importas
+	doc: reflected changes
+20070122
+	ui: added -i option to backtick
+	doc: reflected change
+	doc: suppressed hyperlinks in section headers
+20070125
+	deps: moved to skalibs-0.46
+	version: 1.07
+20070917
+	code: added tryexec
+20081007
+	code: added breakcode option to for and forbacktick
+	code: added ifte
+20081020
+	portability: export overwrites EXPORT on HFS+ (MacOS fs)
+	  workaround: rename EXPORT to EXPORT-
+20081022
+	packaging: /command wasn't relative to conf-sp_root
+	  fix: update package/upgrade
+	portability: strip -x is broken on some Solaris platforms
+	  workaround: empty default conf-compile/conf-striplibs
+20081023
+	packaging: separated compat links, moved to new prepare...
+	doc: reflected ui changes
+	version: 1.08
+20091214
+	code: added fdblock and ifelse
+	ui: added -X flag to if, ifte, ifthenelse
+20100119
+	code: added homeof, multidefine, loopwhilex, forx, forbacktickx
+	doc: reflected changes
+	bug: ifte didn't parse end of script correctly
+	  fix: rewrite the incriminated part
+	deps: moved to skalibs-1.0.0
+	packaging: moved to new system
+20110628
+	version: 1.1.0
+20110810
+	build: libexecline objects were not built as PIC when required
+	  fix: add x bits in deps-obj/
+	version: 1.1.1
+	ui: changed forx/forbacktickx behaviour when breakcode happens
+	version: 1.1.2
+20120214
+	internal: changed bools from unsigned char to int
+	code: added -x option to if
+	doc: added multidefine to el_substitute.html's list
+20120220
+	version: 1.1.3
+20120312
+	bug: typo in loopwhile.c, added in 1.1.3. Thx lory.fulgi@infinito.it.
+	   fix: obvious.
+20120313
+	version: 1.1.4
+20120606
+	code: added el_obsolescent() to mark loopwhile, for, forbacktick
+	code: changed forx, forbacktickx and backtick to not substitute
+	ui: added -E/-e options to those programs
+	doc: reflected changes
+20120612
+	version: 1.1.5
+20121111
+	bug: background didn't set LASTPID
+	  fix: correctly initialize the fmt array
+	version: 1.1.6
+20121115
+	doc: properly documented if's -x option
+20130124
+	build: added FHS support
+	internal: switched to space quoter and null terminator (tm).
+	doc: reflected changes
+20130212
+	version: 1.2.0
+20130403
+	bug: typo in fdreserve.c ('0' instead of 0)
+	  impact: envvars weren't properly exported
+	  fix: obvious
+	version: 1.2.1
+20130527
+	bug: bad #ifdef in forx.c and backtick.c
+	  impact: forx didn't work, bad USAGE in backtick
+	  fix: obvious
+	ui: changed USAGE macros to execlineb syntax
+	version: 1.2.2
+20130913
+	internal: fixed deprecated macros
+20130927
+	version: 1.2.3
+20131012
+	bug: pipeline crashed on empty remainder
+	  fix: don't try to be smart with df = 0, just die
+20131019
+	version: 1.2.4
+20131101
+	ui: changed LASTPID to ! and LASTEXITCODE to ?
+	  added EXECLINE_OLD_VARNAMES for compatibility
+20131105
+	version: 1.3.0
+20140325
+	bug: segfault with empty remainder in backtick
+	  fix: add a line to catch the case and exit
+	version: 1.3.1
+20140410
+	build: moved to 4-number versioning
+	deps: moved to skalibs-1.6.0.0
+20140506
+	ui: removed obsolete for, forbacktick, loopwhile
+	ui: removed default -DEXECLINE_DOSUBST_COMPAT
+20140514
+	version: 1.3.1.1

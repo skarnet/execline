@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the emptyenv program</title>
+    <meta name="Description" content="execline: the emptyenv program" />
+    <meta name="Keywords" content="execline command emptyenv" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>emptyenv</tt> program </h1>
+
+<p>
+<tt>emptyenv</tt> empties the current environment, or cleans it up; then
+executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     emptyenv [ -p ] <em>prog...</em>
+     emptyenv -c <em>prog...</em>
+     emptyenv [ -o ] [ -P ] <em>prog...</em>
+</pre>
+
+<p>
+By default, <tt>emptyenv</tt> unsets all environment variables, then
+execs into <em>prog</em> with its arguments. Options control which
+environment variables are unset.
+</p>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-p</tt>&nbsp;: keep the <tt>PATH</tt> environment variable. </li>
+ <li> <tt>-c</tt>&nbsp;: clean up. Do not empty the environment. Instead,
+remove every variable used internally by the execline programs, to avoid
+any interference with or information leakage to external programs. </li>
+ <li> <tt>-o</tt>&nbsp;: <a href="el_pushenv.html#pop">pop</a> environment
+variables starting with <tt>ELGETOPT_</tt>. You might want to do this
+before executing a final program from a script that uses
+<a href="elgetpositionals.html">elgetpositionals</a>. </li>
+ <li> <tt>-P</tt>&nbsp;: <a href="el_pushenv.html#pop">pop</a> environment
+variables starting with <tt>#</tt>, <tt>0</tt> to <tt>9</tt>, and
+<tt>EXECLINE_</tt>. You might want to do this before executing a final program
+from a script launched by <a href="execlineb.html">execlineb</a>. </li>
+</ul>
+
+</body>
+</html>

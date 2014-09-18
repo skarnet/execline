@@ -1,0 +1,77 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the forbacktickx command</title>
+  <meta name="Description" content="execline: the forbacktickx command" />
+  <meta name="Keywords" content="execline command forbacktickx" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>forbacktickx</tt> program </h1>
+
+<p>
+<tt>forbacktickx</tt> runs a program and uses its output as loop elements to
+run another program.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     forbacktickx [ -p | -x breakcode ] [ -n ] [ -C | -c ] [ -0 | -d <em>delim</em> ] <em>variable</em> { <em>gen...</em> } <em>loop...</em>
+</pre>
+
+<ul>
+ <li> <tt>forbacktickx</tt> reads a
+<a href="el_semicolon.html">block</a>,
+<em>gen...</em>, and unquotes it. </li>
+ <li> It runs <em>gen...</em> as a child process. <em>gen</em>'s
+output must not contain a null character. </li>
+ <li> It reads <em>gen</em>'s output as it needs,
+<a href="el_transform.html#split">splitting</a> it automatically. </li>
+ <li> For every argument <em>x</em> in the split output,
+<tt>forbacktickx</tt> runs <em>loop...</em> as a child process, with
+<em>variable</em>=<em>x</em> added to its environment. </li>
+ <li><tt>forbacktickx</tt> then exits 0.
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-p</tt>&nbsp;: parallel mode. Do not wait for a <em>loop...</em>
+instance to finish before spawning the next one. <em>forbacktickx</em> will
+still wait for all instances of <em>loop</em> to terminate before
+exiting, though. </li>
+ <li> <tt>-0</tt>&nbsp;: accept null characters from <em>gen</em>'s output,
+using them as delimiters. If this option and a <tt>-d</tt> option are
+used simultaneously, the rightmost one wins. </li>
+ <li> <tt>-x</tt>&nbsp;<em>breakcodes</em>&nbsp;: <em>breakcodes</em> must
+be a comma-separated list of exit codes. If at some point <em>loop...</em>
+exits with a code listed in <em>breakcodes</em>, forbacktickx will not keep
+looping, but will exit immediately with the same exit code. This doesn't apply
+if the <tt>-p</tt> option has been given. </li>
+ <li> Other options are used to <a href="el_transform.html">control
+the substitution mechanism</a> for every <em>x</em>. Of course, you can't
+split <em>x</em>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> You can start <em>loop...</em> with "import <em>variable</em> unexport <em>variable</em>"
+to perform variable substitution.
+</ul>
+ 
+</body>
+</html>

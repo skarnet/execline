@@ -1,0 +1,59 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the execline-startup script</title>
+ <meta name="Description" content="execline: the execline-startup script" />
+ <meta name="Keywords" content="execline execline-startup startup login script .profile" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>execline-startup</tt> script </h1>
+
+<p>
+<tt>execline-startup</tt> performs some system-specific
+login initialization, then executes <tt>${HOME}/.execline-loginshell</tt>.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     /etc/execline-startup
+</pre>
+
+<ul>
+ <li> <tt>execline-startup</tt> sets the <tt>SHELL</tt>
+environment variable to <tt>/etc/execline-shell</tt>.
+It then performs some system-specific initialization, and
+transforms itself into <tt>${HOME}/.execline-loginshell $@</tt>. </li>
+ <li><tt>${HOME}/.execline-loginshell</tt> must be readable and
+executable by the user. It must exec into <tt>$SHELL $@</tt>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>execline-startup</tt> is an
+<a href="execlineb.html">execlineb</a> script; hence, it is readable
+and modifiable. It is meant to be modified by the system administrator
+to perform system-specific login-time initialization. </li>
+ <li> As a modifiable configuration file, execline-startup is provided in execline's
+<tt>etc/</tt> subdirectory, and should be copied by the administrator
+to <tt>/etc</tt>. </li>
+ <li> <tt>execline-startup</tt> is meant to be used as a login shell.
+System administrators should manually add <tt>/etc/execline-startup</tt>
+to the <tt>/etc/shells</tt> file. The <tt>/etc/execline-startup</tt>
+file itself plays the role of the <tt>/etc/profile</tt> file, and
+<tt>${HOME}/.execline-loginshell</tt> plays the role of the
+<tt>${HOME}/.profile</tt> file.</li>
+</ul>
+
+</body>
+</html>

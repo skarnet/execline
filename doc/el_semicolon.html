@@ -1,0 +1,124 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="en" />
+<title>execline: block management</title>
+<meta name="Description" content="execline: block management" />
+<meta name="Keywords" content="execline block blocks null argument tilda semicolon el_semicolon" />
+<!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> Blocks </h1>
+
+<p>
+A command line (and thus an execline script) is one-dimensional. But a
+Unix execution flow can be <em>two</em>-dimensional: when two
+instructions are sequenced, for instance. In that case, we need a
+way to extract <em>two</em> command lines from <em>one</em> argv.
+That is precisely what <em>blocks</em> are made for.
+</p>
+
+<p>
+ execline commands that need more than one linear set of arguments
+use blocks. For instance, the
+<a href="foreground.html">foreground</a> command needs to spawn a
+first process, then execute into a second one. It reads the command
+line for the first process from a block, and the command line for the
+second process from the rest of the argv. In the following script:
+</p>
+<pre>
+ #!/command/execlineb
+ foreground { echo 1 } echo 2
+</pre>
+<p>
+ <tt>echo&nbsp;1</tt> is read from a block and spawned; then
+<tt>echo&nbsp;2</tt> is executed.
+</p>
+
+<h2> execlineb syntax </h2>
+
+<p>
+ In <a href="execlineb.html">execlineb</a> scripts, blocks are
+delimited by braces. They can be nested.
+</p>
+
+<h2> argv syntax </h2>
+
+<p>
+ execlineb reads and parses the script, and converts it into an <em>argv</em>
+(a simple Unix command line) with a different syntax for blocks. 
+In an argv, blocks are not delimited by braces;
+they are made of <em>quoted arguments</em> and terminated by an
+empty word (""). A quoted argument begins with a space.
+ Nested blocks are represented by arguments being
+quoted several times, i.e. having several spaces in front of them;
+an empty word inside a block
+gets quoted too, i.e. it will be represented as a series of
+spaces.
+</p>
+
+<p>
+ Actually, the block-reading commands know nothing about braces;
+they only understand the "quoted arguments + empty word" syntax.
+So if you want to use <a href="foreground.html">foreground</a>
+from your shell to sequence <tt>echo&nbsp;1</tt> and
+<tt>echo&nbsp;2</tt>, you will have to write
+</p>
+
+<pre>
+ $ foreground ' echo' ' 1' '' echo 2
+</pre>
+
+<p>
+ You do not really need to quote every argument inside a block in
+that simple case. The following command works as well:
+</p>
+
+<pre>
+ $ foreground echo 1 '' echo 2
+</pre>
+
+<p>
+ However, this is bad practice, because it leads to a security hole:
+commands that perform
+<a href="el_substitute.html">substitution</a> inside a block may
+produce empty words, which may modify your script's execution flow.
+</p>
+
+<pre>
+ $ define FOO '' foreground ' echo' ' ${FOO}' ' rm' ' -rf' ' /' '' echo blah
+</pre>
+
+<p>
+ is safe, whereas
+</p>
+
+<pre>
+ $ define FOO '' foreground echo '${FOO}' rm -rf / '' echo blah
+</pre>
+
+<p>
+ has very much unwanted results. (Don't try this at home.)
+</p>
+
+<p>
+ You can use the <tt>EXECLINE_STRICT</tt> environment variable to
+check proper block quoting. If that variable contains <tt>1</tt>,
+commands that read blocks will print a warning message everytime
+they find an unquoted argument inside a block. If that variable
+contains <tt>2</tt> or a bigger integer, commands will print an
+error message and die on unquoted arguments.
+<br /> You can use <a href="execlineb.html">execlineb</a>'s
+<tt>-w</tt> or <tt>-W</tt>
+switch to set <tt>EXECLINE_STRICT</tt> to <tt>1</tt> or <tt>2</tt>.
+</p>
+
+</body>
+</html>

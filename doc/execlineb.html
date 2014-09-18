@@ -1,0 +1,246 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-6" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the execlineb command</title>
+    <meta name="Description" content="execline: the execlineb command" />
+    <meta name="Keywords" content="execline command execlineb launcher" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>execlineb</tt> program </h1>
+
+<p>
+<tt>execlineb</tt> reads and executes a script.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> ] -c <em>script</em> [ <em>args...</em> ]
+</pre>
+
+<p>
+or
+</p>
+
+<pre>
+     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> ] <em>scriptfile</em> [ <em>args...</em> ]
+</pre>
+
+<p>
+or in an executable file:
+</p>
+
+<pre>
+#!/command/execlineb [ -qwWpPS<em>nmin</em> ]
+<em>script</em>
+</pre>
+
+<p>
+ <em>Parsing phase</em>.
+</p>
+
+<ul>
+ <li> <tt>execlineb</tt> reads and parses the script it is given.
+It exits 100 on a syntax error and 111 on a temporary error.
+It makes an <em>argv</em>, i.e. a system command line, with the
+parsed script. If the <em>argv</em> is empty, <tt>execlineb</tt>
+exits 0. </li>
+</ul>
+
+<p>
+ <em>Environment management phase</em>.
+</p>
+
+<ul>
+ <li> <em>Pushing the current stack frame.</em> If neither the
+<tt>-p</tt> nor the <tt>-P</tt> nor the <tt>-S</tt> option is set:
+<tt>execlineb</tt> <a href="el_pushenv.html">pushes</a>
+the current positional parameters, i.e. environment variables that
+start with <tt>#</tt>, <tt>0</tt>, <tt>1</tt>, ..., <tt>9</tt>.
+To get the previous values back, use
+<a href="emptyenv.html"><tt>emptyenv&nbsp;-P</tt></a>. </li>
+ <li> <em>Setting the new stack frame.</em> If neither the <tt>-P</tt>
+nor the <tt>-S</tt> option is set:
+ <ul>
+  <li> <tt>execlineb</tt> sets the <tt>#</tt> environment variable to
+the number <em>n</em> of <em>args</em> it is given. </li>
+  <li> It sets the <tt>0</tt> environment variable to the name
+of the script - or to the <tt>execlineb</tt> invocation name
+if the <tt>-c</tt> option is used. </li>
+  <li> It sets the <tt>1</tt>, <tt>2</tt>, ... <tt><em>n</em></tt>
+environment variables to the different <em>args</em>. </li>
+ </ul> </li>
+</ul>
+
+<p>
+ <em>Execution phase</em>.
+</p>
+
+<ul>
+ <li> <tt>execlineb</tt> executes into the <em>argv</em> it
+has built from the script.
+There is only one command line for the
+whole script: the <tt>execlineb</tt> binary is a <em>launcher</em>,
+whose sole purpose is to execute into that command line. It does
+not stay in memory like a traditional <em>interpreter</em> would. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-c&nbsp;<em>script</em></tt>&nbsp;: execute <em>script</em>, do not
+look for a file. </li>
+</ul>
+
+<p>
+ See below for the other options.
+</p>
+
+<h2> Syntax of scripts </h2>
+
+<p>
+ An execlineb script is a string that must not contain the null character.
+<tt>execlineb</tt> parses it and divides it into <em>words</em>.
+
+ The parser recognizes the following components:
+</p>
+
+<ul>
+ <li> <em>whitespace</em> is defined as spaces, tabs, newlines and
+carriage returns. Words are always separated by whitespace.</li>
+ <li> A <em>quoted string</em> begins with a doublequote (<tt>"</tt>)
+and ends with another doublequote. Quoted doublequotes must be prefixed
+by a backslash (<tt>\</tt>). Quoted strings always evaluate to exactly
+one word. For instance, <tt>""</tt> evaluates to the empty word. </li>
+ <li> The <tt>\a</tt>, <tt>\b</tt>, <tt>\t</tt>, <tt>\n</tt>, <tt>\v</tt>,
+<tt>\f</tt>, and <tt>\r</tt> sequences are recognized in quoted
+strings, and are converted to the ASCII numbers 7, 8, 9, 10, 11, 12 and
+13 respectively. </li>
+ <li> Inside a quoted string, backslashed
+newlines disappear completely. </li>
+ <li> <tt>\0x<em>ab</em></tt> sequences are recognized in quoted strings
+and evaluate to ASCII hexadecimal number <em>ab</em>. </li>
+ <li> <tt>\0<em>abc</em></tt> sequences are recognized in quoted strings
+and evaluate to ASCII octal number <em>abc</em>. </li>
+ <li> <tt>\<em>abc</em></tt> sequences are recognized in quoted strings
+and evaluate to ASCII decimal number <em>abc</em>. <em>a</em> must not
+be zero. </li>
+ <li> A comment starts with a <tt>#</tt> and ends with the line. Comments
+are not recognized inside quoted strings. </li>
+ <li> Anything else is an unquoted string, that can evaluate to
+zero or more words. </li>
+ <li> Any character can be escaped in unquoted strings by prepending
+it with a backslash. It works the same way in quoted strings, except
+for the special sequences described above. </li>
+</ul>
+
+<p>
+ You can see an example of distinct <tt>execlineb</tt> components
+<a href="componentsb.txt">here</a>.
+</p>
+
+<p>
+ In addition to that simple lexing,
+<tt>execlineb</tt> performs the following higher-level parsing:
+</p>
+
+<ul>
+   <li> A word consisting of a single <em>opening brace</em> (<tt>{</tt>)
+increments an internal level counter, <em>blevel</em>, and disappears from the
+<em>argv</em>. Quoted open braces do not have that behaviour. </li>
+ <li> A word consisting of a single <em>closing brace</em> (<tt>}</tt>)
+decrements <em>blevel</em>, and is replaced with the empty word.
+Quoted closing braces do not have that behaviour. </li>
+ <li> If <tt>execlineb</tt> finds that braces are unmatched (i.e.
+<em>blevel</em> goes below 0 during the parsing, or is not 0 at the end
+of the script), it exits 100 with an error message. </li>
+ <li> <tt>execlineb</tt> automatically quotes
+<a href="el_semicolon.html">blocks</a>. Which means that everytime it
+finds a word, it prepends it with <em>blevel</em> spaces. </li>
+</ul>
+
+<p>
+For proper execution, the sequence of words must follow
+the <a href="grammar.html">execline grammar</a>.
+</p>
+
+<h2> Options for block syntax checking </h2>
+
+<p>
+ External execline commands that read blocks, like
+<a href="foreground.html">foreground</a>, use the <tt>EXECLINE_STRICT</tt>
+environment variable: if it is set to 1, they will print a warning message
+on stderr if they find their blocks not to be properly quoted. If it is set
+to 2, they will also die. If it is set to 0, or unset, they won't complain
+at all.
+</p>
+
+<p>
+ Normally the <tt>EXECLINE_STRICT</tt> environment variable is
+inherited from the caller. You can
+force it unset, set to 1, or set to 2 by giving respectively the
+<tt>-q</tt>, <tt>-w</tt> or <tt>-W</tt> option to <tt>execlineb</tt>.
+</p>
+
+<h2> Options for environment management </h2>
+
+<p>
+ Normally, execline scripts are <em>reentrant</em>: environment variables
+potentially overwritten by <tt>execlineb</tt>, such as <tt>#</tt> or
+<tt>0</tt>, are
+<a href="el_pushenv.html">pushed</a>. This is the standard, safe
+behaviour. Nevertheless, it is rather costly, and may be unneeded for
+small scripts: for those cases, execline comes with two options
+that bypass the environment management. Be warned that the purpose
+of these options is <strong>optimization</strong>, and you should not
+use them if you're not familiar with the way execlineb uses the
+environment to store positional parameters. Alternatively, there's also
+an integrated substitution mechanism that doesn't make use
+of the environment at all.
+</p>
+
+<ul>
+ <li> The <tt>-p</tt> option will bypass the
+<a href="el_pushenv.html">push</a> phase: the current frame of positional
+parameters will be <em>overwritten</em>. The script will <em>not</em> be
+reentrant. </li>
+ <li> The <tt>-P</tt> option will bypass positional parameter handling
+<em>completely</em>: the environment will not be pushed, and positional
+parameters will be ignored. <tt>execlineb -P -c "<em>script</em>"</tt> is
+equivalent to, but more efficient than, <tt>execlineb -c
+"emptyenv -P <em>script</em>"</tt>. You should use the <tt>-P</tt> option
+only in standalone scripts that take no arguments, such as
+<a href="http://skarnet.org/software/s6/">s6</a>'s or 
+<a href="http://smarden.org/runit/">runit</a>'s <em>run scripts</em>. </li>
+ <li> The <tt>-S&nbsp;<em>nmin</em></tt> option <em>will</em> substitute the
+positional parameters - up to at least <em>nmin</em> - but <em>will not</em>
+push nor set environment
+variables. <tt>execlineb -S3 -c "<em>script</em>"</tt> is equivalent to,
+but more efficient than, <tt>execlineb -c "elgetpositionals -P3 emptyenv
+-P <em>script</em>"</tt>. See
+<a href="el_pushenv.html#integrated">the details</a>. </li>
+</ul>
+
+<h2> Current limitations </h2>
+
+<p>
+ <tt>execlineb</tt> builds and executes a unique
+<em>argv</em> with the script: hence scripts are subject to OS-dependent
+limitations such as the kernel buffer size for <em>argv</em> and <em>envp</em>
+ - at least 64 kB on most systems. This means that <tt>execlineb</tt> cannot
+execute arbitrarily large scripts. Be careful with deeply nested scripts too:
+without the <tt>-p</tt>/<tt>-P</tt>/<tt>-S</tt> option, each execlineb
+invocation uses up some space in the environment.
+</p>
+
+</body>
+</html>

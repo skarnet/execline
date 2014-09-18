@@ -1,0 +1,86 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the dollarat command</title>
+ <meta name="Description" content="execline: the dollarat command" />
+ <meta name="Keywords" content="execline command dollarat" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>dollarat</tt> program </h1>
+
+<p>
+<tt>dollarat</tt> prints the positional parameters of an execline script.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     dollarat [ -n ] [ -0 | -d <em>delimchar</em> ]
+</pre>
+
+<ul>
+ <li> <tt>dollarat</tt> reads the number <em>n</em> of "positional
+parameters" in the <tt>#</tt> environment variable. If that variable
+is not set or does not contain a valid <em>n</em>, <tt>dollarat</tt>
+exits 100. </li>
+ <li> <tt>dollarat</tt> prints the value of the <tt>1</tt> environment
+variable, then <em>delimchar</em>, then the value of the <tt>2</tt>
+environment variable... and so on until <tt><em>n</em></tt>. If one of
+these variables is not set, <tt>dollarat</tt> exits 100. </li>
+ <li> If everything runs OK, <tt>dollarat</tt> exits 0. This makes it
+one of the rare "exiting" execline commands. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-n</tt>&nbsp;: <em>chomp</em>. Do not print the last
+<em>delimchar</em>. </li>
+ <li> <tt>-d</tt>&nbsp;<em>delimchar</em>&nbsp;: use the character
+<em>delimchar</em> as separator between the arguments. Default: <tt>\n</tt>.
+If <em>delimchar</em> has more than one character, only the first one is
+used. If <em>delimchar</em> is the empty string, then <tt>dollarat</tt>
+will output the positional parameters as a
+<a href="el_transform.html#netstrings">sequence of netstrings</a> (and the
+<tt>-n</tt> option will be ignored). </li>
+ <li> <tt>-0</tt>&nbsp;: use the null character as separator. Any <tt>-d</tt>
+argument will be ignored. Warning: this option should only be used to feed
+data to programs that know how to handle null-separated lists. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> You can use <tt>dollarat&nbsp;-d&nbsp;""</tt> along with the
+<a href="forbacktickx.html">forbacktickx</a> command to reliably loop
+over the positional parameters:
+<pre>
+ #!/command/execlineb
+ forbacktickx -d "" ARG { dollarat -d "" }
+ dosomething $ARG
+</pre>
+
+ will call <tt>dosomething</tt> in turn on each argument to the script.
+That will work even if those arguments contain spaces, newlines,
+or other fancy characters. </li>
+
+ <li> Alternatively, instead of encoding data into a netstring, you can
+use a null-separated list, which will work the same way:
+<pre>
+ #!/command/execlineb
+ forbacktickx -0 ARG { dollarat -0 }
+ dosomething $ARG
+</pre> </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the ifelse command</title>
+  <meta name="Description" content="execline: the ifelse command" />
+  <meta name="Keywords" content="execline command ifelse" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://www.skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>ifelse</tt> program </h1>
+
+<p>
+ <tt>ifelse</tt> performs conditional execution, with two branches.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+<pre>
+     ifelse [ -X ] [ -n ] { <em>prog1...</em> } { <em>prog2...</em> } <em>prog3...</em>
+</pre>
+
+<ul>
+ <li> <tt>ifelse</tt> reads <em>prog1...</em> in a
+<a href="el_semicolon.html">block</a>. It forks and executes it,
+then waits for it to complete. </li>
+ <li> If <em>prog1</em> crashes, <tt>ifelse</tt> exits 1 with an error message. </li>
+ <li> If <em>prog1</em> exits with a return code equal to 0,
+<tt>ifelse</tt> execs into <em>prog2</em>. </li>
+ <li> Else <tt>ifelse</tt> execs into <em>prog3</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-n</tt>&nbsp;: negate the test. </li>
+ <li> <tt>-X</tt>&nbsp;: do not die if <em>prog1</em> crashes; treat a crash
+as a non-zero ("false") exit. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>ifelse <em>prog1...</em> "" <em>prog2...</em> "" <em>prog3...</em></tt> is
+roughly equivalent to <tt>sh -c '<em>prog1...</em> && exec <em>prog2...</em> || exec <em>prog3...</em>'</tt>. </li>
+</ul>
+
+</body>
+</html>

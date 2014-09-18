@@ -1,0 +1,94 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the elgetpositionals command</title>
+ <meta name="Description" content="execline: the elgetpositionals command" />
+ <meta name="Keywords" content="execline command elgetpositionals arguments positional parameters" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+<p />
+
+<h1> The <tt>elgetpositionals</tt> program </h1>
+
+<p>
+<tt>elgetpositionals</tt> substitutes the positional parameters of an execline script.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     elgetpositionals [ -P <em>sharp</em> ] <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>elgetpositionals</tt> reads the number <em>n</em> of "positional
+parameters" in the <tt>#</tt> environment variable. If that variable
+is not set or does not contain a valid <em>n</em>, <tt>elgetpositionals</tt>
+exits 100. </li>
+ <li> <tt>elgetpositionals</tt> performs some
+<a href="el_substitute.html">substitutions</a> in parallel on
+<em>prog...</em>:
+<ul>
+ <li> key: <tt>#</tt>, value: <em>n</em> </li>
+ <li> key: <tt>0</tt>, value: the value of the <tt>0</tt> environment
+variable </li>
+ <li> key: <tt>1</tt>, value: the value of the <tt>1</tt> environment
+variable </li>
+ <li> ... and so on until <em>n</em> (or <em>sharp</em> if it is
+greater than <em>n</em>). Those values are never transformed. </li>
+ <li> key: <tt>@</tt>, value: all values of the variables from <tt>1</tt> to
+<tt><em>n</em></tt>. This value is <a href="el_transform.html#split">split</a>
+into <em>n</em> words. </li>
+</ul>
+ If a variable between <tt>0</tt> and <tt><em>n</em></tt> does not
+exist, <tt>elgetpositionals</tt> exits 100.
+ </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-P</tt>&nbsp;<em>sharp</em>&nbsp;: substitute at least
+<em>sharp</em>+1 positional parameters, from 0 to
+max(<em>n</em>, <em>sharp</em>). If <em>n</em>&lt;<em>sharp</em>,
+positional parameters between <em>n</em>+1 and <em>sharp</em> are
+replaced with the empty string. Not having the <tt>-P</tt> switch is
+equivalent to having <tt>-P&nbsp;0</tt>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> A typical argument-taking execline script will
+often begin that way:
+<pre>
+ #!/command/execlineb
+ elgetopt <em>optstring</em>
+ elgetpositionals
+ <em>prog...</em>
+</pre>
+</li>
+ <li> If you are performing other substitutions that do not depend
+on the positional parameters, think about replacing the
+<tt>elgetpositionals</tt> call with a
+<a href="multisubstitute.html">multisubstitute</a> call containing
+the <tt>elgetpositionals</tt> directive. </li>
+ <li> If you are going to use the <a href="shift.html">shift</a>
+command, it is best to use <a href="importas.html">importas</a> to
+substitute the first positional parameters, then use <tt>shift</tt>,
+then <tt>elgetpositionals</tt>. That way, <tt>$@</tt> will correctly
+be replaced by the remaining arguments. More generally, you should
+try to use <tt>elgetpositionals</tt> as late as possible. </li>
+ <li> Use <tt>execlineb</tt>'s <tt>-S</tt> switch instead of
+<tt>elgetpositionals</tt> whenever you can. It is more efficient. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the loopwhilex command</title>
+  <meta name="Description" content="execline: the loopwhilex command" />
+  <meta name="Keywords" content="execline command loopwhilex" />
+  <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>loopwhilex</tt> program </h1>
+
+<p>
+<tt>loopwhilex</tt> performs a conditional loop.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     loopwhilex [ -n ] [ -x <em>exitcodes</em> ] <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>loopwhilex</tt> runs <em>prog...</em> as a child process and
+waits for it to complete. </li>
+ <li> As long as <em>prog</em> exits zero, <tt>loopwhile</tt> runs it again. </li>
+ <li> <tt>loopwhilex</tt> then exits 0. If <em>prog</em> was killed by a signal,
+<tt>loopwhilex</tt> exits that signal's number instead. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-x</tt>&nbsp;<em>exitcodes</em>&nbsp;: <em>exitcodes</em> must be a comma-separated
+list of valid exit codes. If this option is given, <tt>loopwhilex</tt> will exit if <em>prog...</em>'s
+exit code is listed in <em>breakcodes</em>. </li>
+ <li> <tt>-n</tt>&nbsp;: negate the test: run <em>prog...</em> as long as it exits non-zero
+(or exits a code that is <em>not</em> listed in <em>breakcodes</em>). </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>loopwhilex <em>prog</em>...</tt> is equivalent to <tt>loopwhilex -n -x 0 <em>prog...</em></tt>. </li>
+ <li> Be careful: execline <strong>maintains no state</strong>, in particular it
+uses <strong>no real variables</strong>, and environment will
+be of no use here since every instance of <em>prog...</em> runs as a separate
+child process. To avoid being stuck in an infinite loop, <em>prog...</em>
+should modify some external state - for instance, the filesystem. </li>
+</ul>
+
+</body>
+</html>
