@@ -1,4 +1,4 @@
-BIN_TARGETS = \
+BIN_TARGETS := \
 background \
 backtick \
 cd \
@@ -41,11 +41,13 @@ umask \
 unexport \
 wait
 
-SBIN_TARGETS =
-LIBEXEC_TARGETS =
+SBIN_TARGETS :=
+LIBEXEC_TARGETS :=
 
-SHARED_LIBS = \
-libexecline.so
+ifdef DO_SHARED
+SHARED_LIBS := libexecline.so
+endif
 
-STATIC_LIBS = \
-libexecline.a
+ifdef DO_STATIC
+STATIC_LIBS := libexecline.a
+endif

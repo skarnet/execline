@@ -344,9 +344,19 @@ if $allstatic ; then
   vpathd=
 fi
   echo "vpath lib%.so$vpathd"
-echo
-$static || echo "STATIC_LIBS :="
-$shared || echo "SHARED_LIBS :="
+echo "STATIC_LIBS :="
+echo "SHARED_LIBS :="
+if $static ; then
+  echo "DO_STATIC := 1"
+else
+  echo "DO_STATIC :="
+fi
+if $shared ; then
+  echo "DO_SHARED := 1"
+else
+  echo "DO_SHARED :="
+fi
+
 exec 1>&3 3>&-
 echo "  ... done."
 
