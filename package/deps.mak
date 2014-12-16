@@ -65,46 +65,87 @@ src/libexecline/exlsn_import.o src/libexecline/exlsn_import.lo: src/libexecline/
 src/libexecline/exlsn_main.o src/libexecline/exlsn_main.lo: src/libexecline/exlsn_main.c src/include/execline/execline.h src/include-local/exlsn.h
 src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_multidefine.lo: src/libexecline/exlsn_multidefine.c src/include/execline/execline.h src/include-local/exlsn.h
 
-background:src/execline/background.o -lexecline -lskarnet
-backtick:src/execline/backtick.o -lexecline -lskarnet
-cd:src/execline/cd.o -lskarnet
-define:src/execline/define.o -lexecline -lskarnet
-dollarat:src/execline/dollarat.o -lskarnet
-elgetopt:src/execline/elgetopt.o -lexecline -lskarnet
-elgetpositionals:src/execline/elgetpositionals.o -lexecline -lskarnet
-elglob:src/execline/elglob.o -lexecline -lskarnet
-emptyenv:src/execline/emptyenv.o -lexecline -lskarnet
-exec:src/execline/exec.o -lskarnet
-execlineb:src/execline/execlineb.o -lexecline -lskarnet
-exit:src/execline/exit.o -lskarnet
-export:src/execline/export.o -lskarnet
-fdblock:src/execline/fdblock.o -lskarnet
-fdclose:src/execline/fdclose.o -lskarnet
-fdmove:src/execline/fdmove.o -lskarnet
-fdreserve:src/execline/fdreserve.o -lskarnet
-forbacktickx:src/execline/forbacktickx.o -lexecline -lskarnet
-foreground:src/execline/foreground.o -lexecline -lskarnet
-forx:src/execline/forx.o -lexecline -lskarnet
-getpid:src/execline/getpid.o -lskarnet
-heredoc:src/execline/heredoc.o -lskarnet
-homeof:src/execline/homeof.o -lskarnet
-if:src/execline/if.o -lexecline -lskarnet
-ifelse:src/execline/ifelse.o -lexecline -lskarnet
-ifte:src/execline/ifte.o -lexecline -lskarnet
-ifthenelse:src/execline/ifthenelse.o -lexecline -lskarnet
-import:src/execline/import.o -lexecline -lskarnet
-importas:src/execline/importas.o -lexecline -lskarnet
-loopwhilex:src/execline/loopwhilex.o -lexecline -lskarnet
-multidefine:src/execline/multidefine.o -lexecline -lskarnet
-multisubstitute:src/execline/multisubstitute.o -lexecline -lskarnet
-pipeline:src/execline/pipeline.o -lexecline -lskarnet
-piperw:src/execline/piperw.o -lskarnet
-redirfd:src/execline/redirfd.o -lskarnet
-runblock:src/execline/runblock.o -lexecline -lskarnet
-shift:src/execline/shift.o -lexecline -lskarnet
-tryexec:src/execline/tryexec.o -lexecline -lskarnet
-umask:src/execline/umask.o -lskarnet
-unexport:src/execline/unexport.o -lskarnet
-wait:src/execline/wait.o -lexecline -lskarnet
-libexecline.a: src/libexecline/el_execsequence.o src/libexecline/el_getstrict.o src/libexecline/el_obsolescent.o src/libexecline/el_popenv.o src/libexecline/el_pushenv.o src/libexecline/el_semicolon.o src/libexecline/el_spawn0.o src/libexecline/el_spawn1.o src/libexecline/el_substandrun.o src/libexecline/el_substandrun_str.o src/libexecline/el_substitute.o src/libexecline/el_transform.o src/libexecline/el_vardupl.o src/libexecline/exlsn_define.o src/libexecline/exlsn_elglob.o src/libexecline/exlsn_import.o src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_exlp.o src/libexecline/exlsn_main.o src/libexecline/exlsn_free.o src/libexecline/exlp.o
-libexecline.so: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_obsolescent.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_import.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
+background: private EXTRA_LIBS :=
+background: src/execline/background.o -lexecline -lskarnet
+backtick: private EXTRA_LIBS :=
+backtick: src/execline/backtick.o -lexecline -lskarnet
+cd: private EXTRA_LIBS :=
+cd: src/execline/cd.o -lskarnet
+define: private EXTRA_LIBS :=
+define: src/execline/define.o -lexecline -lskarnet
+dollarat: private EXTRA_LIBS :=
+dollarat: src/execline/dollarat.o -lskarnet
+elgetopt: private EXTRA_LIBS :=
+elgetopt: src/execline/elgetopt.o -lexecline -lskarnet
+elgetpositionals: private EXTRA_LIBS :=
+elgetpositionals: src/execline/elgetpositionals.o -lexecline -lskarnet
+elglob: private EXTRA_LIBS :=
+elglob: src/execline/elglob.o -lexecline -lskarnet
+emptyenv: private EXTRA_LIBS :=
+emptyenv: src/execline/emptyenv.o -lexecline -lskarnet
+exec: private EXTRA_LIBS :=
+exec: src/execline/exec.o -lskarnet
+execlineb: private EXTRA_LIBS :=
+execlineb: src/execline/execlineb.o -lexecline -lskarnet
+exit: private EXTRA_LIBS :=
+exit: src/execline/exit.o -lskarnet
+export: private EXTRA_LIBS :=
+export: src/execline/export.o -lskarnet
+fdblock: private EXTRA_LIBS :=
+fdblock: src/execline/fdblock.o -lskarnet
+fdclose: private EXTRA_LIBS :=
+fdclose: src/execline/fdclose.o -lskarnet
+fdmove: private EXTRA_LIBS :=
+fdmove: src/execline/fdmove.o -lskarnet
+fdreserve: private EXTRA_LIBS :=
+fdreserve: src/execline/fdreserve.o -lskarnet
+forbacktickx: private EXTRA_LIBS :=
+forbacktickx: src/execline/forbacktickx.o -lexecline -lskarnet
+foreground: private EXTRA_LIBS :=
+foreground: src/execline/foreground.o -lexecline -lskarnet
+forx: private EXTRA_LIBS :=
+forx: src/execline/forx.o -lexecline -lskarnet
+getpid: private EXTRA_LIBS :=
+getpid: src/execline/getpid.o -lskarnet
+heredoc: private EXTRA_LIBS :=
+heredoc: src/execline/heredoc.o -lskarnet
+homeof: private EXTRA_LIBS :=
+homeof: src/execline/homeof.o -lskarnet
+if: private EXTRA_LIBS :=
+if: src/execline/if.o -lexecline -lskarnet
+ifelse: private EXTRA_LIBS :=
+ifelse: src/execline/ifelse.o -lexecline -lskarnet
+ifte: private EXTRA_LIBS :=
+ifte: src/execline/ifte.o -lexecline -lskarnet
+ifthenelse: private EXTRA_LIBS :=
+ifthenelse: src/execline/ifthenelse.o -lexecline -lskarnet
+import: private EXTRA_LIBS :=
+import: src/execline/import.o -lexecline -lskarnet
+importas: private EXTRA_LIBS :=
+importas: src/execline/importas.o -lexecline -lskarnet
+loopwhilex: private EXTRA_LIBS :=
+loopwhilex: src/execline/loopwhilex.o -lexecline -lskarnet
+multidefine: private EXTRA_LIBS :=
+multidefine: src/execline/multidefine.o -lexecline -lskarnet
+multisubstitute: private EXTRA_LIBS :=
+multisubstitute: src/execline/multisubstitute.o -lexecline -lskarnet
+pipeline: private EXTRA_LIBS :=
+pipeline: src/execline/pipeline.o -lexecline -lskarnet
+piperw: private EXTRA_LIBS :=
+piperw: src/execline/piperw.o -lskarnet
+redirfd: private EXTRA_LIBS :=
+redirfd: src/execline/redirfd.o -lskarnet
+runblock: private EXTRA_LIBS :=
+runblock: src/execline/runblock.o -lexecline -lskarnet
+shift: private EXTRA_LIBS :=
+shift: src/execline/shift.o -lexecline -lskarnet
+tryexec: private EXTRA_LIBS :=
+tryexec: src/execline/tryexec.o -lexecline -lskarnet
+umask: private EXTRA_LIBS :=
+umask: src/execline/umask.o -lskarnet
+unexport: private EXTRA_LIBS :=
+unexport: src/execline/unexport.o -lskarnet
+wait: private EXTRA_LIBS :=
+wait: src/execline/wait.o -lexecline -lskarnet
+libexecline.a:  src/libexecline/el_execsequence.o src/libexecline/el_getstrict.o src/libexecline/el_obsolescent.o src/libexecline/el_popenv.o src/libexecline/el_pushenv.o src/libexecline/el_semicolon.o src/libexecline/el_spawn0.o src/libexecline/el_spawn1.o src/libexecline/el_substandrun.o src/libexecline/el_substandrun_str.o src/libexecline/el_substitute.o src/libexecline/el_transform.o src/libexecline/el_vardupl.o src/libexecline/exlsn_define.o src/libexecline/exlsn_elglob.o src/libexecline/exlsn_import.o src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_exlp.o src/libexecline/exlsn_main.o src/libexecline/exlsn_free.o src/libexecline/exlp.o
+libexecline.so:  src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_obsolescent.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_import.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
