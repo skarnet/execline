@@ -3,7 +3,7 @@
 #include <skalibs/strerr2.h>
 #include "exlsn.h"
 
-#define USAGE "import [ -i | -D default ] [ -n ] [ -s ] [ -C | -c ] [ -d delim ] var prog..."
+#define USAGE "import [ -i | -D default ] [ -u ] [ -n ] [ -s ] [ -C | -c ] [ -d delim ] var prog..."
 
 int main (int argc, char const **argv, char const *const *envp)
 {

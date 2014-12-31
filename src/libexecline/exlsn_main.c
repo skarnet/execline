@@ -1,6 +1,8 @@
 /* ISC license. */
 
+#include <skalibs/bytestr.h>
 #include <skalibs/strerr2.h>
+#include <skalibs/genalloc.h>
 #include <execline/execline.h>
 #include "exlsn.h"
 

@@ -17,16 +17,18 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
   char const *defaultval = 0 ;
   char const *x ;
   int insist = 0 ;
+  int unexport = 0 ;
   blah.var = info->vars.len ;
   blah.value = info->values.len ;
 
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "iD:nsCcd:", &localopt) ;
+    register int opt = subgetopt_r(argc, argv, "iuD:nsCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
       case 'i' : insist = 1 ; break ;
+      case 'u' : unexport = 1 ; break ;
       case 'D' : defaultval = localopt.arg ; break ;
       case 'n' : si.chomp = 1 ; break ;
       case 's' : si.split = 1 ; break ;
@@ -46,6 +48,10 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
   {
     if (insist) strerr_dienotset(100, argv[as]) ;
     x = defaultval ;
+  }
+  else if (unexport)
+  {
+    if (!stralloc_catb(&info->modifs, argv[as], str_len(argv[as]) + 1)) goto err ;
   }
   if (!x) blah.n = 0 ;
   else
