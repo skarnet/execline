@@ -197,6 +197,9 @@ if test -z "$prefix" ; then
   if test "$includedir" = '$prefix/include' ; then
     includedir=/usr/include
   fi
+  if test "$sysdeps" = '$prefix/lib/skalibs/sysdeps' ; then
+    sysdeps=/usr/lib/skalibs/sysdeps
+  fi
 fi
 
 # Expand installation directories
