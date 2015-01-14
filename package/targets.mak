@@ -44,6 +44,12 @@ wait
 SBIN_TARGETS :=
 LIBEXEC_TARGETS :=
 
+ifdef DO_ALLSTATIC
+LIBEXECLINE := libexecline.a
+else
+LIBEXECLINE := libexecline.so
+endif
+
 ifdef DO_SHARED
 SHARED_LIBS := libexecline.so
 endif
