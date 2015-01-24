@@ -18,7 +18,7 @@ static char const *const commands[8] =
   0
 } ;
 
-static exlsnfunc_t *const functions[8] =
+static exlsnfunc_t_ref const functions[8] =
 {
   &exlsn_define,
   &exlsn_importas,
@@ -36,12 +36,10 @@ int main (int argc, char const **argv, char const *const *envp)
   PROG = "multisubstitute" ;
   if (!--argc) strerr_dieusage(100, USAGE) ;
 
- /* Read a block containing directives */
   argc1 = el_semicolon(++argv) ;
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
   if (argc1 + 1 == argc) strerr_dieusage(100, USAGE) ;
 
- /* Parse args and update the substitution info */
   while (argc1)
   {
     int n ;
@@ -59,6 +57,5 @@ int main (int argc, char const **argv, char const *const *envp)
     argv += n ; argc1 -= n ; argc -= n ;
   }
 
- /* Perform the substitution and exec */
   el_substandrun(argc-1, argv+1, envp, &info) ;
 }

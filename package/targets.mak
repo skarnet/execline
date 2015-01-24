@@ -15,6 +15,7 @@ export \
 fdblock \
 fdclose \
 fdmove \
+fdswap \
 fdreserve \
 forbacktickx \
 foreground \

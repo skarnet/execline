@@ -19,6 +19,7 @@ src/execline/fdblock.o src/execline/fdblock.lo: src/execline/fdblock.c
 src/execline/fdclose.o src/execline/fdclose.lo: src/execline/fdclose.c
 src/execline/fdmove.o src/execline/fdmove.lo: src/execline/fdmove.c
 src/execline/fdreserve.o src/execline/fdreserve.lo: src/execline/fdreserve.c
+src/execline/fdswap.o src/execline/fdswap.lo: src/execline/fdswap.c
 src/execline/forbacktickx.o src/execline/forbacktickx.lo: src/execline/forbacktickx.c src/include/execline/config.h src/include/execline/execline.h
 src/execline/foreground.o src/execline/foreground.lo: src/execline/foreground.c src/include/execline/execline.h
 src/execline/forx.o src/execline/forx.lo: src/execline/forx.c src/include/execline/config.h src/include/execline/execline.h
@@ -99,6 +100,8 @@ fdmove: private EXTRA_LIBS :=
 fdmove: src/execline/fdmove.o -lskarnet
 fdreserve: private EXTRA_LIBS :=
 fdreserve: src/execline/fdreserve.o -lskarnet
+fdswap: private EXTRA_LIBS :=
+fdswap: src/execline/fdswap.o -lskarnet
 forbacktickx: private EXTRA_LIBS :=
 forbacktickx: src/execline/forbacktickx.o ${LIBEXECLINE} -lskarnet
 foreground: private EXTRA_LIBS :=
