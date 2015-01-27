@@ -55,7 +55,7 @@ int main (int argc, char const **argv, char const *const *envp)
   close(fdwstat) ;
   if (wait_pid(pid, &fdwstat) < 0) strerr_diefu1sys(111, "wait_pid") ;
 
-  if (WIFSIGNALED(fdwstat) || WEXITSTATUS(fdwstat))
+  if (wait_status(fdwstat))
   {
     if (insist)
       if (WIFSIGNALED(fdwstat)) strerr_dief1x(111, "child process crashed") ;
