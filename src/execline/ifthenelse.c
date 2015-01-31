@@ -41,7 +41,6 @@ int main (int argc, char const **argv, char const *const *envp)
     strerr_dief1x(100, "unterminated else block") ;
 
   argv[argc1] = 0 ;
-  pid = fork() ;
   pid = el_spawn0(argv[0], argv, envp) ;
   if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
   if (wait_pid(pid, &wstat) == -1)
