@@ -39,10 +39,10 @@ waits for it to complete. </li>
 
 <ul>
  <li> <tt>-x</tt>&nbsp;<em>exitcodes</em>&nbsp;: <em>exitcodes</em> must be a comma-separated
-list of valid exit codes. If this option is given, <tt>loopwhilex</tt> will exit if <em>prog...</em>'s
-exit code is listed in <em>breakcodes</em>. </li>
+list of valid exit codes. If this option is given, <tt>loopwhilex</tt> will run as long as
+<em>prog...</em>'s exit code is <em>not</em> listed in <em>breakcodes</em>. </li>
  <li> <tt>-n</tt>&nbsp;: negate the test: run <em>prog...</em> as long as it exits non-zero
-(or exits a code that is <em>not</em> listed in <em>breakcodes</em>). </li>
+(or exits a code that <em>is</em> listed in <em>breakcodes</em>). </li>
 </ul>
 
 <h2> Notes </h2>
