@@ -52,9 +52,9 @@ int main (int argc, char const **argv, char const *const *envp)
     {
       char fmt[UINT_FMT] ;
       fmt[uint_fmt(fmt, WTERMSIG(wstat))] = 0 ;
-      strerr_dief2x(1, "child crashed with signal ", fmt) ;
+      strerr_dief2x(128 + WTERMSIG(wstat), "child crashed with signal ", fmt) ;
     }
-    if (wait_status(wstat))
+    if (wait_estatus(wstat))
     {
       argv += argc2 + 1 ;
       argc2 = argc3 ;

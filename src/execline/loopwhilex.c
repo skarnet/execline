@@ -8,10 +8,10 @@
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
-#define USAGE "loopwhilex [ -n ] [ -x exitcode,exitcode,... ] prog..."
+#define USAGE "loopwhilex [ -n ] [ -o okcode,okcode,... | -x exitcode,exitcode,... ] prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int isbreak (unsigned short *tab, unsigned int n, int code)
+static int isok (unsigned short *tab, unsigned int n, int code)
 {
   register unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
@@ -21,21 +21,26 @@ static int isbreak (unsigned short *tab, unsigned int n, int code)
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   int wstat ;
-  int not = 0, cont = 1 ;
-  unsigned short breakcodes[256] ;
+  int not = 0, cont = 1, rev = 0 ;
+  unsigned short okcodes[256] ;
   unsigned int nbc = 0 ;
   PROG = "loopwhilex" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "nx:", &l) ;
+      register int opt = subgetopt_r(argc, argv, "no:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
         case 'n' : not = 1 ; break ;
+        case 'o' :
+          rev = 0 ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          break ;
         case 'x' :
-          if (!ushort_scanlist(breakcodes, 256, l.arg, &nbc)) dieusage() ;
+          rev = 1 ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
         default : dieusage() ;
       }
@@ -46,17 +51,17 @@ int main (int argc, char const *const *argv, char const *const *envp)
 
   if (!nbc)
   {
-    breakcodes[0] = 0 ;
+    okcodes[0] = 0 ;
     nbc = 1 ;
-    not = !not ;
   }
+  else if (rev) not = !not ;
 
   while (cont)
   {
     pid_t pid = el_spawn0(argv[0], argv, envp) ;
     if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
     if (wait_pid(pid, &wstat) < 0) strerr_diefu1sys(111, "wait_pid") ;
-    cont = not == isbreak(breakcodes, nbc, wait_status(wstat)) ;
+    cont = not != isok(okcodes, nbc, wait_estatus(wstat)) ;
   }
-  return WIFSIGNALED(wstat) ? WTERMSIG(wstat) : 0 ;
+  return wait_estatus(wstat) ;
 }

@@ -11,10 +11,10 @@
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forx [ -p | -x breakcode,breakcode,... ] var { values... } command..."
+#define USAGE "forx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] var { values... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int isbreak (unsigned short *tab, unsigned int n, int code)
+static int isok (unsigned short *tab, unsigned int n, int code)
 {
   register unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
@@ -25,22 +25,27 @@ int main (int argc, char const **argv, char const *const *envp)
 {
   char const *x ;
   int argc1 ;
-  unsigned short breakcodes[256] ;
+  unsigned short okcodes[256] ;
   unsigned int nbc = 0 ;
-  int flagpar = 0 ;
+  int flagpar = 0, not = 1 ;
   PROG = "forx" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "epx:", &l) ;
+      register int opt = subgetopt_r(argc, argv, "epo:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
         case 'e' : break ; /* compat */
         case 'p' : flagpar = 1 ; break ;
+        case 'o' :
+          not = 0 ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          break ;
         case 'x' :
-          if (!ushort_scanlist(breakcodes, 256, l.arg, &nbc)) dieusage() ;
+          not = 1 ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
         default : dieusage() ;
       }
@@ -80,8 +85,8 @@ int main (int argc, char const **argv, char const *const *envp)
         int wstat ;
         if (wait_pid(pid, &wstat) == -1)
           strerr_diefu2sys(111, "wait for ", argv[argc1+1]) ;
-        if (isbreak(breakcodes, nbc, wait_status(wstat)))
-          return wait_status(wstat) ;
+        if (not == isok(okcodes, nbc, wait_estatus(wstat)))
+          return wait_estatus(wstat) ;
       }
     }
     if (flagpar)

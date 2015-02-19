@@ -17,6 +17,18 @@
 
 <h1> What has changed in execline </h1>
 
+<h2> in 2.1.0.0 </h2>
+
+<ul>
+ <li> skalibs dependency bumped to 2.3.1.0 </li>
+ <li> <a href="foreground.html">foreground</a> now sets the ? environment
+variable to 256 plus the signal number when its block was killed by a signal
+(in previous releases it used 126). </li>
+ <li> New rules for exit codes of forx, loopwhilex, forbacktickx </li>
+ <li> New <tt>-e</tt> option to <a href="loopwhilex.html">loopwhilex</a>,
+deprecating the <tt>-x</tt> option. </li>
+</ul>
+
 <h2> in 2.0.2.1 </h2>
 
 <ul>

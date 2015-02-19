@@ -15,9 +15,8 @@ int main (int argc, char const **argv, char const *const *envp)
 {
   int argc1, wstat ;
   pid_t pid ;
-  unsigned int not = 0 ;
+  int not = 0, flagnormalcrash = 0 ;
   unsigned short e = 1 ;
-  int flagnormalcrash = 0 ;
   PROG = "if" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
@@ -36,6 +35,7 @@ int main (int argc, char const **argv, char const *const *envp)
     }
     argc -= l.ind ; argv += l.ind ;
   }
+  if (e > 255) strerr_dief1x(100, "invalid exit code") ;
   argc1 = el_semicolon(argv) ;
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
   argv[argc1] = 0 ;
@@ -46,9 +46,9 @@ int main (int argc, char const **argv, char const *const *envp)
   {
     char fmt[UINT_FMT] ;
     fmt[uint_fmt(fmt, WTERMSIG(wstat))] = 0 ;
-    strerr_dief2x(1, "child crashed with signal ", fmt) ;
+    strerr_dief2x(128 + WTERMSIG(wstat), "child crashed with signal ", fmt) ;
   }
-  if (not == !wait_status(wstat)) return (int)e ;
+  if (not == !wait_estatus(wstat)) return e ;
   pathexec0_run(argv+argc1+1, envp) ;
   strerr_dieexec(111, argv[argc1+1]) ;
 }

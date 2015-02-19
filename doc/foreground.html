@@ -37,7 +37,8 @@
 executes it, then waits for it to complete. </li>
  <li> <tt>foreground</tt> sets the <tt>?</tt> environment
 variable to the exit code of <em>prog1</em>. If <em>prog1...</em>
-did not exit normally, the <tt>?</tt> value is 111. </li>
+was killed by a signal, the <tt>?</tt> value is 256 plus the signal
+number. </li>
  <li> <tt>foreground</tt> then execs into <em>prog2...</em>. </li>
 </ul>
 
@@ -51,6 +52,12 @@ wrap external commands that exit instead of natively supporting the
  <li> <tt>foreground <em>prog1...</em> "" <em>prog2...</em></tt> is
 equivalent to <tt>sh -c '<em>prog1...</em> ; exec <em>prog2...</em>'</tt>.
  </li>
+ <li> 256 and above are not valid exit codes for commands, so when the
+<tt>?</tt> environment variable contains 256 or more, it means that the
+previous command was killed by a signal. There is no ambiguity here, and
+<tt>?</tt> reports exactly what happened to the previous command;
+<tt>foreground</tt> does not exit, so there is no need for
+<a href="exitcodes.html">exit code approximation</a>. </li>
 </ul>
 
 </body>

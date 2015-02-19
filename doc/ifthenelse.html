@@ -38,7 +38,8 @@ consecutive <a href="el_semicolon.html">blocks</a>. </li>
  <li> <tt>ifthenelse</tt> runs <em>progif...</em> as a child process
 and waits for it to complete. </li>
  <li> If <em>progif...</em> crashes (i.e. is killed by a signal), <tt>ifthenelse</tt>
-exits 1 with an error message. </li>
+prints an error message, then exits 128 plus the number of the signal
+that killed <em>progif</em>. </li>
  <li> If <em>progif...</em> exits zero, <tt>ifthenelse</tt> runs
 <em>progthen...</em> as a child process, else it runs <em>progelse...</em>. </li>
  <li> <tt>ifthenelse</tt> waits for its child to complete and puts the exit

@@ -28,7 +28,7 @@
 </p>
 
 <pre>
-     forx [ -p | -x <em>breakcodes</em> ] <em>variable</em> { <em>args...</em> } <em>loop...</em>
+     forx [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] <em>variable</em> { <em>args...</em> } <em>loop...</em>
 </pre>
 
 <ul>
@@ -48,11 +48,17 @@ That block contains a list of <em>args</em>. </li>
 <em>loop...</em> to exit before spawning the next one. <tt>forx</tt>
 will still wait for all instances of <em>loop</em> to terminate before
 exiting, though. </li>
- <li> <tt>-x</tt>&nbsp;<em>breakcodes</em>&nbsp;: <em>breakcodes</em> must
+ <li> <tt>-o</tt>&nbsp;<em>okcodes</em>&nbsp;: <em>okcodes</em> must
 be a comma-separated list of exit codes. If the <tt>-p</tt> flag
-hasn't been given and <em>loop</em> exits with one of the codes in <em>breakcodes</em>,
-forx will not run the following instances of the loop, but exit immediately with the
-same exit code. </li>
+hasn't been given and <em>loop</em> exits with one of the codes in
+<em>okcodes</em>,
+forx will run the following instances of the loop, but if the exit code is
+not listed in <em>okcodes</em>, forx will exit immediately with an
+<a href="exitcodes.html">approximation</a> of the same exit code. </li>
+ <li> <tt>-x</tt>&nbsp;<em>breakcodes</em>&nbsp;: like the previous
+option, but with inverted meaning - the listed exit codes are codes
+that will make forx break the loop and exit, and the unlisted exit
+codes will make it keep looping. </li>
 </ul>
 
 <h2> Notes </h2>

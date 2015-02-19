@@ -46,14 +46,14 @@ int main (int argc, char const **argv, char const *const *envp)
   {
     char fmt[UINT_FMT] ;
     fmt[uint_fmt(fmt, WTERMSIG(wstat))] = 0 ;
-    strerr_dief2x(1, "child crashed with signal ", fmt) ;
+    strerr_dief2x(128 + WTERMSIG(wstat), "child crashed with signal ", fmt) ;
   }
-  if (not != !wait_status(wstat)) argv[argc1] = 0 ;
-  else
+  if (not == !wait_estatus(wstat))
   {
     argv += argc1 + 1 ;
     argv[argc2] = 0 ;
   }
+  else argv[argc1] = 0 ;
   pathexec0_run(argv, envp) ;
   strerr_dieexec(111, *argv) ;
 }

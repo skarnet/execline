@@ -24,31 +24,38 @@
 <h2> Interface </h2>
 
 <pre>
-     loopwhilex [ -n ] [ -x <em>exitcodes</em> ] <em>prog...</em>
+     loopwhilex [ -n ] [ -o <em>okcodes</em> | -x <em>breakcodes</em> ] <em>prog...</em>
 </pre>
 
 <ul>
  <li> <tt>loopwhilex</tt> runs <em>prog...</em> as a child process and
 waits for it to complete. </li>
  <li> As long as <em>prog</em> exits zero, <tt>loopwhile</tt> runs it again. </li>
- <li> <tt>loopwhilex</tt> then exits 0. If <em>prog</em> was killed by a signal,
-<tt>loopwhilex</tt> exits that signal's number instead. </li>
+ <li> <tt>loopwhilex</tt> then exits with an
+<a href="exitcodes.html">approximation</a> of the last <em>prog</em>
+invocation's exit code. </li>
 </ul>
 
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-x</tt>&nbsp;<em>exitcodes</em>&nbsp;: <em>exitcodes</em> must be a comma-separated
-list of valid exit codes. If this option is given, <tt>loopwhilex</tt> will run
-<em>prog...</em> as long as its exit code is <em>not</em> listed in <em>breakcodes</em>. </li>
- <li> <tt>-n</tt>&nbsp;: negate the test: run <em>prog...</em> as long as it exits non-zero
-(or exits a code that <em>is</em> listed in <em>breakcodes</em>). </li>
+ <li> <tt>-o</tt>&nbsp;<em>okcodes</em>&nbsp;: <em>okcodes</em> must
+be a comma-separated list of exit codes. <tt>loopwhilex</tt> will keep
+looping as long as <em>prog</em> exits with one of the codes in
+<em>okcodes</em>. </li>
+ <li> <tt>-x</tt>&nbsp;<em>breakcodes</em>&nbsp;: like the previous
+option, but with inverted meaning - the listed exit codes are codes
+that will break the loop and exit, and the unlisted exit codes will keep
+the loop running. </li>
+ <li> <tt>-n</tt>&nbsp;: negate the test. This option is now redundant,
+and may disappear soon. </li>
 </ul>
 
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>loopwhilex <em>prog</em>...</tt> is equivalent to <tt>loopwhilex -n -x 0 <em>prog...</em></tt>. </li>
+ <li> <tt>loopwhilex <em>prog</em>...</tt> is equivalent to <tt>loopwhilex -n -x 0 <em>prog...</em></tt>
+and <tt>loopwhilex -o 0 <em>prog</em>...</tt> </li>
  <li> Be careful: execline <strong>maintains no state</strong>, in particular it
 uses <strong>no real variables</strong>, and environment will
 be of no use here since every instance of <em>prog...</em> runs as a separate

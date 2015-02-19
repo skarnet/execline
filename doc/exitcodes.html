@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: exit codes</title>
+    <meta name="Description" content="execline: exit codes" />
+    <meta name="Keywords" content="execline exit codes" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> How to propagate exit codes up a process dynasty </h1>
+
+<p>
+ Say we have a parent process <em>P</em>, child of a grandparent process
+<em>G</em>, spawning a child process <em>C</em> and waiting for it.
+Either <em>C</em> dies normally with an exit code from 0 to 255, or it is
+killed by a signal.
+ How can we make sure that <em>P</em> reports to <em>G</em> what happened
+to <em>C</em>, with as much precision as possible&nbsp;?
+</p>
+
+<p>
+ The problem is, there's more information in a wstat (the
+structure filled in by
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/waitpid.html">waitpid()</a>)
+than a process can report by
+simply exiting. <em>P</em> could exit with the same exit code as <em>C</em>,
+but then what should it do if C has been killed by a signal&nbsp;?
+</p>
+
+<p>
+ An idea is to have <em>P</em> kill itself with the same signal that killed
+<em>C</em>.
+But that's actually not right, because <em>P</em> itself could be killed by a
+signal from another source, and G needs that information. "<em>P</em> has been
+killed by a signal" and "<em>C</em> has been killed by a signal" are two
+different informations, so they should not be reported in the same way.
+</p>
+
+<p>
+ So, any way you look at it, there is always more information than we
+can report.
+</p>
+
+<p>
+Shells have their own
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_08_02">convention</a>
+for reporting crashes, but since any exit code greater than 127 is reported
+as is, the information given by the shell is unreliable: "child exited 129"
+and "child was killed by SIGHUP" are indistinguishable. When shells get
+nested, all bets are off - the information conveyed by exit codes becomes
+devoid of meaning pretty fast. We need something better.
+</p>
+
+<h2> execline's solution </h2>
+
+<p>
+execline commands such as <a href="forx.html">forx</a>, that can report
+a child's exit code, proceed that way when they're in the position of
+<em>P</em>:
+</p>
+
+<ul>
+ <li> If <em>C</em> was killed by a signal: <em>P</em> exits 128 plus the
+signal number. </li>
+ <li> If <em>C</em> exited 128 or more: <em>P</em> exits 128. </li>
+ <li> Else, <em>P</em> exits with the same code as <em>C</em>. </li>
+</ul>
+
+<p>
+ Rationale:
+</p>
+
+<ul>
+ <li> 128+ exit codes are extremely rare and should report really
+problematic conditions; commands usually exit 127 or less. If <em>C</em>
+exits 128+, it's more important to convey the information
+"something really bad happened, but the <em>C</em> process itself was not
+killed by a signal" than the exact nature of the event. </li>
+ <li> Commands following that convention can be nested. If <em>P</em> exits
+129+, <em>G</em> knows that <em>C</em> was
+killed by a signal. If <em>G</em> also needs to report that to its parent,
+it will exit 128: <em>G</em>'s parent will not know the signal number, but
+it will know that <em>P</em> reported 128 or more, so either <em>C</em> or
+a scion of <em>C</em> had problems. </li>
+ <li> Exact information is reported in the common case. </li>
+</ul>
+
+</body>
+</html>

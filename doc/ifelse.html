@@ -34,7 +34,8 @@
  <li> <tt>ifelse</tt> reads <em>prog1...</em> in a
 <a href="el_semicolon.html">block</a>. It forks and executes it,
 then waits for it to complete. </li>
- <li> If <em>prog1</em> crashes, <tt>ifelse</tt> exits 1 with an error message. </li>
+ <li> If <em>prog1</em> crashes, <tt>ifelse</tt> prints an error message
+and exits 128 plus the number of the signal that killed <em>prog1</em>. </li>
  <li> If <em>prog1</em> exits with a return code equal to 0,
 <tt>ifelse</tt> execs into <em>prog2</em>. </li>
  <li> Else <tt>ifelse</tt> execs into <em>prog3</em>. </li>
