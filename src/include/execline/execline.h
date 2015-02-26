@@ -15,7 +15,6 @@
 
 extern int el_vardupl (char const *, char const *, unsigned int) gccattr_pure ;
 extern unsigned int el_getstrict (void) gccattr_const ;
-extern void el_obsolescent (void) ;
 
 
 /* Environment shifting */

@@ -1,43 +1,23 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <errno.h>
-#include <skalibs/sgetopt.h>
-#include <skalibs/bytestr.h>
-#include <skalibs/buffer.h>
-#include <skalibs/fmtscan.h>
-#include <skalibs/strerr2.h>
-#include <skalibs/stralloc.h>
-#include <skalibs/genalloc.h>
-#include <skalibs/env.h>
-#include <skalibs/djbunix.h>
-#include <skalibs/skamisc.h>
-#include <skalibs/netstring.h>
 #include <skalibs/ushort.h>
+#include <skalibs/bytestr.h>
+#include <skalibs/sgetopt.h>
+#include <skalibs/strerr2.h>
+#include <skalibs/djbunix.h>
 #include <execline/config.h>
 #include <execline/execline.h>
 
 #define USAGE "forbacktickx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int isok (unsigned short *tab, unsigned int n, int code)
-{
-  register unsigned int i = 0 ;
-  for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
-  return i < n ;
-}
+#define DELIM_DEFAULT " \n\r\t"
 
 int main (int argc, char const **argv, char const *const *envp)
 {
-  genalloc pids = GENALLOC_ZERO ; /* pid_t */
-  char const *delim = " \n\r\t" ;
-  unsigned int delimlen = 4 ;
-  char const *x ;
-  pid_t pidw ;
-  int fd, argc1 ;
-  unsigned short okcodes[256] ;
-  unsigned int nbc = 0 ;
-  int crunch = 0, chomp = 0, not = 1 ;
+  char const *delim = DELIM_DEFAULT ;
+  char const *codes = 0 ;
+  int crunch = 0, chomp = 0, not = 1, par = 0 ;
   PROG = "forbacktickx" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
@@ -48,100 +28,69 @@ int main (int argc, char const **argv, char const *const *envp)
       switch (opt)
       {
 	case 'e' : break ; /* compat */
-        case 'p' :
-        {
-          if (!genalloc_ready(pid_t, &pids, 2))
-            strerr_diefu1sys(111, "genalloc_ready") ;
-          break ;
-        }
+        case 'p' : par = 1 ; break ;
         case 'n' : chomp = 1 ; break ;
         case 'C' : crunch = 1 ; break ;
         case 'c' : crunch = 0 ; break ;
-        case '0' : delim = "" ; delimlen = 1 ; break ;
-        case 'd' : delim = l.arg ; delimlen = str_len(delim) ; break ;
+        case '0' : delim = 0 ; break ;
+        case 'd' : delim = l.arg ; break ;
         case 'o' :
+        {
+          unsigned short okcodes[256] ;
+          unsigned int nbc ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          codes = l.arg ;
           not = 0 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
+        }
         case 'x' :
-          not = 1 ;
+        {
+          unsigned short okcodes[256] ;
+          unsigned int nbc ;
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          codes = l.arg ;
+          not = 1 ;
           break ;
+        }
         default : dieusage() ;
       }
     }
     argc -= l.ind ; argv += l.ind ;
   }
   if (argc < 2) dieusage() ;
-  x = argv[0] ; if (!*x) dieusage() ;
-  argv++ ; argc-- ;
-  argc1 = el_semicolon(argv) ;
-  if (!argc1) strerr_dief1x(100, "empty block") ;
-  if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
-  argv[argc1] = 0 ;
-  pidw = el_spawn1(argv[0], argv, envp, &fd, 1) ;
-  if (!pidw) strerr_diefu2sys(111, "spawn ", argv[0]) ;
+  if (!argv[0][0]) dieusage() ;
+  if (!argv[1][0]) strerr_dief1x(100, "empty block") ;
   {
-    char buf[BUFFER_INSIZE] ;
-    buffer b = BUFFER_INIT(&buffer_read, fd, buf, BUFFER_INSIZE) ;
-    stralloc modif = STRALLOC_ZERO ;
-    unsigned int envlen = env_len(envp) ;
-    unsigned int modifstart = str_len(x)+1 ;
-    char const *newenv[envlen + 2] ;
-    if (!stralloc_ready(&modif, modifstart+1))
-      strerr_diefu1sys(111, "stralloc_ready") ;
-    byte_copy(modif.s, modifstart-1, x) ;
-    modif.s[modifstart-1] = '=' ;
-    for (;;)
+    unsigned int m = 0, i = 1 ;
+    char const *newargv[argc + 15] ;
+    newargv[m++] = EXECLINE_BINPREFIX "pipeline" ;
+    newargv[m++] = "--" ;
+    while (argv[i] && argv[i][0] != EXECLINE_BLOCK_END_CHAR && (!EXECLINE_BLOCK_END_CHAR || (argv[i][0] && argv[i][1])))
+      newargv[m++] = argv[i++] ;
+    if (!argv[i]) strerr_dief1x(100, "unterminated block") ;
+    newargv[m++] = "" ; i++ ;
+    newargv[m++] = EXECLINE_BINPREFIX "unexport" ;
+    newargv[m++] = "!" ;
+    newargv[m++] = EXECLINE_BINPREFIX "forstdin" ;
+    if (par) newargv[m++] = "-p" ;
+    if (chomp) newargv[m++] = "-n" ;
+    if (crunch) newargv[m++] = "-C" ;
+    if (!delim) newargv[m++] = "-0" ;
+    else if (str_diff(delim, DELIM_DEFAULT))
     {
-      pid_t pid ;
-      modif.len = modifstart ;
-      if (delimlen)
-      {
-        register int r = skagetlnsep(&b, &modif, delim, delimlen) ;
-        if (!r) break ;
-        else if (r < 0)
-        {
-          if (errno != EPIPE) strerr_diefu1sys(111, "skagetlnsep") ;
-          if (chomp) break ;
-        }
-        else modif.len-- ;
-        if ((modif.len == modifstart) && crunch) continue ;
-      }
-      else
-      {
-        unsigned int unread = 0 ;
-        if (netstring_get(&b, &modif, &unread) <= 0)
-        {
-          if (netstring_okeof(&b, unread)) break ;
-          else strerr_diefu1sys(111, "netstring_get") ;
-        }
-      }
-      if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_0") ;
-      if (!env_merge(newenv, envlen+2, envp, envlen, modif.s, modif.len))
-        strerr_diefu1sys(111, "merge environment") ;
-      pid = el_spawn0(argv[argc1 + 1], argv + argc1 + 1, newenv) ;
-      if (!pid) strerr_diefu2sys(111, "spawn ", argv[argc1+1]) ;
-      if (pids.s)
-      {
-        if (!genalloc_append(pid_t, &pids, &pid))
-          strerr_diefu1sys(111, "genalloc_append") ;
-      }
-      else
-      {
-        int wstat ;
-        if (wait_pid(pid, &wstat) < 0)
-          strerr_diefu2sys(111, "wait for ", argv[argc1 + 1]) ;
-        if (not == isok(okcodes, nbc, wait_estatus(wstat)))
-          return wait_estatus(wstat) ;
-      }
+      newargv[m++] = "-d" ;
+      newargv[m++] = delim ;
     }
-    stralloc_free(&modif) ;
+    if (codes)
+    {
+      newargv[m++] = not ? "-x" : "-o" ;
+      newargv[m++] = codes ;
+    }
+    newargv[m++] = "--" ;
+    newargv[m++] = argv[0] ;
+    while (argv[i]) newargv[m++] = argv[i++] ;
+    newargv[m++] = 0 ;
+    pathexec_run(newargv[0], newargv, envp) ;
+    strerr_dieexec(111, newargv[0]) ;
   }
-  fd_close(fd) ;
-  if (!genalloc_append(pid_t, &pids, &pidw))
-    strerr_diefu1sys(111, "genalloc_append") ;
-  if (!waitn(genalloc_s(pid_t, &pids), genalloc_len(pid_t, &pids)))
-    strerr_diefu1sys(111, "waitn") ;
-  return 0 ;
 }

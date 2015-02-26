@@ -1,6 +1,5 @@
 el_execsequence.o
 el_getstrict.o
-el_obsolescent.o
 el_popenv.o
 el_pushenv.o
 el_semicolon.o

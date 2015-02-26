@@ -18,9 +18,10 @@ fdclose			0755
 fdreserve		0755
 fdmove			0755
 fdswap			0755
-forx			0755
 forbacktickx		0755
 foreground		0755
+forstdin		0755
+forx			0755
 getpid			0755
 heredoc			0755
 homeof			0755

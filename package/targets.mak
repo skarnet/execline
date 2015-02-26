@@ -19,6 +19,7 @@ fdswap \
 fdreserve \
 forbacktickx \
 foreground \
+forstdin \
 forx \
 getpid \
 heredoc \
