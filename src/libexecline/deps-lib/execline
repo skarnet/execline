@@ -1,5 +1,8 @@
 el_execsequence.o
 el_getstrict.o
+el_parse.o
+el_parse_from_buffer.o
+el_parse_from_string.o
 el_popenv.o
 el_pushenv.o
 el_semicolon.o

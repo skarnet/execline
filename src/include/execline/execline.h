@@ -5,10 +5,21 @@
 
 #include <sys/types.h>
 #include <skalibs/gccattributes.h>
+#include <skalibs/buffer.h>
 #include <skalibs/stralloc.h>
 
 #define EXECLINE_BLOCK_QUOTE_CHAR ' '
 #define EXECLINE_BLOCK_END_CHAR '\0'
+
+
+/* Parsing */
+
+typedef int el_chargen_func_t (unsigned char *, void *) ;
+typedef el_chargen_func_t *el_chargen_func_t_ref ;
+
+extern int el_parse (stralloc *, el_chargen_func_t_ref, void *) ;
+extern int el_parse_from_string (stralloc *, char const *) ;
+extern int el_parse_from_buffer (stralloc *, buffer *) ;
 
 
 /* Basics */

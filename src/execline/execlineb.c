@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <skalibs/uint16.h>
+#include <errno.h>
 #include <skalibs/uint.h>
 #include <skalibs/allreadwrite.h>
 #include <skalibs/sgetopt.h>
@@ -9,158 +9,13 @@
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
+#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
 #include <execline/execline.h>
 #include "exlsn.h"
 
 #define USAGE "execlineb [ -p | -P | -S nmin ] [ -q | -w | -W ] [ -c commandline ] script args"
-
-typedef unsigned char chargen_t (void) ;
-
-/* Action (strongest 11 bits) */
-
-#define PUSH 0x8000
-#define PUSH0 0x4000
-#define PUSHSPECIAL 0x2000
-#define SETBASE 0x1000
-#define MARK 0x0800
-#define CALC 0x0400
-#define QUOTE 0x0200
-#define INCB 0x0100
-#define DECB 0x0080
-
-
-/* State (weakest 5 bits) */
-
-#define MAIN 0x00
-#define INWORD 0x01
-#define INWORDESC 0x02
-#define INSTR 0x03
-#define INSTRESC 0x04
-#define INREM 0x05
-#define OCT0 0x06
-#define OCT1 0x07
-#define OCT2 0x08
-#define DEC1 0x09
-#define DEC2 0x0a
-#define HEX0 0x0b
-#define HEX1 0x0c
-#define ENDCALC 0x0d
-#define OPENB 0x0e
-#define CLOSEB 0x0f
-#define ERROR 0x10
-#define ACCEPT 0x11
-
-static buffer b ;
-
-static void initbuffer (char const *s)
-{
-  static char buf[BUFFER_INSIZE] ;
-  int fd = open_readb(s) ;
-  if (fd < 0) strerr_diefu3sys(111, "open ", s, " for reading") ;
-  if (coe(fd) < 0) strerr_diefu2sys(111, "coe ", s) ;
-  buffer_init(&b, &buffer_read, fd, buf, BUFFER_INSIZE) ;
-}
-
-static unsigned char nextinbuffer ()
-{
-  char c ;
-  switch (buffer_get(&b, &c, 1))
-  {
-    case -1: strerr_diefu1sys(111, "read script") ;
-    case 0 : return 0 ;
-  }
-  return (unsigned char)c ;
-}
-
-static unsigned char const *string = 0 ;
-
-static unsigned char nextinstring ()
-{
-  static unsigned int pos = 0 ;
-  return string[pos++] ;
-}
-
-static int lex (stralloc *sa, chargen_t *next)
-{
-  static unsigned char const class[256] = "`aaaaaaaaadaaaaaaaaaaaaaaaaaaaaaafcbffffffffffffjhhhhhhhiifffffffmmmmmmfffffffffffffffffffffeffffggmmmgfffffffkfffkfkfkflffnfoffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" ;
-  static uint16 const table[16][16] =
-  {
-    { 0x0011, 0x4011, 0x0010, 0x0010, 0x0010, 0x0011, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x4091 },
-    { 0x0000, 0x4000, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x0100, 0x4080 },
-    { 0x0005, 0x8001, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x8001, 0x8001 },
-    { 0x0203, 0x0003, 0x8001, 0x0001, 0x8003, 0x0005, 0x0010, 0x0401, 0x0401, 0x0401, 0x0401, 0x0010, 0x0401, 0x0401, 0x0003, 0x0003 },
-    { 0x0000, 0x4000, 0x8001, 0x8003, 0x0003, 0x0000, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x0100, 0x4080 },
-    { 0x0202, 0x0002, 0x8001, 0x0004, 0x8003, 0x0005, 0x0010, 0x0404, 0x0404, 0x0404, 0x0404, 0x0010, 0x0404, 0x0404, 0x0002, 0x0002 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x8001, 0x8001 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x2003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x880c, 0x800d, 0x8403, 0x8001, 0x8001 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x9809, 0x0005, 0x8807, 0x8008, 0x800d, 0x800a, 0x800d, 0x880c, 0x800d, 0x8403, 0x8001, 0x8001 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x9809, 0x0005, 0x0010, 0x8403, 0x8403, 0x800a, 0x800d, 0x880c, 0x800d, 0x8403, 0x8001, 0x8001 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x1006, 0x0005, 0x8807, 0x8008, 0x800d, 0x800a, 0x800d, 0x880c, 0x800d, 0x8403, 0x8001, 0x8001 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x2003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x8001, 0x8001 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x8003, 0x0005, 0x100b, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x8001, 0x8001 },
-    { 0x8201, 0x8001, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x880c, 0x800d, 0x8403, 0x8001, 0x8001 },
-    { 0x820e, 0x8001, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x8001, 0x8001 },
-    { 0x820f, 0x8001, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x8001, 0x8001 }
-  } ;
-
-  unsigned int mark = 0 ;
-  unsigned int n = 0 ;
-  unsigned char state = MAIN, base = 10 ;
-  unsigned int blevel = 0 ;
-
-  while (state < ERROR)
-  {
-    unsigned char cur = (*next)() ;
-    register uint16 c = table[class[cur]-'`'][state] ;
-    state = c & 0x1F ;
-
- /* Actions. The order is important ! */
-
-    if (c & CALC)
-    {
-      unsigned int z ;
-      if (!stralloc_0(sa)) return -1 ;
-      sa->len = mark ;
-      uint_scan_base(sa->s + sa->len, &z, base) ;
-      sa->s[sa->len++] = (unsigned char)z ;
-    }
-    if (c & MARK) mark = sa->len ;
-    if (c & QUOTE)
-    {
-      char tilde = EXECLINE_BLOCK_QUOTE_CHAR ;
-      register unsigned int i = blevel ;
-      if (!stralloc_readyplus(sa, i<<1)) return -1 ;
-      while (i--) stralloc_catb(sa, &tilde, 1) ;
-    }
-    if (c & INCB) sa->len -= ++blevel ;
-    if (c & DECB)
-    {
-      if (!blevel--) return -4 ;
-      sa->s[--sa->len-1] = EXECLINE_BLOCK_END_CHAR ;
-      if (!EXECLINE_BLOCK_END_CHAR) sa->len-- ;
-    }
-    if (c & PUSH) if (!stralloc_catb(sa, (char *)&cur, 1)) return -1 ;
-    if (c & PUSHSPECIAL)
-    {
-      char x = 7 + byte_chr("abtnvfr", 7, cur) ;
-      if (!stralloc_catb(sa, &x, 1)) return -1 ;
-    }
-    if (c & PUSH0) if (n++, !stralloc_0(sa)) return -1 ;
-    if (c & SETBASE)
-      switch (cur)
-      {
-        case 'x' : base = 16 ; break ;
-        case '0' : base = 8 ; break ;
-        default : base = 10 ;
-      }
-  }
-  if (state == ERROR) return -2 ;
-  if (blevel) return -3 ;
-  return n ;
-}
-
 
 static int myexlp (stralloc *sa, char const *const *argv, unsigned int argc, unsigned int nmin, char const *dollar0)
 {
@@ -205,16 +60,15 @@ static int myexlp (stralloc *sa, char const *const *argv, unsigned int argc, uns
   return -1 ;
 }
 
-
 int main (int argc, char const *const *argv, char const *const *envp)
 {
-  chargen_t *next ;
   stralloc sa = STRALLOC_ZERO ;
   stralloc modif = STRALLOC_ZERO ;
   int nc ;
   int flagstrict = -1 ;
   unsigned int nmin = 0 ;
-  char const *dollar0 = argv[0] ;
+  char const *stringarg = 0 ;
+  char const *dollar0 = *argv ;
   unsigned int flagpushenv = 2 ;
   PROG = "execlineb" ;
   {
@@ -230,7 +84,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'q' : flagstrict = 0 ; break ;
         case 'w' : flagstrict = 1 ; break ;
         case 'W' : flagstrict = 2 ; break ;
-        case 'c' : string = (unsigned char *)l.arg ; break ;
+        case 'c' : stringarg = l.arg ; break ;
         case 'S' :
         {
           if (!uint0_scan(l.arg, &nmin)) strerr_dieusage(100, USAGE) ;
@@ -242,17 +96,24 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     argc -= l.ind ; argv += l.ind ;
   }
-  if (string) next = &nextinstring ;
+  if (stringarg) nc = el_parse_from_string(&sa, stringarg) ;
   else
   {
-    if (!argv[0]) strerr_dieusage(100, USAGE) ;
-    initbuffer(argv[0]) ;
-    dollar0 = argv[0] ;
-    argv++ ; argc-- ;
-    next = &nextinbuffer ;
+    char buf[BUFFER_INSIZE] ;
+    buffer b ;
+    int fd ;
+    int e ;
+    if (!argc--) strerr_dieusage(100, USAGE) ;
+    dollar0 = *argv++ ;
+    fd = open_readb(dollar0) ;
+    if (fd < 0) strerr_diefu3sys(111, "open ", dollar0, " for reading") ;
+    buffer_init(&b, &fd_readsv, fd, buf, BUFFER_INSIZE) ;
+    nc = el_parse_from_buffer(&sa, &b) ;
+    e = errno ;
+    fd_close(fd) ;
+    errno = e ;
   }
 
-  nc = lex(&sa, next) ;
   switch (nc)
   {
     case -4: strerr_dief2x(100, "unmatched ", "}") ;
