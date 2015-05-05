@@ -1,0 +1,98 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the trap command</title>
+ <meta name="Description" content="execline: the trap command" />
+ <meta name="Keywords" content="execline command trap signal" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>trap</tt> program </h1>
+
+<tt>trap</tt> traps signals and runs a variety of commands according
+to the signals it catches.
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     trap [ -x ] [ -t <em>millisecs</em> ]
+     {
+       [ timeout { <em>progtimeout...</em> } ]
+       [ SIGTERM { <em>progsigterm...</em> } ]
+       [ quit { <em>progsigquit...</em> } ]
+       [ 1 { <em>progsighup</em>... } ]
+       ...
+     }
+     <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>trap</tt> reads a sequence of directives in a
+<a href="el_semicolon.html">block</a>. It expects at least one
+directive. </li>
+ <li> Each directive is a keyword followed by a block. </li>
+ <li> The keyword can be the special word <tt>timeout</tt>, a signal
+name (case-insensitive, with or without the <tt>SIG</tt> prefix),
+ or a signal number. The block following it is a command line to
+run when the specified event occurs. </li>
+ <li> <tt>trap</tt> sets traps for the various directives it reads.
+A trap for <tt>SIGTERM</tt> will be triggered when the <tt>trap</tt>
+program receives a SIGTERM.
+A trap for <tt>timeout</tt> will be triggered when <em>millisecs</em>
+milliseconds elapse without a signal being caught. </li>
+ <li> It spawns a child executing <em>prog...</em>. </li>
+ <li> It sets the <tt>!</tt> environment
+variable to the pid of the <em>prog...</em> process. </li>
+ <li> Whenever it catches a signal, it spawns the program described in the
+corresponding directive. It will not spawn a program for the same signal
+twice: if the first subprocess is still active when another instance of the
+same signal arrives, this second instance is ignored. </li>
+ <li> When <em>prog...</em> exits, <tt>trap</tt> exits with an
+<a href="exitcodes.html">approximation</a> of the same exit code. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-x</tt>&nbsp;: forward signals. If this option is given,
+any signal that <tt>trap</tt> receives and that is not explicitly
+trapped will be sent to <em>prog</em>. By default, <tt>trap</tt> does
+not forward any signals, and does not ignore them either - for instance a
+SIGTERM, unless caught by a <tt>SIGTERM</tt> directive, will kill the
+<tt>trap</tt> process (and leave <em>prog</em> running). With the
+<tt>-x</tt> option, without a <tt>SIGTERM</tt> directive, a SIGTERM
+will be still be caught by <tt>trap</tt>, that will send it to
+<em>prog</em>. </li>
+ <li> <tt>-t&nbsp;<em>millisecs</em></tt>&nbsp;: if a <tt>timeout</tt>
+directive exists, the corresponding <em>progtimeout...</em> will be run
+every time <em>millisecs</em> milliseconds elapse without <tt>trap</tt>
+receiving a signal. By default, <em>millisecs</em> is 0, which means
+infinite (i.e. a <tt>timeout</tt> directive will never trigger). </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> Programs defined in command line directives can start with
+<tt><a href="import.html">import</a> !</tt> to retrieve the pid of
+<em>prog</em> in <tt>${!}</tt> </li>
+ <li> <tt>trap</tt> is a standard shell builtin, with similar
+functionality. It is more idiomatic, and probably more efficient,
+to use that builtin in shell scripts, and to only use the
+<tt>trap</tt> program in execline scripts. </li>
+</ul>
+
+</body>
+</html>

@@ -41,6 +41,7 @@ src/execline/piperw.o src/execline/piperw.lo: src/execline/piperw.c
 src/execline/redirfd.o src/execline/redirfd.lo: src/execline/redirfd.c
 src/execline/runblock.o src/execline/runblock.lo: src/execline/runblock.c src/include/execline/execline.h
 src/execline/shift.o src/execline/shift.lo: src/execline/shift.c src/include/execline/execline.h
+src/execline/trap.o src/execline/trap.lo: src/execline/trap.c src/include/execline/execline.h
 src/execline/tryexec.o src/execline/tryexec.lo: src/execline/tryexec.c src/include/execline/execline.h
 src/execline/umask.o src/execline/umask.lo: src/execline/umask.c
 src/execline/unexport.o src/execline/unexport.lo: src/execline/unexport.c
@@ -147,6 +148,8 @@ runblock: private EXTRA_LIBS :=
 runblock: src/execline/runblock.o ${LIBEXECLINE} -lskarnet
 shift: private EXTRA_LIBS :=
 shift: src/execline/shift.o ${LIBEXECLINE} -lskarnet
+trap: private EXTRA_LIBS :=
+trap: src/execline/trap.o ${LIBEXECLINE} -lskarnet
 tryexec: private EXTRA_LIBS :=
 tryexec: src/execline/tryexec.o ${LIBEXECLINE} -lskarnet
 umask: private EXTRA_LIBS :=

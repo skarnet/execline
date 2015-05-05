@@ -37,6 +37,7 @@ pipeline		0755
 redirfd			0755
 runblock		0755
 shift			0755
+trap			0755
 tryexec			0755
 umask			0755
 unexport		0755

@@ -38,6 +38,7 @@ piperw \
 redirfd \
 runblock \
 shift \
+trap \
 tryexec \
 umask \
 unexport \
