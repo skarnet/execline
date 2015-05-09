@@ -66,6 +66,7 @@ int main (int argc, char const **argv, char const *const *envp)
       if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
     }
     if (fd_move(w, fd) < 0) strerr_diefu1sys(111, "fd_move") ;
+    if (w == fd) uncoe(fd) ;
     {
 #ifdef EXECLINE_OLD_VARNAMES
       char fmt[UINT64_FMT * 2 + 10] = "!=" ;
