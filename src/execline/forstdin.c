@@ -147,11 +147,11 @@ int main (int argc, char const **argv, char const *const *envp)
     stralloc_free(&modif) ;
   }
   if (pids.s)
-  {
-    if (sig_restore(SIGCHLD) < 0)
-      strerr_diefu2sys(111, "restore", " SIGCHLD handler") ;
-    if (!waitn(genalloc_s(pid_t, &pids), genalloc_len(pid_t, &pids)))
-      strerr_diefu1sys(111, "waitn") ;
-  }
+    for (;;)
+    {
+      sig_block(SIGCHLD) ;
+      if (!pids.len) break ;
+      sig_pause() ;
+    }
   return 0 ;
 }

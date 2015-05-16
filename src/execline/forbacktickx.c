@@ -1,6 +1,9 @@
 /* ISC license. */
 
+#include <unistd.h>
+#include <errno.h>
 #include <skalibs/ushort.h>
+#include <skalibs/uint.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
@@ -62,7 +65,14 @@ int main (int argc, char const **argv, char const *const *envp)
   if (!argv[1][0]) strerr_dief1x(100, "empty block") ;
   {
     unsigned int m = 0, i = 1 ;
-    char const *newargv[argc + 15] ;
+    int fd = dup(0) ;
+    char const *newargv[argc + 18] ;
+    char fmt[UINT_FMT] ;
+    if (fd < 0)
+    {
+      if (errno != EBADF) strerr_diefu1sys(111, "dup stdin") ;
+    }
+    else fmt[uint_fmt(fmt, (unsigned int)fd)] = 0 ;
     newargv[m++] = EXECLINE_BINPREFIX "pipeline" ;
     newargv[m++] = "--" ;
     while (argv[i] && argv[i][0] != EXECLINE_BLOCK_END_CHAR && (!EXECLINE_BLOCK_END_CHAR || (argv[i][0] && argv[i][1])))
@@ -88,6 +98,17 @@ int main (int argc, char const **argv, char const *const *envp)
     }
     newargv[m++] = "--" ;
     newargv[m++] = argv[0] ;
+    if (fd < 0)
+    {
+      newargv[m++] = EXECLINE_BINPREFIX "fdclose" ;
+      newargv[m++] = "0" ;
+    }
+    else
+    {
+      newargv[m++] = EXECLINE_BINPREFIX "fdmove" ;
+      newargv[m++] = "0" ;
+      newargv[m++] = fmt ;
+    }
     while (argv[i]) newargv[m++] = argv[i++] ;
     newargv[m++] = 0 ;
     pathexec_run(newargv[0], newargv, envp) ;
