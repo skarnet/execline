@@ -98,7 +98,7 @@ int main (int argc, char const **argv, char const *const *envp)
     if (pids.s)
     {
       if (sig_catch(SIGCHLD, &parallel_sigchld_handler) < 0)
-        strerr_diefu2sys(111, "install", " SIGCHLD handler") ;
+        strerr_diefu1sys(111, "install SIGCHLD handler") ;
     }
     for (;;)
     {
@@ -128,12 +128,14 @@ int main (int argc, char const **argv, char const *const *envp)
       if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_0") ;
       if (!env_merge(newenv, envlen+2, envp, envlen, modif.s, modif.len))
         strerr_diefu1sys(111, "merge environment") ;
+      if (pids.s) sig_block(SIGCHLD) ;
       pid = el_spawn0(argv[1], argv + 1, newenv) ;
       if (!pid) strerr_diefu2sys(111, "spawn ", argv[1]) ;
       if (pids.s)
       {
         if (!genalloc_append(pid_t, &pids, &pid))
           strerr_diefu1sys(111, "genalloc_append") ;
+        sig_unblock(SIGCHLD) ;
       }
       else
       {
