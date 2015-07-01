@@ -254,8 +254,10 @@ doing a job, not at implementing a program's logic. </li>
 Unix systems have a limit on the <em>argv</em>+<em>envp</em> size;
 <tt>execline</tt> cannot execute scripts that are bigger than this limit.</li>
  <li> <tt>execline</tt> commands do not perform signal handling. It is not
-possible to trap signals inside an execline script. If you want to trap
-signals, write a specific C program, or use a shell. </li>
+possible to trap signals efficiently inside an execline script. The
+<a href="trap.html">trap</a> binary, part of the execline suite, provides a
+signal management primitive, but it is more limited and slower than its
+equivalent shell construct. </li>
  <li> Due to the <tt>execline</tt> design, maintaining a state is
 difficult. Information has to transit via environment variables or
 temporary files, which makes commands like
