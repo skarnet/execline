@@ -357,7 +357,7 @@ LDFLAGS := $LDFLAGS_AUTO
 LDFLAGS_NOSHARED := $LDFLAGS_NOSHARED
 CROSS_COMPILE := $cross
 
-vpath lib%a$vpaths
+vpath lib%.a$vpaths
 EOF
 if $allstatic ; then
   echo ".LIBPATTERNS := lib%.a"
