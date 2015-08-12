@@ -307,7 +307,7 @@ if $shared ; then
   tryldflag LDFLAGS_SHARED -Wl,-Bsymbolic
 fi
 
-LDFLAGS_SHARED="${LDFLAGS_SHARED}$addlibdpath"
+LDFLAGS_SHARED="${LDFLAGS_SHARED}${addlibdpath}"
 
 if $allstatic ; then
   LDFLAGS_NOSHARED="${LDFLAGS_NOSHARED}${addlibspath}"
