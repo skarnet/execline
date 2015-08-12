@@ -67,19 +67,20 @@ ifneq ($(strip $(ALL_BINS)),)
 endif
 
 install: install-dynlib install-libexec install-bin install-sbin install-lib install-include
-install-dynlib: $(SHARED_LIBS:lib%.so=$(DESTDIR)$(dynlibdir)/lib%.so)
+install-dynlib: $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(dynlibdir)/lib%.so)
 install-libexec: $(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%)
 install-bin: $(BIN_TARGETS:%=$(DESTDIR)$(bindir)/%)
 install-sbin: $(SBIN_TARGETS:%=$(DESTDIR)$(sbindir)/%)
-install-lib: $(STATIC_LIBS:lib%.a=$(DESTDIR)$(libdir)/lib%.a)
+install-lib: $(STATIC_LIBS:lib%.a.xyzzy=$(DESTDIR)$(libdir)/lib%.a)
 install-include: $(ALL_INCLUDES:src/include/$(package)/%.h=$(DESTDIR)$(includedir)/$(package)/%.h)
+install-data: $(ALL_DATA:src/etc/%=$(DESTDIR)$(datadir)/%)
 
 ifneq ($(exthome),)
 
 update:
 	exec $(INSTALL) -l $(notdir $(home)) $(DESTDIR)$(exthome)
 
-global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so=$(DESTDIR)$(sproot)/library.so/lib%.so) $(BIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%) $(SBIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
+global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so) $(BIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%) $(SBIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
 
 $(DESTDIR)$(sproot)/command/%: $(DESTDIR)$(home)/command/%
 	exec $(INSTALL) -D -l ..$(subst $(sproot),,$(exthome))/command/$(<F) $@
@@ -91,12 +92,15 @@ $(DESTDIR)$(sproot)/library.so/lib%.so: $(DESTDIR)$(dynlibdir)/lib%.so
 
 endif
 
-$(DESTDIR)$(dynlibdir)/lib%.so: lib%.so
+$(DESTDIR)$(datadir)/%: src/etc/%
+	exec $(INSTALL) -D -m 644 $< $@
+
+$(DESTDIR)$(dynlibdir)/lib%.so: lib%.so.xyzzy
 	$(INSTALL) -D -m 755 $< $@.$(version) && \
-	$(INSTALL) -l $<.$(version) $@.$(version_m) && \
-	$(INSTALL) -l $<.$(version_m) $@.$(version_M) && \
-	$(INSTALL) -l $<.$(version_M) $@.$(version_l) && \
-	exec $(INSTALL) -l $<.$(version_l) $@
+	$(INSTALL) -l $(@F).$(version) $@.$(version_m) && \
+	$(INSTALL) -l $(@F).$(version_m) $@.$(version_M) && \
+	$(INSTALL) -l $(@F).$(version_M) $@.$(version_l) && \
+	exec $(INSTALL) -l $(@F).$(version_l) $@
 
 $(DESTDIR)$(libexecdir)/% $(DESTDIR)$(bindir)/% $(DESTDIR)$(sbindir)/%: % package/modes
 	exec $(INSTALL) -D -m 600 $< $@
@@ -104,7 +108,7 @@ $(DESTDIR)$(libexecdir)/% $(DESTDIR)$(bindir)/% $(DESTDIR)$(sbindir)/%: % packag
 	if [ x$$owner != x ] ; then chown -- $$owner $@ ; fi && \
 	chmod $$mode $@ ; }
 
-$(DESTDIR)$(libdir)/lib%.a: lib%.a
+$(DESTDIR)$(libdir)/lib%.a: lib%.a.xyzzy
 	exec $(INSTALL) -D -m 644 $< $@
 
 $(DESTDIR)$(includedir)/$(package)/%.h: src/include/$(package)/%.h
@@ -119,13 +123,13 @@ $(DESTDIR)$(includedir)/$(package)/%.h: src/include/$(package)/%.h
 $(ALL_BINS):
 	exec $(REALCC) -o $@ $(CFLAGS_ALL) $(LDFLAGS_ALL) $(LDFLAGS_NOSHARED) $^ $(EXTRA_LIBS) $(LDLIBS_ALL)
 
-lib%.a:
+lib%.a.xyzzy:
 	exec $(AR) rc $@ $^
 	exec $(RANLIB) $@
 
-lib%.so:
-	exec $(REALCC) -o $@ $(CFLAGS_ALL) $(CFLAGS_SHARED) $(LDFLAGS_ALL) $(LDFLAGS_SHARED) -Wl,-soname,$@.$(version_l) $^
+lib%.so.xyzzy:
+	exec $(REALCC) -o $@ $(CFLAGS_ALL) $(CFLAGS_SHARED) $(LDFLAGS_ALL) $(LDFLAGS_SHARED) -Wl,-soname,$(patsubst lib%.so.xyzzy,lib%.so.$(version_l),$@) $^
 
-.PHONY: it all clean distclean tgz strip install install-dynlib install-bin install-sbin install-lib install-include
+.PHONY: it all clean distclean tgz strip install install-dynlib install-bin install-sbin install-lib install-include install-data
 
 .DELETE_ON_ERROR:

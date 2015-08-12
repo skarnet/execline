@@ -358,13 +358,14 @@ LDFLAGS_NOSHARED := $LDFLAGS_NOSHARED
 CROSS_COMPILE := $cross
 
 vpath lib%.a$vpaths
+vpath lib%.so$vpathd
 EOF
 if $allstatic ; then
   echo ".LIBPATTERNS := lib%.a"
   echo "DO_ALLSTATIC := 1"
-  vpathd=
+else
+  echo ".LIBPATTERNS := lib%.so"
 fi
-  echo "vpath lib%.so$vpathd"
 if $static ; then
   echo "DO_STATIC := 1"
 else
