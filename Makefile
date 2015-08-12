@@ -18,9 +18,24 @@ STATIC_LIBS :=
 SHARED_LIBS :=
 INTERNAL_LIBS :=
 EXTRA_TARGETS :=
+LIB_DEFS :=
 
 -include config.mak
+
+define library_definition =
+LIB$(firstword $(subst =, ,$(1))) := lib$(lastword $(subst =, ,$(1))).$(if $(DO_ALLSTATIC),a,so).xyzzy
+ifdef DO_SHARED
+SHARED_LIBS += lib$(lastword $(subst =, ,$(1))).so.xyzzy
+endif
+ifdef DO_STATIC
+STATIC_LIBS += lib$(lastword $(subst =, ,$(1))).a.xyzzy
+endif
+endef
+
 include package/targets.mak
+
+$(foreach var,$(LIB_DEFS),$(eval $(call library_definition,$(var))))
+
 include package/deps.mak
 
 version_m := $(basename $(version))

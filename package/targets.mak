@@ -47,16 +47,4 @@ wait
 SBIN_TARGETS :=
 LIBEXEC_TARGETS :=
 
-ifdef DO_ALLSTATIC
-LIBEXECLINE := libexecline.a.xyzzy
-else
-LIBEXECLINE := libexecline.so.xyzzy
-endif
-
-ifdef DO_SHARED
-SHARED_LIBS := libexecline.so.xyzzy
-endif
-
-ifdef DO_STATIC
-STATIC_LIBS := libexecline.a.xyzzy
-endif
+LIB_DEFS := EXECLINE=execline
