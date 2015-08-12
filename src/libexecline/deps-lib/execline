@@ -21,3 +21,4 @@ exlsn_exlp.o
 exlsn_main.o
 exlsn_free.o
 exlp.o
+-lskarnet
