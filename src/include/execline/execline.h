@@ -8,7 +8,9 @@
 #include <skalibs/buffer.h>
 #include <skalibs/stralloc.h>
 
+#define EXECLINE_BLOCK_QUOTE_STRING " "
 #define EXECLINE_BLOCK_QUOTE_CHAR ' '
+#define EXECLINE_BLOCK_END_STRING ""
 #define EXECLINE_BLOCK_END_CHAR '\0'
 
 
