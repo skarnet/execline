@@ -298,6 +298,8 @@ tryflag CPPFLAGS_AUTO -Werror=implicit-int
 tryflag CPPFLAGS_AUTO -Werror=pointer-sign
 tryflag CPPFLAGS_AUTO -Werror=pointer-arith
 
+CPPFLAGS_AUTO="${CPPFLAGS_AUTO}${addincpath}"
+
 if $evenmorestatic ; then
   LDFLAGS_NOSHARED=-static
 fi
@@ -322,8 +324,6 @@ if test -z "$vpaths" ; then
     addlibspath="$addlibspath -L/usr/lib/$base"
   done < package/deps-build  
 fi
-
-CPPFLAGS_AUTO="$CPPFLAGS_AUTO $addincpath"
 
 echo "creating config.mak..."
 cmdline=$(quote "$0")
