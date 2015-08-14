@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the withstdinas command</title>
+ <meta name="Description" content="execline: the withstdinas command" />
+ <meta name="Keywords" content="execline command withstdinas" />
+ <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>withstdinas</tt> program </h1>
+
+<p>
+<tt>withstdinas</tt> reads the entirety of its standard input in an
+environment variable, and runs another program with that additional
+environment variable.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     withstdinas [ -i | -D <em>default</em> ] [ -n ] <em>variable</em> <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>withstdinas</tt> reads its stdin until EOF. </li>
+ <li> It then execs into <em>prog...</em>, with
+<em>variable</em> added to the environment; the value of
+<em>variable</em> is what was read on stdin. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-i</tt>&nbsp;: insist. If the data on stdin is invalid as
+an environment variable, for instance if it contains a null
+character, <tt>withstdinas</tt> exits 1. </li>
+ <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: default value.
+If the data on stdin is invalid, <em>default</em> is used as
+<em>variable</em>'s value. If neither the <tt>-i</tt> nor the <tt>-D</tt>
+option have been given, <tt>withstdinas</tt> execs into
+<em>prog...</em> with <em>variable</em> containing whatever value could be read on stdin,
+cut before the first null character. </li>
+ <li> <tt>-n</tt>&nbsp;: chomp an ending newline off stdin. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> You can start <em>prog...</em> with "import -u <em>variable</em>"
+to perform variable substitution. </li>
+</ul>
+
+</body>
+</html>

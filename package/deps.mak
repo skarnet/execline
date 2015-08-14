@@ -3,7 +3,7 @@
 #
 
 src/execline/background.o src/execline/background.lo: src/execline/background.c src/include/execline/execline.h
-src/execline/backtick.o src/execline/backtick.lo: src/execline/backtick.c src/include/execline/execline.h
+src/execline/backtick.o src/execline/backtick.lo: src/execline/backtick.c src/include/execline/config.h src/include/execline/execline.h
 src/execline/cd.o src/execline/cd.lo: src/execline/cd.c
 src/execline/define.o src/execline/define.lo: src/execline/define.c src/include-local/exlsn.h
 src/execline/dollarat.o src/execline/dollarat.lo: src/execline/dollarat.c
@@ -46,6 +46,7 @@ src/execline/tryexec.o src/execline/tryexec.lo: src/execline/tryexec.c src/inclu
 src/execline/umask.o src/execline/umask.lo: src/execline/umask.c
 src/execline/unexport.o src/execline/unexport.lo: src/execline/unexport.c
 src/execline/wait.o src/execline/wait.lo: src/execline/wait.c src/include/execline/execline.h
+src/execline/withstdinas.o src/execline/withstdinas.lo: src/execline/withstdinas.c
 src/libexecline/el_execsequence.o src/libexecline/el_execsequence.lo: src/libexecline/el_execsequence.c src/include/execline/execline.h
 src/libexecline/el_getstrict.o src/libexecline/el_getstrict.lo: src/libexecline/el_getstrict.c src/include/execline/execline.h
 src/libexecline/el_parse.o src/libexecline/el_parse.lo: src/libexecline/el_parse.c src/include/execline/execline.h
@@ -73,7 +74,7 @@ src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_multidefine.lo: src/li
 background: private EXTRA_LIBS :=
 background: src/execline/background.o ${LIBEXECLINE} -lskarnet
 backtick: private EXTRA_LIBS :=
-backtick: src/execline/backtick.o ${LIBEXECLINE} -lskarnet
+backtick: src/execline/backtick.o -lskarnet
 cd: private EXTRA_LIBS :=
 cd: src/execline/cd.o -lskarnet
 define: private EXTRA_LIBS :=
@@ -158,6 +159,8 @@ unexport: private EXTRA_LIBS :=
 unexport: src/execline/unexport.o -lskarnet
 wait: private EXTRA_LIBS :=
 wait: src/execline/wait.o ${LIBEXECLINE} -lskarnet
+withstdinas: private EXTRA_LIBS :=
+withstdinas: src/execline/withstdinas.o -lskarnet
 libexecline.a.xyzzy: src/libexecline/el_execsequence.o src/libexecline/el_getstrict.o src/libexecline/el_parse.o src/libexecline/el_parse_from_buffer.o src/libexecline/el_parse_from_string.o src/libexecline/el_popenv.o src/libexecline/el_pushenv.o src/libexecline/el_semicolon.o src/libexecline/el_spawn0.o src/libexecline/el_spawn1.o src/libexecline/el_substandrun.o src/libexecline/el_substandrun_str.o src/libexecline/el_substitute.o src/libexecline/el_transform.o src/libexecline/el_vardupl.o src/libexecline/exlsn_define.o src/libexecline/exlsn_elglob.o src/libexecline/exlsn_import.o src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_exlp.o src/libexecline/exlsn_main.o src/libexecline/exlsn_free.o src/libexecline/exlp.o
 libexecline.so.xyzzy: private EXTRA_LIBS := -lskarnet
 libexecline.so.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_parse.lo src/libexecline/el_parse_from_buffer.lo src/libexecline/el_parse_from_string.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_import.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo

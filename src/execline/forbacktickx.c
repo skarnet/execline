@@ -16,7 +16,7 @@
 
 #define DELIM_DEFAULT " \n\r\t"
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const *const *argv, char const *const *envp)
 {
   char const *delim = DELIM_DEFAULT ;
   char const *codes = 0 ;

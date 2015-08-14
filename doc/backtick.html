@@ -19,8 +19,8 @@
 <h1> The <tt>backtick</tt> program </h1>
 
 <p>
-<tt>backtick</tt> runs a program and uses its output as the argument of
-another program.
+<tt>backtick</tt> runs a program and stores its output in an
+environment variable, then executes another program.
 </p>
 
 <h2> Interface </h2>
@@ -47,8 +47,8 @@ output as a value. </li>
 
 <ul>
  <li> <tt>-i</tt>&nbsp;: insist. If <em>prog1</em> crashes or exits non-zero,
-<tt>backtick</tt> exits with the same exit code (or 111 if <em>prog1</em>
-crashed). </li>
+<tt>backtick</tt> exits with an
+<a href="exitcodes.html">approximation</a> of the same exit code. </li>
  <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: default value. If
 <em>prog1</em> crashes or exits non-zero, <em>default</em> is used as
 <em>variable</em>'s value. If neither the <tt>-i</tt> nor the <tt>-D</tt>

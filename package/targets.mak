@@ -42,7 +42,8 @@ trap \
 tryexec \
 umask \
 unexport \
-wait
+wait \
+withstdinas
 
 SBIN_TARGETS :=
 LIBEXEC_TARGETS :=

@@ -42,3 +42,4 @@ tryexec			0755
 umask			0755
 unexport		0755
 wait			0755
+withstdinas		0755
