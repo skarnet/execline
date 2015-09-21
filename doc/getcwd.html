@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the getcwd program</title>
+    <meta name="Description" content="execline: the getcwd program" />
+    <meta name="Keywords" content="execline command getcwd current working directory variable pwd" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>getcwd</tt> program </h1>
+
+<p>
+<tt>getcwd</tt> stores its current working directory
+into a given environment variable,
+then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     getcwd <em>var</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>getcwd</tt> stores a fully resolved absolute path (i.e. without any
+<tt>..</t> or symbolic link components) to its current working directory
+into the <em>var</em> variable, then
+execs into <em>prog</em> with its arguments.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <em>var</em> must be given without a dollar&nbsp;! </li>
+ <li> <em>var</em> must not contain <tt>=</tt>. </li>
+ <li> Unlike the
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pwd.html">pwd</a>
+POSIX command, <tt>getcwd</tt> does not depend on the PWD environment
+variable and will always exhibit the same behaviour. </li>
+</ul>
+
+</body>
+</html>

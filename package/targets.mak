@@ -21,6 +21,7 @@ forbacktickx \
 foreground \
 forstdin \
 forx \
+getcwd \
 getpid \
 heredoc \
 homeof \

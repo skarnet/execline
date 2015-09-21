@@ -24,6 +24,7 @@ src/execline/forbacktickx.o src/execline/forbacktickx.lo: src/execline/forbackti
 src/execline/foreground.o src/execline/foreground.lo: src/execline/foreground.c src/include/execline/execline.h
 src/execline/forstdin.o src/execline/forstdin.lo: src/execline/forstdin.c src/include/execline/config.h src/include/execline/execline.h
 src/execline/forx.o src/execline/forx.lo: src/execline/forx.c src/include/execline/config.h src/include/execline/execline.h
+src/execline/getcwd.o src/execline/getcwd.lo: src/execline/getcwd.c
 src/execline/getpid.o src/execline/getpid.lo: src/execline/getpid.c
 src/execline/heredoc.o src/execline/heredoc.lo: src/execline/heredoc.c
 src/execline/homeof.o src/execline/homeof.lo: src/execline/homeof.c
@@ -115,6 +116,8 @@ forstdin: private EXTRA_LIBS :=
 forstdin: src/execline/forstdin.o ${LIBEXECLINE} -lskarnet
 forx: private EXTRA_LIBS :=
 forx: src/execline/forx.o ${LIBEXECLINE} -lskarnet
+getcwd: private EXTRA_LIBS :=
+getcwd: src/execline/getcwd.o -lskarnet
 getpid: private EXTRA_LIBS :=
 getpid: src/execline/getpid.o -lskarnet
 heredoc: private EXTRA_LIBS :=
