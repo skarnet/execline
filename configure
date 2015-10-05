@@ -306,7 +306,6 @@ fi
 
 if $shared ; then
   tryldflag LDFLAGS_AUTO -Wl,--hash-style=both
-  tryldflag LDFLAGS_SHARED -Wl,-Bsymbolic
 fi
 
 LDFLAGS_SHARED="${LDFLAGS_SHARED}${addlibdpath}"
