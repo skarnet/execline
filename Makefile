@@ -20,7 +20,7 @@ INTERNAL_LIBS :=
 EXTRA_TARGETS :=
 LIB_DEFS :=
 
-define library_definition =
+define library_definition
 LIB$(firstword $(subst =, ,$(1))) := lib$(lastword $(subst =, ,$(1))).$(if $(DO_ALLSTATIC),a,so).xyzzy
 ifdef DO_SHARED
 SHARED_LIBS += lib$(lastword $(subst =, ,$(1))).so.xyzzy
