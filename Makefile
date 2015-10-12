@@ -7,7 +7,7 @@
 
 it: all
 
-make_need := 4.0
+make_need := 3.81
 ifeq "" "$(strip $(filter $(make_need), $(firstword $(sort $(make_need) $(MAKE_VERSION)))))"
 fail := $(error Your make ($(MAKE_VERSION)) is too old. You need $(make_need) or newer)
 endif

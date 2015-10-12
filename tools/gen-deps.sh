@@ -66,7 +66,7 @@ for dir in $(ls -1 src | grep -v ^include) ; do
       fi
     done < src/$dir/deps-lib/$file
     echo "lib${file}.a.xyzzy:$deps"
-    echo "lib${file}.so.xyzzy: private EXTRA_LIBS :=$libs"
+    echo "lib${file}.so.xyzzy: EXTRA_LIBS :=$libs"
     echo "lib${file}.so.xyzzy:$(echo "$deps" | sed 's/\.o/.lo/g')"
   done
 
