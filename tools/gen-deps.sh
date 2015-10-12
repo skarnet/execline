@@ -83,7 +83,7 @@ for dir in $(ls -1 src | grep -v ^include) ; do
         deps="$deps $dep"
       fi
     done < src/$dir/deps-exe/$file
-    echo "$file: private EXTRA_LIBS :=$libs"
+    echo "$file: EXTRA_LIBS :=$libs"
     echo "$file: src/$dir/$file.o$deps"
   done
 done
