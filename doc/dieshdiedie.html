@@ -33,15 +33,16 @@ on the subject</a>, section 5.)
 of the shell is parsing: the parser and the runner are intimately
 interleaved and cannot be clearly separated, thanks to the
 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">specification</a>.
-Even worse, the
-shell sometimes has to perform <em>double parsing</em>, for instance
-after parameter expansion. This can lead to atrocities like
-<pre>
-zork="foo ; echo bar"
-touch $zork
-</pre> not doing what you would like them to do, even in that simple
-case. (<a href="http://www.zsh.org/">zsh</a> has a sane behaviour by
-default, at the expense of explicitly breaking the spec.)
+The shell performs several kinds of expansions, automatic filename
+globbing, and automatic word splitting, in an unintuitive order,
+requiring users to memorize numerous arbitrary quoting rules in
+order to achieve what they want. Pages
+<a href="http://www.google.com/search?q=shell+script+pitfalls">abound</a>
+where common mistakes are listed, more often than not leading to
+security holes. Did you know that <tt>"$@"</tt> is a special case
+of double quoting, because it will split the arguments into
+several words, whereas every other use of double quotes in a shell is
+meant to <em>prevent</em> splitting?
 </p>
 
 <p>
