@@ -53,6 +53,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       newargv[m++] = argv[i++] ;
     if (!argv[i]) strerr_dief1x(100, "unterminated block") ;
     newargv[m++] = "" ; i++ ;
+    if (!argv[i]) strerr_dief1x(100, "empty remainder") ;
     newargv[m++] = EXECLINE_BINPREFIX "withstdinas" ;
     if (insist) newargv[m++] = "-i" ;
     if (chomp) newargv[m++] = "-n" ;
