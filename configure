@@ -180,7 +180,7 @@ for arg ; do
     --enable-slashpackage) sproot= ; slashpackage=true ;;
     --disable-slashpackage) sproot= ; slashpackage=false ;;
     --enable-cross=*) cross=${arg#*=} ;;
-    --enable-cross) cross= ;;
+    --enable-cross) ;;
     --disable-cross) cross= ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*|--build=*) ;;
     --host=*|--target=*) target=${arg#*=} ;;
