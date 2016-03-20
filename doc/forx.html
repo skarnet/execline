@@ -29,7 +29,7 @@
 </p>
 
 <pre>
-     forx [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] <em>variable</em> { <em>args...</em> } <em>loop...</em>
+     forx [ -p ] [ -o <em>okcodes</em> | -x <em>breakcodes</em> ] <em>variable</em> { <em>args...</em> } <em>loop...</em>
 </pre>
 
 <ul>
@@ -45,14 +45,9 @@ That block contains a list of <em>args</em>. </li>
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-p</tt>&nbsp;: run in parallel. Do not wait for an instance of
-<em>loop...</em> to exit before spawning the next one. <tt>forx</tt>
-will still wait for all instances of <em>loop</em> to terminate before
-exiting, though. </li>
  <li> <tt>-o</tt>&nbsp;<em>okcodes</em>&nbsp;: <em>okcodes</em> must
-be a comma-separated list of exit codes. If the <tt>-p</tt> flag
-hasn't been given and <em>loop</em> exits with one of the codes in
-<em>okcodes</em>,
+be a comma-separated list of exit codes. If
+<em>loop</em> exits with one of the codes in <em>okcodes</em>,
 forx will run the following instances of the loop, but if the exit code is
 not listed in <em>okcodes</em>, forx will exit immediately with an
 <a href="exitcodes.html">approximation</a> of the same exit code. </li>
@@ -60,6 +55,14 @@ not listed in <em>okcodes</em>, forx will exit immediately with an
 option, but with inverted meaning - the listed exit codes are codes
 that will make forx break the loop and exit, and the unlisted exit
 codes will make it keep looping. </li>
+ <li> <tt>-p</tt>&nbsp;: run in parallel. Do not wait for an instance of
+<em>loop...</em> to exit before spawning the next one. <tt>forx</tt>
+will still wait for all instances of <em>loop</em> to terminate before
+exiting 0. If the <tt>-o</tt> option has been given, <tt>forx</tt>
+will exit 0 if all of the exit codes are in the values listed in the <em>okcodes</em>
+list, else it will exit 1. If the <tt>-x</tt> option has been given,
+<tt>forx</tt> will exit 0 if none of the exit codes are in the values
+listed in the <em>breakcodes</em> list, else it will exit 1. </li>
 </ul>
 
 <h2> Notes </h2>

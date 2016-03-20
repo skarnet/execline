@@ -11,14 +11,33 @@
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] var { values... } command..."
+#define USAGE "forx [ -p ] [ -o okcode,okcode,... | -x breakcode,breakcode,... ] var { values... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int isok (unsigned short *tab, unsigned int n, int code)
+static int isok (unsigned short const *tab, unsigned int n, int code)
 {
   register unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
   return i < n ;
+}
+
+static int waitn_code (unsigned short const *tab, unsigned int nbc, pid_t *pids, unsigned int n, int not)
+{
+  int ok = 1 ;
+  while (n)
+  {
+    int wstat ;
+    register unsigned int i = 0 ;
+    register pid_t pid = wait_nointr(&wstat) ;
+    if (pid < 0) return -1 ;
+    for (; i < n ; i++) if (pid == pids[i]) break ;
+    if (i < n)
+    {
+      if (not == isok(tab, nbc, wait_estatus(wstat))) ok = 0 ;
+      pids[i] = pids[--n] ;
+    }
+  }
+  return ok ;
 }
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -55,6 +74,8 @@ int main (int argc, char const **argv, char const *const *envp)
 
   if (argc < 2) dieusage() ;
   x = argv[0] ; if (!*x) dieusage() ;
+  if (x[0] == EXECLINE_BLOCK_QUOTE_CHAR)
+    strerr_warnw3x("variable ", x, " starts with a block quoting character") ;
   argv++ ; argc-- ;
   argc1 = el_semicolon(argv) ;
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
@@ -89,8 +110,13 @@ int main (int argc, char const **argv, char const *const *envp)
           return wait_estatus(wstat) ;
       }
     }
+
     if (flagpar)
-      if (!waitn(pids, argc1)) strerr_diefu1sys(111, "waitn") ;
+    {
+      register int r = waitn_code(okcodes, nbc, pids, argc1, not) ;
+      if (r < 0) strerr_diefu1sys(111, "waitn") ;
+      else if (!r) return 1 ;
+    }
   }
   return 0 ;
 }
