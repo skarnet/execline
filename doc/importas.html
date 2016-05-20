@@ -32,7 +32,8 @@ environment variable, then executes another program.
 <ul>
  <li> <tt>importas</tt> fetches the value of <em>envvar</em> in the
 environment. If neither the <em>-D</em> nor the <em>-i</em> option is given,
-and <em>envvar</em> is undefined, the <strong>null word</strong> is returned. </li>
+and <em>envvar</em> is undefined, <strong>no word</strong> is returned
+(that is different from the empty word). </li>
  <li> <tt>importas</tt> then performs
 <a href="el_substitute.html">variable substitution</a> on <em>prog...</em>,
 with <em>variable</em> as key and that string as value.
@@ -42,11 +43,10 @@ with <em>variable</em> as key and that string as value.
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-D</tt>&nbsp;<em>default</em>&nbsp;: If <em>envvar</em> is
-undefined, and this option is not given, substitute zero word for
-<em>variable</em> instead of the empty word; and if it is given,
-substitute <em>default</em> instead. To substitute the empty word,
-use <tt>-D&nbsp;""</tt>. </li>
+ <li> <tt>-D</tt>&nbsp;<em>default</em>&nbsp;: If this option is given and
+<em>envvar</em> is undefined, substitute <em>default</em> for the value of
+<em>variable</em> instead of no word. For instance, to substitute
+the empty word, use <tt>-D&nbsp;""</tt>. </li>
  <li> <tt>-i</tt>&nbsp;: Insist. If <em>envvar</em> is undefined,
 <tt>importas</tt> will not do anything; instead, it will exit 100 with an
 error message. This has precedence over any <tt>-D</tt> option. </li>
@@ -56,6 +56,18 @@ the environment after the substitution. <tt>importas -u <em>variable</em>
 <em>envvar</em> unexport <em>envvar</em></tt>. </li>
  <li> Other options are used to <a href="el_transform.html">control
 the substitution mechanism</a>. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> When <em>envvar</em> is undefined, and the <tt>-D</tt> option is
+not given, any <a href="el_substitute.html">variable substitution</a>
+with <em>variable</em> as the key will return no word; that is true
+even when the <tt>${<em>variable</em>}</tt> form to be substituted
+happens in the middle of a word (with a prefix and/or a postfix), which
+means the whole world will be deleted. If this is not the behaviour
+you want, use the <tt>-D</tt> option. </li>
 </ul>
 
 </body>
