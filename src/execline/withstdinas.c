@@ -10,7 +10,7 @@
 #include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
 
-#define USAGE "withstdinas [ -i | -D default ] [ -n ] var remainder..."
+#define USAGE "withstdinas [ -i | -I | -D default ] [ -n ] var remainder..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -18,19 +18,19 @@ int main (int argc, char const **argv, char const *const *envp)
   subgetopt_t localopt = SUBGETOPT_ZERO ;
   stralloc modif = STRALLOC_ZERO ;
   unsigned int modifstart ;
-  int insist = 0, chomp = 0, reapit = 0 ;
+  int insist = 0, chomp = 0 ;
   char const *def = 0 ;
   PROG = "withstdinas" ;
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "einD:!", &localopt) ;
+    register int opt = subgetopt_r(argc, argv, "iInD:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
-      case 'i' : insist = 1 ; break ;
+      case 'i' : insist = 2 ; break ;
+      case 'I' : insist = 1 ; break ;
       case 'n' : chomp = 1 ; break ;
       case 'D' : def = localopt.arg ; break ;
-      case '!' : reapit = 1 ; break ;
       default : dieusage() ;
     }
   }
@@ -38,42 +38,23 @@ int main (int argc, char const **argv, char const *const *envp)
 
   if (!argc) dieusage() ;
   if (!*argv[0] || strchr(argv[0], '=')) strerr_dief1x(100, "invalid variable name") ;
-  if (!stralloc_catb(&modif, "!", 2)
-   || !stralloc_cats(&modif, argv[0])
-   || !stralloc_catb(&modif, "=", 1))
+  if (!stralloc_cats(&modif, argv[0]) || !stralloc_catb(&modif, "=", 1))
     strerr_diefu1sys(111, "stralloc_catb") ;
   modifstart = modif.len ;
   if (!slurp(&modif, 0)) strerr_diefu1sys(111, "slurp") ;
-  if (reapit)
-  {
-    char const *x = env_get2(envp, "!") ;
-    if (x)
-    {
-      uint64 pid ;
-      int wstat ;
-      if (!uint640_scan(x, &pid)) strerr_dieinvalid(100, "!") ;
-      if (waitpid(pid, &wstat, 0) < 0)
-        strerr_diefu1sys(111, "waitpid") ;
-      if (wait_estatus(wstat))
-      {
-        if (insist)
-          if (WIFSIGNALED(wstat)) strerr_dief1x(wait_estatus(wstat), "child process crashed") ;
-          else strerr_dief1x(wait_estatus(wstat), "child process exited non-zero") ;
-        else if (def)
-        {
-          modif.len = modifstart ;
-          if (!stralloc_cats(&modif, def)) strerr_diefu1sys(111, "stralloc_catb") ;
-        }
-      }
-    }
-  }
   if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_catb") ;
   {
-    unsigned int reallen = str_len(modif.s + 2) ;
-    if (reallen < modif.len - 3)
+    unsigned int reallen = str_len(modif.s) ;
+    if (reallen < modif.len - 1)
     {
-      if (insist)
+      if (insist >= 2)
         strerr_dief1x(1, "stdin contained a null character") ;
+      else if (insist)
+      {
+        modif.len = modifstart ;
+        modif.s[modif.len - 1] = 0 ;
+        chomp = 0 ;
+      }
       else if (def)
       {
         modif.len = modifstart ;
@@ -81,13 +62,12 @@ int main (int argc, char const **argv, char const *const *envp)
           strerr_diefu1sys(111, "stralloc_catb") ;
         strerr_warnw2x("stdin contained a null character", " - using default instead") ;
       }
-      else
-        modif.len = reallen + 3 ;
+      else modif.len = reallen + 1 ;
     }
     if (chomp && (modif.s[modif.len - 2] == '\n'))
       modif.s[--modif.len - 1] = 0 ;
   }
   if (!argv[1]) return 0 ;
-  pathexec_r(argv + 1, envp, env_len(envp), modif.s + !reapit * 2, modif.len - !reapit * 2) ;
+  pathexec_r(argv + 1, envp, env_len(envp), modif.s, modif.len) ;
   strerr_dieexec(111, argv[1]) ;
 }

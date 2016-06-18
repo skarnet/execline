@@ -31,7 +31,7 @@ environment variable.
 </p>
 
 <pre>
-     withstdinas [ -i | -D <em>default</em> ] [ -n ] <em>variable</em> <em>prog...</em>
+     withstdinas [ -i | -I | -D <em>default</em> ] [ -n ] <em>variable</em> <em>prog...</em>
 </pre>
 
 <ul>
@@ -44,16 +44,23 @@ environment variable.
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-i</tt>&nbsp;: insist. If the data on stdin is invalid as
-an environment variable, for instance if it contains a null
-character, <tt>withstdinas</tt> exits 1. </li>
- <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: default value.
-If the data on stdin is invalid, <em>default</em> is used as
-<em>variable</em>'s value. If neither the <tt>-i</tt> nor the <tt>-D</tt>
-option have been given, <tt>withstdinas</tt> execs into
-<em>prog...</em> with <em>variable</em> containing whatever value could be read on stdin,
-cut before the first null character. </li>
  <li> <tt>-n</tt>&nbsp;: chomp an ending newline off stdin. </li>
+</ul>
+
+<p>
+ The other options tell withstdinas what to do if its input is
+not suitable as the contents of an environment variable, i.e. it
+contains a null character:
+</p>
+
+<ul>
+ <li> <tt>-i</tt>&nbsp;: withstdinas exits 1. </li>
+ <li> <tt>-I</tt>&nbsp;: <em>variable</em> is <strong>removed</strong> from
+the environment, and execution proceeds. </li>
+ <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: the value of <em>variable</em>
+is set to <em>default</em>, and execution proceeds. </li>
+ <li> neither of those options:  the value of <em>variable</em> is set to whatever the
+start of the input is, up to the first null character; and execution proceeds. </li>
 </ul>
 
 <h2> Notes </h2>

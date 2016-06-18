@@ -1,84 +1,102 @@
 /* ISC license. */
 
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
-#include <errno.h>
-#include <skalibs/uint.h>
+#include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
+#include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
-#include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "backtick [ -i | -D default ] [ -n ] var { prog... } command..."
+#define USAGE "backtick [ -i | -I | -D default ] [ -n ] var { prog... } remainder..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const **argv, char const *const *envp)
 {
-  char const *def = 0 ;
+  subgetopt_t localopt = SUBGETOPT_ZERO ;
+  pid_t pid ;
+  int argc1, fdwstat ;
+  stralloc modif = STRALLOC_ZERO ;
+  unsigned int modifstart ;
   int insist = 0, chomp = 0 ;
+  char const *def = 0 ;
   PROG = "backtick" ;
+  for (;;)
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
-    for (;;)
+    register int opt = subgetopt_r(argc, argv, "iInD:", &localopt) ;
+    if (opt < 0) break ;
+    switch (opt)
     {
-      register int opt = subgetopt_r(argc, argv, "eniD:", &l) ;
-      if (opt == -1) break ;
-      switch (opt)
-      {
-	case 'e' : break ; /* compat */
-        case 'n' : chomp = 1 ; break ;
-        case 'i' : insist = 1 ; break ;
-        case 'D' : def = l.arg ; break ;
-        default : dieusage() ;
-      }
+      case 'i' : insist = 2 ; break ;
+      case 'I' : insist = 1 ; break ;
+      case 'n' : chomp = 1 ; break ;
+      case 'D' : def = localopt.arg ; break ;
+      default : dieusage() ;
     }
-    argc -= l.ind ; argv += l.ind ;
   }
+  argc -= localopt.ind ; argv += localopt.ind ;
+
   if (argc < 2) dieusage() ;
-  if (!argv[0][0]) dieusage() ;
-  if (!argv[1][0]) strerr_dief1x(100, "empty block") ;
+  if (!*argv[0]) strerr_dief1x(100, "empty variable not accepted") ;
+  if (!stralloc_cats(&modif, argv[0]) || !stralloc_catb(&modif, "=", 1))
+    strerr_diefu1sys(111, "stralloc_catb") ;
+  modifstart = modif.len ;
+  argc-- ; argv++ ;
+  argc1 = el_semicolon(argv) ;
+  if (!argc1) strerr_dief1x(100, "empty block") ;
+  if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
+
+  argv[argc1] = 0 ;
+  pid = child_spawn1_pipe(argv[0], argv, envp, &fdwstat, 1) ;
+  if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
+  if (!slurp(&modif, fdwstat)) strerr_diefu1sys(111, "slurp") ;
+  close(fdwstat) ;
+  if (wait_pid(pid, &fdwstat) < 0) strerr_diefu1sys(111, "wait_pid") ;
+
+  if (wait_status(fdwstat))
   {
-    unsigned int m = 0, i = 1 ;
-    int fd = dup(0) ;
-    char const *newargv[argc + 15] ;
-    char fmt[UINT_FMT] ;
-    if (fd < 0)
+    if (insist >= 2)
+      if (WIFSIGNALED(fdwstat)) strerr_dief1x(111, "child process crashed") ;
+      else strerr_dief1x(WEXITSTATUS(fdwstat), "child process exited non-zero") ;
+    else if (insist)
     {
-      if (errno != EBADF) strerr_diefu1sys(111, "dup stdin") ;
+      modif.len = modifstart - 1 ;
+      chomp = 0 ;
     }
-    else fmt[uint_fmt(fmt, (unsigned int)fd)] = 0 ;
-    newargv[m++] = EXECLINE_BINPREFIX "pipeline" ;
-    newargv[m++] = "--" ;
-    while (argv[i] && argv[i][0] != EXECLINE_BLOCK_END_CHAR && (!EXECLINE_BLOCK_END_CHAR || (argv[i][0] && argv[i][1])))
-      newargv[m++] = argv[i++] ;
-    if (!argv[i]) strerr_dief1x(100, "unterminated block") ;
-    newargv[m++] = "" ; i++ ;
-    if (!argv[i]) strerr_dief1x(100, "empty remainder") ;
-    newargv[m++] = EXECLINE_BINPREFIX "withstdinas" ;
-    if (insist) newargv[m++] = "-i" ;
-    if (chomp) newargv[m++] = "-n" ;
-    if (def)
+    else if (def)
     {
-      newargv[m++] = "-D" ;
-      newargv[m++] = def ;
+      modif.len = modifstart ;
+      if (!stralloc_cats(&modif, def)) strerr_diefu1sys(111, "stralloc_catb") ;
     }
-    newargv[m++] = "-!" ;
-    newargv[m++] = "--" ;
-    newargv[m++] = argv[0] ;
-    if (fd < 0)
-    {
-      newargv[m++] = EXECLINE_BINPREFIX "fdclose" ;
-      newargv[m++] = "0" ;
-    }
-    else
-    {
-      newargv[m++] = EXECLINE_BINPREFIX "fdmove" ;
-      newargv[m++] = "0" ;
-      newargv[m++] = fmt ;
-    }
-    while (argv[i]) newargv[m++] = argv[i++] ;
-    newargv[m++] = 0 ;
-    pathexec_run(newargv[0], newargv, envp) ;
-    strerr_dieexec(111, newargv[0]) ;
   }
+  if (argc == argc1 - 1) return 0 ;
+  if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_catb") ;
+  {
+    unsigned int reallen = str_len(modif.s) ;
+    if (reallen < modif.len - 1)
+    {
+      if (insist >= 2)
+        strerr_dief1x(1, "child process output contained a null character") ;
+      else if (insist)
+      {
+        modif.len = modifstart ;
+        modif.s[modif.len - 1] = 0 ;
+        chomp = 0 ;
+      }
+      else if (def)
+      {
+        modif.len = modifstart ;
+        if (!stralloc_catb(&modif, def, str_len(def)+1))
+          strerr_diefu1sys(111, "stralloc_catb") ;
+        strerr_warnw2x("child process output contained a null character", " - using default instead") ;
+      }
+      else modif.len = reallen + 1 ;
+    }
+    if (chomp && (modif.s[modif.len - 2] == '\n'))
+      modif.s[--modif.len - 1] = 0 ;
+  }
+  pathexec_r(argv + argc1 + 1, envp, env_len(envp), modif.s, modif.len) ;
+  strerr_dieexec(111, argv[argc1 + 1]) ;
 }

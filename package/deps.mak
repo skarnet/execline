@@ -3,7 +3,7 @@
 #
 
 src/execline/background.o src/execline/background.lo: src/execline/background.c src/include/execline/execline.h
-src/execline/backtick.o src/execline/backtick.lo: src/execline/backtick.c src/include/execline/config.h src/include/execline/execline.h
+src/execline/backtick.o src/execline/backtick.lo: src/execline/backtick.c src/include/execline/execline.h
 src/execline/cd.o src/execline/cd.lo: src/execline/cd.c
 src/execline/define.o src/execline/define.lo: src/execline/define.c src/include-local/exlsn.h
 src/execline/dollarat.o src/execline/dollarat.lo: src/execline/dollarat.c
@@ -75,7 +75,7 @@ src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_multidefine.lo: src/li
 background: EXTRA_LIBS :=
 background: src/execline/background.o ${LIBEXECLINE} -lskarnet
 backtick: EXTRA_LIBS :=
-backtick: src/execline/backtick.o -lskarnet
+backtick: src/execline/backtick.o ${LIBEXECLINE} -lskarnet
 cd: EXTRA_LIBS :=
 cd: src/execline/cd.o -lskarnet
 define: EXTRA_LIBS :=
