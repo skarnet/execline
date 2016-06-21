@@ -30,7 +30,7 @@ environment variable, then executes another program.
 </p>
 
 <pre>
-     backtick [ -i | -D <em>default</em> ] [ -n ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
+     backtick [ -i | -I | -D <em>default</em> ] [ -n ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
 </pre>
 
 <ul>
@@ -52,8 +52,9 @@ output. </li>
 
 <p>
  The other options tell backtick what to do if <em>prog1...</em>'s output
-is not suitable as the contents of an environment variable, i.e. it
-contains a null character:
+is not suitable as the contents of an environment variable (i.e. it
+contains a null character) or if <em>prog1...</em> crashes or exits
+nonzero:
 </p>
 
 <ul>
@@ -63,7 +64,8 @@ the environment, and execution proceeds. </li>
  <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: the value of <em>variable</em>
 is set to <em>default</em>, and execution proceeds. </li>
  <li> neither of those options: the value of <em>variable</em> is set to whatever
-the start of <em>prog1...</em>'s output is, up to the first null character;
+the start of <em>prog1...</em>'s output is, up to the first null character,
+or to whatever <em>prog1...</em> wrote before crashing;
 then execution proceeds. </li>
 </ul>
 
