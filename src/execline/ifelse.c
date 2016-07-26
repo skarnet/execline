@@ -8,7 +8,7 @@
 #include <skalibs/uint.h>
 #include <execline/execline.h>
 
-#define USAGE "ifelse [ -n ] [ -X ] { command-if } { command-then... }"
+#define USAGE "ifelse [ -n ] [ -X ] { command-if } { command-then... } command-else..."
 
 int main (int argc, char const **argv, char const *const *envp)
 {
