@@ -72,9 +72,9 @@ src/libexecline/exlsn_import.o src/libexecline/exlsn_import.lo: src/libexecline/
 src/libexecline/exlsn_main.o src/libexecline/exlsn_main.lo: src/libexecline/exlsn_main.c src/include/execline/execline.h src/include-local/exlsn.h
 src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_multidefine.lo: src/libexecline/exlsn_multidefine.c src/include/execline/execline.h src/include-local/exlsn.h
 
-background: EXTRA_LIBS :=
+background: EXTRA_LIBS := ${SPAWN_LIB}
 background: src/execline/background.o ${LIBEXECLINE} -lskarnet
-backtick: EXTRA_LIBS :=
+backtick: EXTRA_LIBS := ${SPAWN_LIB}
 backtick: src/execline/backtick.o ${LIBEXECLINE} -lskarnet
 cd: EXTRA_LIBS :=
 cd: src/execline/cd.o -lskarnet
@@ -112,9 +112,9 @@ forbacktickx: EXTRA_LIBS :=
 forbacktickx: src/execline/forbacktickx.o -lskarnet
 foreground: EXTRA_LIBS :=
 foreground: src/execline/foreground.o ${LIBEXECLINE} -lskarnet
-forstdin: EXTRA_LIBS :=
+forstdin: EXTRA_LIBS := ${SPAWN_LIB}
 forstdin: src/execline/forstdin.o ${LIBEXECLINE} -lskarnet
-forx: EXTRA_LIBS :=
+forx: EXTRA_LIBS := ${SPAWN_LIB}
 forx: src/execline/forx.o ${LIBEXECLINE} -lskarnet
 getcwd: EXTRA_LIBS :=
 getcwd: src/execline/getcwd.o -lskarnet
@@ -124,25 +124,25 @@ heredoc: EXTRA_LIBS :=
 heredoc: src/execline/heredoc.o -lskarnet
 homeof: EXTRA_LIBS :=
 homeof: src/execline/homeof.o -lskarnet
-if: EXTRA_LIBS :=
+if: EXTRA_LIBS := ${SPAWN_LIB}
 if: src/execline/if.o ${LIBEXECLINE} -lskarnet
-ifelse: EXTRA_LIBS :=
+ifelse: EXTRA_LIBS := ${SPAWN_LIB}
 ifelse: src/execline/ifelse.o ${LIBEXECLINE} -lskarnet
-ifte: EXTRA_LIBS :=
+ifte: EXTRA_LIBS := ${SPAWN_LIB}
 ifte: src/execline/ifte.o ${LIBEXECLINE} -lskarnet
-ifthenelse: EXTRA_LIBS :=
+ifthenelse: EXTRA_LIBS := ${SPAWN_LIB}
 ifthenelse: src/execline/ifthenelse.o ${LIBEXECLINE} -lskarnet
 import: EXTRA_LIBS :=
 import: src/execline/import.o ${LIBEXECLINE} -lskarnet
 importas: EXTRA_LIBS :=
 importas: src/execline/importas.o ${LIBEXECLINE} -lskarnet
-loopwhilex: EXTRA_LIBS :=
+loopwhilex: EXTRA_LIBS := ${SPAWN_LIB}
 loopwhilex: src/execline/loopwhilex.o ${LIBEXECLINE} -lskarnet
 multidefine: EXTRA_LIBS :=
 multidefine: src/execline/multidefine.o ${LIBEXECLINE} -lskarnet
 multisubstitute: EXTRA_LIBS :=
 multisubstitute: src/execline/multisubstitute.o ${LIBEXECLINE} -lskarnet
-pipeline: EXTRA_LIBS :=
+pipeline: EXTRA_LIBS := ${SPAWN_LIB}
 pipeline: src/execline/pipeline.o ${LIBEXECLINE} -lskarnet
 piperw: EXTRA_LIBS :=
 piperw: src/execline/piperw.o -lskarnet
@@ -152,7 +152,7 @@ runblock: EXTRA_LIBS :=
 runblock: src/execline/runblock.o ${LIBEXECLINE} -lskarnet
 shift: EXTRA_LIBS :=
 shift: src/execline/shift.o ${LIBEXECLINE} -lskarnet
-trap: EXTRA_LIBS :=
+trap: EXTRA_LIBS := ${SPAWN_LIB}
 trap: src/execline/trap.o ${LIBEXECLINE} -lskarnet
 tryexec: EXTRA_LIBS :=
 tryexec: src/execline/tryexec.o ${LIBEXECLINE} -lskarnet

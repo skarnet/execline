@@ -1,2 +1,3 @@
 ${LIBEXECLINE}
 -lskarnet
+${SPAWN_LIB}
