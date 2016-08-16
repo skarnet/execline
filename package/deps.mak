@@ -110,7 +110,7 @@ fdswap: EXTRA_LIBS :=
 fdswap: src/execline/fdswap.o -lskarnet
 forbacktickx: EXTRA_LIBS :=
 forbacktickx: src/execline/forbacktickx.o -lskarnet
-foreground: EXTRA_LIBS :=
+foreground: EXTRA_LIBS := ${SPAWN_LIB}
 foreground: src/execline/foreground.o ${LIBEXECLINE} -lskarnet
 forstdin: EXTRA_LIBS := ${SPAWN_LIB}
 forstdin: src/execline/forstdin.o ${LIBEXECLINE} -lskarnet
