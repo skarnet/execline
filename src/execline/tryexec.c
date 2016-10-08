@@ -39,6 +39,8 @@ int main (int argc, char const **argv, char const *const *envp)
     int argc1 = el_semicolon(argv) ;
     if (!argc1) strerr_dief1x(100, "empty block") ;
     if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
+    if (not && argc1 == argc - 1)
+      strerr_dief1x(100, "empty remainder not allowed with -n") ;
     argv[argc1] = 0 ;
     dom = argv + not * (argc1 + 1) ;
     sub = argv + !not * (argc1 + 1) ;
