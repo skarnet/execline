@@ -71,7 +71,7 @@ int main (int argc, char const **argv, char const *const *envp)
       if (!stralloc_cats(&modif, def)) strerr_diefu1sys(111, "stralloc_catb") ;
     }
   }
-  if (argc == argc1 - 1) return 0 ;
+  if (argc1 == argc - 1) return 0 ;
   if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_catb") ;
   {
     unsigned int reallen = str_len(modif.s) ;
