@@ -29,7 +29,7 @@
 </p>
 
 <pre>
-     wait [ -r ] { [ <em>pids...</em> ] } <em>prog...</em>
+     wait [ -I | -i ] [ -r | -t <em>timeout</em> ] { [ <em>pids...</em> ] } <em>prog...</em>
 </pre>
 
 <ul>
@@ -45,9 +45,19 @@ empty list, it waits for every child process it has. </li>
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-r</tt>&nbsp;: reap mode. Do not pause until a child has
-exited; only reap all pending zombies. The read block must be empty
-for that option to be effective. </li>
+ <li> <tt>-r</tt>&nbsp;: equivalent to <tt>-t&nbsp;0</tt>. Do not
+pause: only reap processes that are already dead when <tt>wait</tt>
+is invoked. </li>
+ <li> <tt>-t</tt>&nbsp;<em>timeout</em>&nbsp;: wait for a maximum
+of <em>timeout</em> milliseconds. If there still are living processes
+among <em>pids...</em> (or among <tt>wait</tt>'s children if
+<em>pids...</em> is an empty list), after <em>timeout</em>
+milliseconds, they will not be reaped. </li>
+ <li> <tt>-I</tt>&nbsp;: loose. If <tt>wait</tt> times out while
+waiting for children to die, it will still
+exec into <em>prog...</em>. This is the default. </li>
+ <li> <tt>-i</tt>&nbsp;: strict. If <tt>wait</tt> times out, it
+will print an error message and exit 1. </li>
 </ul>
 
 </body>
