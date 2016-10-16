@@ -25,7 +25,7 @@
 <h2> Interface </h2>
 
 <pre>
-     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> ] -c <em>script</em> [ <em>args...</em> ]
+     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> | -s <em>nmin</em> ] -c <em>script</em> [ <em>args...</em> ]
 </pre>
 
 <p>
@@ -33,7 +33,7 @@ or
 </p>
 
 <pre>
-     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> ] <em>scriptfile</em> [ <em>args...</em> ]
+     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> | -s <em>nmin</em> ] <em>scriptfile</em> [ <em>args...</em> ]
 </pre>
 
 <p>
@@ -62,15 +62,15 @@ exits 0. </li>
 </p>
 
 <ul>
- <li> <em>Pushing the current stack frame.</em> If neither the
-<tt>-p</tt> nor the <tt>-P</tt> nor the <tt>-S</tt> option is set:
+ <li> <em>Pushing the current stack frame.</em> If none of the
+<tt>-p</tt>, <tt>-P</tt>, <tt>-S</tt> or <tt>-s</tt> options is set:
 <tt>execlineb</tt> <a href="el_pushenv.html">pushes</a>
 the current positional parameters, i.e. environment variables that
 start with <tt>#</tt>, <tt>0</tt>, <tt>1</tt>, ..., <tt>9</tt>.
 To get the previous values back, use
 <a href="emptyenv.html"><tt>emptyenv&nbsp;-P</tt></a>. </li>
- <li> <em>Setting the new stack frame.</em> If neither the <tt>-P</tt>
-nor the <tt>-S</tt> option is set:
+ <li> <em>Setting the new stack frame.</em> If none of the <tt>-P</tt>,
+<tt>-S</tt> or <tt>-s</tt> options is set:
  <ul>
   <li> <tt>execlineb</tt> sets the <tt>#</tt> environment variable to
 the number <em>n</em> of <em>args</em> it is given. </li>
@@ -229,6 +229,10 @@ variables. <tt>execlineb -S3 -c "<em>script</em>"</tt> is equivalent to,
 but more efficient than, <tt>execlineb -c "elgetpositionals -P3 emptyenv
 -P <em>script</em>"</tt>. See
 <a href="el_pushenv.html#integrated">the details</a>. </li>
+ <li> The <tt>-s&nbsp;<em>nmin</em></tt> option behaves just like the
+<tt>-S</tt> option, except that it defines <tt>$@</tt> as the rest of the
+command line <strong>after</strong> <em>nmin</em> arguments have been
+removed. </li>
 </ul>
 
 <h2> Current limitations </h2>
@@ -239,8 +243,8 @@ but more efficient than, <tt>execlineb -c "elgetpositionals -P3 emptyenv
 limitations such as the kernel buffer size for <em>argv</em> and <em>envp</em>
  - at least 64 kB on most systems. This means that <tt>execlineb</tt> cannot
 execute arbitrarily large scripts. Be careful with deeply nested scripts too:
-without the <tt>-p</tt>/<tt>-P</tt>/<tt>-S</tt> option, each execlineb
-invocation uses up some space in the environment.
+without the <tt>-p</tt>/<tt>-P</tt>/<tt>-S</tt>/<tt>-s</tt> option, each
+execlineb invocation uses up some space in the environment.
 </p>
 
 </body>

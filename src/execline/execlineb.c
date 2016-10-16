@@ -15,9 +15,9 @@
 #include <execline/execline.h>
 #include "exlsn.h"
 
-#define USAGE "execlineb [ -p | -P | -S nmin ] [ -q | -w | -W ] [ -c commandline ] script args"
+#define USAGE "execlineb [ -p | -P | -S nmin | -s nmin ] [ -q | -w | -W ] [ -c commandline ] script args"
 
-static int myexlp (stralloc *sa, char const *const *argv, unsigned int argc, unsigned int nmin, char const *dollar0)
+static int myexlp (stralloc *sa, char const *const *argv, unsigned int argc, unsigned int nmin, char const *dollar0, int doshift)
 {
   exlsn_t info = EXLSN_ZERO ;
   unsigned int n = argc > nmin ? argc : nmin ;
@@ -33,17 +33,22 @@ static int myexlp (stralloc *sa, char const *const *argv, unsigned int argc, uns
     if (!stralloc_catb(&info.values, fmt, uint_fmt(fmt, argc)) || !stralloc_0(&info.values)) goto err ;
     blah[1].var = 2 ; blah[1].value = info.values.len ; blah[1].n = 1 ;
     if (!stralloc_catb(&info.values, dollar0, str_len(dollar0) + 1)) goto err ;
-    blah[2].var = 4 ; blah[2].value = info.values.len ; blah[2].n = argc ;
+    blah[2].var = 4 ; blah[2].value = info.values.len ; blah[2].n = doshift && n == nmin ? 0 : argc ;
     genalloc_catb(elsubst_t, &info.data, blah, 3) ;
   }
   for (; i < n ; i++)
   {
-    elsubst_t blah ;
+    elsubst_t blah = { .var = info.vars.len, .value = info.values.len, .n = 1 } ;
     char fmt[UINT_FMT] ;
-    blah.var = info.vars.len ; blah.value = info.values.len ; blah.n = 1 ;
     if (!stralloc_catb(&info.vars, fmt, uint_fmt(fmt, i+1)) || !stralloc_0(&info.vars)) goto err ;
     if (!stralloc_catb(&info.values, i < argc ? argv[i] : "", i < argc ? str_len(argv[i]) + 1 : 1)) goto err ;
     genalloc_append(elsubst_t, &info.data, &blah) ;
+    if (i == nmin && doshift)
+    {
+      elsubst_t *p = genalloc_s(elsubst_t, &info.data) + 2 ; /* hit $@ in-place */
+      p->value = blah.value ;
+      p->n = argc - nmin ;
+    }
   }
   {
     stralloc dst = STRALLOC_ZERO ;
@@ -75,7 +80,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "pPqwWc:S:", &l) ;
+      register int opt = subgetopt_r(argc, argv, "pPqwWc:S:s:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -86,9 +91,10 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'W' : flagstrict = 2 ; break ;
         case 'c' : stringarg = l.arg ; break ;
         case 'S' :
+        case 's' :
         {
           if (!uint0_scan(l.arg, &nmin)) strerr_dieusage(100, USAGE) ;
-          flagpushenv = 3 ;
+          flagpushenv = 3 + (opt == 's') ;
           break ;
         }
         default : strerr_dieusage(100, USAGE) ;
@@ -130,9 +136,8 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (!env_addmodif(&modif, "EXECLINE_STRICT", flagstrict ? fmt : 0)) goto errenv ;
   }
 
-  if (flagpushenv == 3)
+  if (flagpushenv == 3 || flagpushenv == 4)
   {
-    flagpushenv = 0 ;
     if (flagstrict && ((unsigned int)argc < nmin))
     {
       char fmtn[UINT_FMT] ;
@@ -144,8 +149,9 @@ int main (int argc, char const *const *argv, char const *const *envp)
       else
         strerr_warnw4x("too few arguments: expecting at least ", fmtn, " but got ", fmta) ;
     }
-    nc = myexlp(&sa, argv, argc, nmin, dollar0) ;
+    nc = myexlp(&sa, argv, argc, nmin, dollar0, flagpushenv == 4) ;
     if (nc < 0) strerr_diefu1sys(111, "substitute positional parameters") ;
+    flagpushenv = 0 ;
   }
   else if (flagpushenv)
   {
