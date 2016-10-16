@@ -77,7 +77,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
 
   if (flagr)  /* put remainder envvars into v */
   {
-    if (++m == sharp) return 0 ;
+    if (++m > sharp) return 0 ;
     if (!genalloc_ready(char const *, &v, sharp - m + 2))
       strerr_diefu1sys(111, "genalloc_ready") ;
     for (; m <= sharp ; m++)
