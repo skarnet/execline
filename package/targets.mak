@@ -46,7 +46,6 @@ unexport \
 wait \
 withstdinas
 
-SBIN_TARGETS :=
 LIBEXEC_TARGETS :=
 
 LIB_DEFS := EXECLINE=execline
