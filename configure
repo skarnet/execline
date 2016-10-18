@@ -134,6 +134,7 @@ bindir='$exec_prefix/bin'
 libdir='$prefix/lib/$package'
 includedir='$prefix/include'
 shebangdir='$bindir'
+shebangisdefault=true
 sysdeps='$prefix/lib/skalibs/sysdeps'
 manualsysdeps=false
 shared=false
@@ -162,7 +163,7 @@ for arg ; do
     --bindir=*) bindir=${arg#*=} ;;
     --libdir=*) libdir=${arg#*=} ;;
     --includedir=*) includedir=${arg#*=} ;;
-    --shebangdir=*) shebangdir=${arg#*=} ;;
+    --shebangdir=*) shebangisdefault=false ; shebangdir=${arg#*=} ;;
     --with-sysdeps=*) sysdeps=${arg#*=} manualsysdeps=true ;;
     --with-include=*) var=${arg#*=} ; stripdir var ; addincpath="$addincpath -I$var" ;;
     --with-lib=*) var=${arg#*=} ; stripdir var ; addlibspath="$addlibspath -L$var" ; vpaths="$vpaths $var" ;;
@@ -239,6 +240,9 @@ if $slashpackage ; then
   libdir=${home}/library
   libexecdir=$bindir
   includedir=${home}/include
+  if $shebangisdefault ; then
+    shebangdir=${extbinprefix}
+  fi
   while read dep ; do
     addincpath="$addincpath -I${sproot}${dep}/include"
     vpaths="$vpaths ${sproot}${dep}/library"
