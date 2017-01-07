@@ -1,6 +1,7 @@
 /* ISC license. */
 
-#include <skalibs/uint16.h>
+#include <sys/types.h>
+#include <stdint.h>
 #include <skalibs/uint.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
@@ -10,7 +11,7 @@
 int el_parse (stralloc *sa, el_chargen_func_t_ref next, void *source)
 {
   static unsigned char const class[256] = "`aaaaaaaaadaaaaaaaaaaaaaaaaaaaaaafcbffffffffffffjhhhhhhhiifffffffmmmmmmfffffffffffffffffffffeffffggmmmgfffffffkfffkfkfkflffnfoffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" ;
-  static uint16 const table[16][16] =
+  static uint16_t const table[16][16] =
   {
     { 0x0011, 0x4011, 0x0010, 0x0010, 0x0010, 0x0011, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x4091 },
     { 0x0000, 0x4000, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x0100, 0x4080 },
@@ -30,14 +31,14 @@ int el_parse (stralloc *sa, el_chargen_func_t_ref next, void *source)
     { 0x820f, 0x8001, 0x8001, 0x8003, 0x8003, 0x0005, 0x0010, 0x8403, 0x8403, 0x8403, 0x8403, 0x0010, 0x8403, 0x8403, 0x8001, 0x8001 }
   } ;
 
-  unsigned int mark = 0 ;
-  unsigned int n = 0 ;
+  size_t mark = 0 ;
+  int n = 0 ;
   unsigned int blevel = 0 ;
   unsigned char state = 0, base = 10 ;
 
   while (state < 0x10)
   {
-    uint16 c ;
+    uint16_t c ;
     unsigned char cur ;
     if (!(*next)(&cur, source)) return -1 ;
     c = table[class[cur]-'`'][state] ;

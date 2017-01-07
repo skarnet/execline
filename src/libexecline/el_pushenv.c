@@ -1,18 +1,19 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <errno.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/uint.h>
 #include <execline/execline.h>
 
-int el_pushenv (stralloc *sa, char const *const *envp, unsigned int envlen, char const *const *list, unsigned int listlen)
+int el_pushenv (stralloc *sa, char const *const *envp, size_t envlen, char const *const *list, size_t listlen)
 {
-  unsigned int i = 0, salen = sa->len, count = 0 ;
+  size_t i = 0, salen = sa->len ;
+  int count = 0 ;
   for (; i < envlen ; i++)
   {
-    unsigned int equal, colon ;
-    unsigned int j = 0 ;
+    size_t equal, colon, j = 0 ;
     for (; j < listlen ; j++) if (str_start(envp[i], list[j])) break ;
     if (j == listlen) goto copyit ;
     count++ ;
@@ -27,8 +28,8 @@ int el_pushenv (stralloc *sa, char const *const *envp, unsigned int envlen, char
     }
     else
     {
+      size_t n ;
       char fmt[UINT_FMT+1] = ":" ;
-      unsigned int n ;
       if (colon + 1 + uint_scan(envp[i] + colon + 1, &n) != equal) goto copyit ;
       n = 1 + uint_fmt(fmt+1, n+1) ;
       if (!stralloc_catb(sa, envp[i], colon)) goto err ;
@@ -39,7 +40,7 @@ int el_pushenv (stralloc *sa, char const *const *envp, unsigned int envlen, char
 copyit:
     if (!stralloc_catb(sa, envp[i], str_len(envp[i]) + 1)) goto err ;
   }
-  return (int)count ;
+  return count ;
 
 badenv :
   errno = EINVAL ;

@@ -40,7 +40,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'o' :
         {
           unsigned short okcodes[256] ;
-          unsigned int nbc ;
+          unsigned int nbc ; /* XXX */
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           codes = l.arg ;
           not = 0 ;
@@ -49,7 +49,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'x' :
         {
           unsigned short okcodes[256] ;
-          unsigned int nbc ;
+          unsigned int nbc ; /* XXX */
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           codes = l.arg ;
           not = 1 ;

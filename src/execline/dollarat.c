@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/buffer.h>
@@ -52,7 +53,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     else
     {
-      unsigned int written = 0 ;
+      size_t written = 0 ;
       if (!netstring_put(buffer_1, x, str_len(x), &written))
         strerr_diefu1sys(111, "write a netstring to stdout") ;
     }

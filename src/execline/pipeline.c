@@ -73,7 +73,7 @@ int main (int argc, char const **argv, char const *const *envp)
 #else
       char fmt[UINT64_FMT + 2] = "!=" ;
 #endif
-      register unsigned int i = 2 ;
+      register size_t i = 2 ;
       i += uint64_fmt(fmt+i, (uint64)pid) ; fmt[i++] = 0 ;
 #ifdef EXECLINE_OLD_VARNAMES
       byte_copy(fmt+i, 8, "LASTPID=") ; i += 8 ;

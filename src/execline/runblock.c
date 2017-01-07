@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/uint.h>
 #include <skalibs/strerr2.h>
@@ -132,7 +133,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   else  /* popenv, then exec */
   {
     char const *list[11] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "#" } ;
-    unsigned int envlen = env_len(envp) ;
+    size_t envlen = env_len(envp) ;
     register int popped = el_popenv(&satmp, envp, envlen, list, 11) ;
     if (popped < 0) strerr_diefu1sys(111, "pop environment") ;
     else

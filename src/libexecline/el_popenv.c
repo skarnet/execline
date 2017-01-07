@@ -1,18 +1,19 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <errno.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/uint.h>
 #include <execline/execline.h>
 
-int el_popenv (stralloc *sa, char const *const *envp, unsigned int envlen, char const *const *list, unsigned int listlen)
+int el_popenv (stralloc *sa, char const *const *envp, size_t envlen, char const *const *list, size_t listlen)
 {
-  unsigned int i = 0, salen = sa->len, count = 0 ;
+  size_t i = 0, salen = sa->len ;
+  int count = 0 ;
   for (; i < envlen ; i++)
   {
-    unsigned int equal, colon, n ;
-    unsigned int j = 0 ;
+    size_t equal, colon, n, j = 0 ;
     for (; j < listlen ; j++) if (str_start(envp[i], list[j])) break ;
     if (j == listlen) goto copyit ;
     j = str_len(list[j]) ;
@@ -34,7 +35,7 @@ int el_popenv (stralloc *sa, char const *const *envp, unsigned int envlen, char 
 copyit:
     if (!stralloc_catb(sa, envp[i], str_len(envp[i]) + 1)) goto err ;
   }
-  return (int)count ;
+  return count ;
 
 badenv :
   errno = EINVAL ;

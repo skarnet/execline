@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/sgetopt.h>
@@ -36,7 +37,7 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argv0) argv[0] = argv0 ;
   if (dash)
   {
-    register unsigned int n = str_len(argv[0]) ;
+    register size_t n = str_len(argv[0]) ;
     char dashed[n+2] ;
     dashed[0] = '-' ;
     byte_copy(dashed+1, n+1, argv[0]) ;

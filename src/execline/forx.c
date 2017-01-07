@@ -60,11 +60,11 @@ int main (int argc, char const **argv, char const *const *envp)
         case 'p' : flagpar = 1 ; break ;
         case 'o' :
           not = 0 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
           break ;
         case 'x' :
           not = 1 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
           break ;
         default : dieusage() ;
       }
@@ -81,8 +81,8 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
   if (!argc1 || (argc1 + 1 == argc)) return 0 ;
   {
-    unsigned int envlen = env_len(envp) ;
-    unsigned int varlen = str_len(x) ;
+    size_t envlen = env_len(envp) ;
+    size_t varlen = str_len(x) ;
     unsigned int i = 0 ;
     pid_t pids[flagpar ? argc1 : 1] ;
     char const *newenv[envlen + 2] ;
@@ -90,7 +90,7 @@ int main (int argc, char const **argv, char const *const *envp)
     for (; i < (unsigned int)argc1 ; i++)
     {
       pid_t pid ;
-      unsigned int vallen = str_len(argv[i]) ;
+      size_t vallen = str_len(argv[i]) ;
       char modif[varlen + vallen + 2] ;
       byte_copy(modif, varlen, x) ;
       modif[varlen] = '=' ;

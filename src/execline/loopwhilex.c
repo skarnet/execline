@@ -23,7 +23,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   int wstat ;
   int not = 0, cont = 1, rev = 0 ;
   unsigned short okcodes[256] ;
-  unsigned int nbc = 0 ;
+  unsigned int nbc = 0 ; /* XXX */
   PROG = "loopwhilex" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;

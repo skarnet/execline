@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
@@ -49,7 +50,7 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argv0) dom[0] = argv0 ;
   if (dash)
   {
-    register unsigned int n = str_len(dom[0]) ;
+    register size_t n = str_len(dom[0]) ;
     char dashed[n+2] ;
     dashed[0] = '-' ;
     byte_copy(dashed+1, n+1, dom[0]) ;

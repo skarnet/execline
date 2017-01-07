@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/env.h>
 #include <skalibs/strerr2.h>
@@ -11,13 +12,14 @@
 	
 int exlp (unsigned int nmin, char const *const *envp, exlsn_t *info)
 {
-  unsigned int varbase = info->vars.len ;
-  unsigned int valbase = info->values.len ;
-  unsigned int datbase = genalloc_len(elsubst_t, &info->data) ;
-  unsigned int i = 0 ;
-  char const *x = env_get2(envp, "#") ;
+  size_t varbase = info->vars.len ;
+  size_t valbase = info->values.len ;
+  size_t datbase = genalloc_len(elsubst_t, &info->data) ;
+  size_t poszero ;
   elsubst_t blah ;
-  unsigned int n, ntot, poszero ;
+  char const *x = env_get2(envp, "#") ;
+  unsigned int n, ntot, i = 0 ;
+
   if (!x) return -2 ;
   if (!uint0_scan(x, &n)) return -2 ;
   if (el_vardupl("#", info->vars.s, info->vars.len)) return -2 ;
@@ -47,7 +49,7 @@ int exlp (unsigned int nmin, char const *const *envp, exlsn_t *info)
   for (; i <= ntot ; i++)
   {
     char fmt[UINT_FMT] ;
-    unsigned int l = uint_fmt(fmt, i) ;
+    size_t l = uint_fmt(fmt, i) ;
     fmt[l] = 0 ;
     if (el_vardupl(fmt, info->vars.s, info->vars.len)) goto err2 ;
     x = (i <= n) ? env_get2(envp, fmt) : "" ;

@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <errno.h>
 #include <skalibs/uint.h>
 #include <skalibs/allreadwrite.h>
@@ -175,7 +176,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (flagpushenv > 1)
     {
       static char const *const list[11] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "#" } ;
-      unsigned int envlen = env_len(envp) ;
+      size_t envlen = env_len(envp) ;
       char const *w[envlen] ;
       if (el_pushenv(&satmp, envp, envlen, list, 11) < 0) goto errenv ;
       if (!env_make(w, envlen, satmp.s, satmp.len)) goto errenv ;

@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
@@ -11,9 +12,9 @@ int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exl
 {
   eltransforminfo_t si = ELTRANSFORMINFO_ZERO ;
   subgetopt_t localopt = SUBGETOPT_ZERO ;
-  unsigned int varbase = info->vars.len ;
-  unsigned int valbase = info->values.len ;
-  unsigned int pos = valbase ;
+  size_t varbase = info->vars.len ;
+  size_t valbase = info->values.len ;
+  size_t pos = valbase ;
   unsigned int i = 0 ;
   unsigned int max ;
   char const *x ;

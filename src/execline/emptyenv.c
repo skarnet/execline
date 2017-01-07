@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/strerr2.h>
@@ -77,7 +78,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   {
     static char const *const list[12] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "#", "ELGETOPT_" } ;
     stralloc sa = STRALLOC_ZERO ;
-    unsigned int envlen = env_len(envp) ;
+    size_t envlen = env_len(envp) ;
     int n = el_popenv(&sa, envp, envlen, flagpos ? list : list + 11, 11 * flagpos + flagopt) ;
     if (n < 0) strerr_diefu1sys(111, "pop current execline environment") ;
     {

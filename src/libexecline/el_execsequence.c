@@ -19,8 +19,8 @@ void el_execsequence (char const *const *argv1, char const *const *argv2, char c
   }
   else
   {
+    size_t j = 2 ;
     int wstat ;
-    unsigned int j = 2 ;
 #ifdef EXECLINE_OLD_VARNAMES
     char fmt[UINT_FMT * 2 + 15] = "?=" ;
 #else

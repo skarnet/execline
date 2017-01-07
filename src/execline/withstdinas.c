@@ -17,7 +17,7 @@ int main (int argc, char const **argv, char const *const *envp)
 {
   subgetopt_t localopt = SUBGETOPT_ZERO ;
   stralloc modif = STRALLOC_ZERO ;
-  unsigned int modifstart ;
+  size_t modifstart ;
   int insist = 0, chomp = 0 ;
   char const *def = 0 ;
   PROG = "withstdinas" ;
@@ -44,7 +44,7 @@ int main (int argc, char const **argv, char const *const *envp)
   if (!slurp(&modif, 0)) strerr_diefu1sys(111, "slurp") ;
   if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_catb") ;
   {
-    unsigned int reallen = str_len(modif.s) ;
+    size_t reallen = str_len(modif.s) ;
     if (reallen < modif.len - 1)
     {
       if (insist >= 2)

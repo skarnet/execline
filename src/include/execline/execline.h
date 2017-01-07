@@ -26,14 +26,14 @@ extern int el_parse_from_buffer (stralloc *, buffer *) ;
 
 /* Basics */
 
-extern int el_vardupl (char const *, char const *, unsigned int) gccattr_pure ;
+extern int el_vardupl (char const *, char const *, size_t) gccattr_pure ;
 extern unsigned int el_getstrict (void) gccattr_const ;
 
 
 /* Environment shifting */
 
-extern int el_pushenv (stralloc *, char const *const *, unsigned int, char const *const *, unsigned int) ;
-extern int el_popenv  (stralloc *, char const *const *, unsigned int, char const *const *, unsigned int) ;
+extern int el_pushenv (stralloc *, char const *const *, size_t, char const *const *, size_t) ;
+extern int el_popenv  (stralloc *, char const *const *, size_t, char const *const *, size_t) ;
 
 
 /* Sequence */
@@ -61,7 +61,7 @@ struct eltransforminfo_s
 
 #define ELTRANSFORMINFO_ZERO { .delim = " \n\r\t", .crunch = 0, .chomp = 0, .split = 0 }
 
-extern int el_transform (stralloc *, unsigned int, eltransforminfo_t const *) ;
+extern int el_transform (stralloc *, size_t, eltransforminfo_t const *) ;
 
 
 /* Substitution */
@@ -69,11 +69,11 @@ extern int el_transform (stralloc *, unsigned int, eltransforminfo_t const *) ;
 typedef struct elsubst_s elsubst_t, *elsubst_t_ref ;
 struct elsubst_s
 {
-  unsigned int var ;
-  unsigned int value ;
+  size_t var ;
+  size_t value ;
   unsigned int n ;
 } ;
 
-extern int el_substitute (stralloc *, char const *, unsigned int, char const *, char const *, elsubst_t const *, unsigned int) ;
+extern int el_substitute (stralloc *, char const *, size_t, char const *, char const *, elsubst_t const *, unsigned int) ;
 
 #endif

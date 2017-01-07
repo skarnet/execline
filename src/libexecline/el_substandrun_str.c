@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <unistd.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/env.h>
@@ -9,7 +10,7 @@
 #include <execline/execline.h>
 #include "exlsn.h"
 
-void el_substandrun_str (stralloc *src, unsigned int srcbase, char const *const *envp, exlsn_t const *info)
+void el_substandrun_str (stralloc *src, size_t srcbase, char const *const *envp, exlsn_t const *info)
 {
   stralloc dst = STRALLOC_ZERO ;
   register int r = el_substitute(&dst, src->s + srcbase, src->len, info->vars.s, info->values.s, genalloc_s(elsubst_t const, &info->data), genalloc_len(elsubst_t const, &info->data)) ;

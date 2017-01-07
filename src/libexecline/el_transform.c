@@ -1,14 +1,15 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/netstring.h>
 #include <skalibs/skamisc.h>
 #include <skalibs/stralloc.h>
 #include <execline/execline.h>
 
-static void el_crunch (stralloc *sa, unsigned int base, char const *delim)
+static void el_crunch (stralloc *sa, size_t base, char const *delim)
 {
-  register unsigned int i = base, j = base ;
+  register size_t i = base, j = base ;
   register int crunching = 0 ;
   for (; i < sa->len ; i++)
   {
@@ -23,10 +24,10 @@ static void el_crunch (stralloc *sa, unsigned int base, char const *delim)
   sa->len = j ;
 }
 
-static int el_split (stralloc *sa, unsigned int base, eltransforminfo_t const *si, int chomped)
+static int el_split (stralloc *sa, size_t base, eltransforminfo_t const *si, int chomped)
 {
-  unsigned int n = 0 ;
-  register unsigned int i = base ;
+  int n = 0 ;
+  register size_t i = base ;
   for (; i < sa->len ; i++)
     if (si->delim[str_chr(si->delim, sa->s[i])])
     {
@@ -44,13 +45,13 @@ static int el_split (stralloc *sa, unsigned int base, eltransforminfo_t const *s
   return n ;
 }
 
-static int el_splitnetstring (stralloc *sa, unsigned int base)
+static int el_splitnetstring (stralloc *sa, size_t base)
 {
-  unsigned int tmpbase = satmp.len ;
-  unsigned int n = 0, i = base ;
+  size_t tmpbase = satmp.len, i = base ;
+  int n = 0 ;
   while (i < sa->len)
   {
-    register int r = netstring_decode(&satmp, sa->s + i, sa->len - i) ;
+    register ssize_t r = netstring_decode(&satmp, sa->s + i, sa->len - i) ;
     if (r < 0) goto err ;
     if (!stralloc_0(&satmp)) goto err ;
     i += r ; n++ ;
@@ -69,7 +70,7 @@ err:
   return -1 ;
 }
 
-int el_transform (stralloc *sa, unsigned int i, eltransforminfo_t const *si)
+int el_transform (stralloc *sa, size_t i, eltransforminfo_t const *si)
 {
   int chomped = 0 ;
   if (si->crunch && *si->delim) el_crunch(sa, i, si->delim) ;

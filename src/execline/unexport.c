@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
@@ -9,7 +10,7 @@
 
 int main (int argc, char const *const *argv, char const *const *envp)
 {
-  unsigned int len ;
+  size_t len ;
   PROG = "unexport" ;
   if (argc < 3) strerr_dieusage(100, USAGE) ;
   len = str_len(argv[1]) ;

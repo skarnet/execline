@@ -33,11 +33,11 @@ static int isok (unsigned short *tab, unsigned int n, int code)
 static void parallel_sigchld_handler (int sig)
 {
   pid_t *tab = genalloc_s(pid_t, &pids) ;
-  unsigned int len = genalloc_len(pid_t, &pids) ;
+  size_t len = genalloc_len(pid_t, &pids) ;
   int wstat ;
   for (;;)
   {
-    register int r = wait_pids_nohang(tab, len, &wstat) ;
+    register ssize_t r = wait_pids_nohang(tab, len, &wstat) ;
     if (r <= 0) break ;
     tab[r-1] = tab[--len] ;
   }
@@ -74,11 +74,11 @@ int main (int argc, char const **argv, char const *const *envp)
         case 'd' : delim = l.arg ; delimlen = str_len(delim) ; break ;
         case 'o' :
           not = 0 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
           break ;
         case 'x' :
           not = 1 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
           break ;
         default : dieusage() ;
       }
@@ -88,8 +88,8 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argc < 2) dieusage() ;
   {
     stralloc modif = STRALLOC_ZERO ;
-    unsigned int envlen = env_len(envp) ;
-    unsigned int modifstart = str_len(argv[0])+1 ;
+    size_t envlen = env_len(envp) ;
+    size_t modifstart = str_len(argv[0])+1 ;
     char const *newenv[envlen + 2] ;
     if (!stralloc_ready(&modif, modifstart+1))
       strerr_diefu1sys(111, "stralloc_ready") ;
@@ -118,7 +118,7 @@ int main (int argc, char const **argv, char const *const *envp)
       }
       else
       {
-        unsigned int unread = 0 ;
+        unsigned int unread = 0 ; /* XXX: change to size_t when the skalibs API changes */
         if (netstring_get(buffer_0, &modif, &unread) <= 0)
         {
           if (netstring_okeof(buffer_0, unread)) break ;

@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <unistd.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
@@ -42,7 +43,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       case -1: strerr_diefu2sys(111, df ? "double" : "", "fork") ;
       case 0:
       {
-        unsigned int len = str_len(argv[1]) ;
+        size_t len = str_len(argv[1]) ;
         PROG = "heredoc (child)" ;
         fd_close(fd[0]) ;
         if (allwrite(fd[1], argv[1], len) < len)

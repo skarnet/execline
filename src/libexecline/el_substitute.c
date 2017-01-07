@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
@@ -9,7 +10,7 @@ typedef struct elsubsu_s elsubsu_t, *elsubsu_t_ref ;
 struct elsubsu_s
 {
   elsubst_t const *subst ;
-  unsigned int pos ;
+  size_t pos ;
 } ;
 
 typedef struct subsuinfo_s subsuinfo_t, *subsuinfo_t_ref ;
@@ -36,7 +37,7 @@ struct subsuinfo_s
 #define INVARBR 0x04
 #define ACCEPT 0x05
 
-static int parseword (stralloc *sa, genalloc *list, char const *s, char const *vars, elsubst_t const *substs, unsigned int nsubst)
+static ssize_t parseword (stralloc *sa, genalloc *list, char const *s, char const *vars, elsubst_t const *substs, unsigned int nsubst)
 {
   static char const class[5] = "\0\\${}" ;
   static unsigned char const table[6][5] =
@@ -49,7 +50,8 @@ static int parseword (stralloc *sa, genalloc *list, char const *s, char const *v
     { INWORD, INVAR | MARK | KEEPESC, INVARBR | MARK | KEEPESC, INVAR | KEEPESC, INVARBR | KEEPESC }
   } ;
 
-  unsigned int mark = 0, pos = 0, offset = 0, esc = 0, salen = sa->len, listlen = genalloc_len(elsubsu_t, list) ;
+  size_t mark = 0, offset = 0, esc = 0, salen = sa->len, listlen = genalloc_len(elsubsu_t, list) ;
+  ssize_t pos = 0 ;
   unsigned char state = INWORD ;
 
   while (state != ACCEPT)
@@ -93,7 +95,7 @@ static int parseword (stralloc *sa, genalloc *list, char const *s, char const *v
     state = c & STATE ; pos++ ;
   }
   sa->len-- ;
-  return (int)pos ;
+  return pos ;
 
 err:
   sa->len = salen ;
@@ -101,23 +103,23 @@ err:
   return -1 ;
 }
 
-static int substword (subsuinfo_t *info, unsigned int wordstart, unsigned int wordlen, unsigned int n, unsigned int offset)
+static int substword (subsuinfo_t *info, size_t wordstart, size_t wordlen, unsigned int n, size_t offset)
 {
   if (n < genalloc_len(elsubsu_t, &info->list))
   {
     elsubsu_t *list = genalloc_s(elsubsu_t, &info->list) ;
     char const *p = info->values + list[n].subst->value ;
-    unsigned int l = list[n].pos + offset ;
-    unsigned int dstbase = info->dst.len ;
-    unsigned int sabase = info->sa.len ;
+    size_t l = list[n].pos + offset ;
+    size_t dstbase = info->dst.len ;
+    size_t sabase = info->sa.len ;
     unsigned int i = 0 ;
     int nc = 0 ;
     if (!stralloc_readyplus(&info->sa, l)) return -1 ;
     stralloc_catb(&info->sa, info->sa.s + wordstart, l) ;
-    for ( ; i < list[n].subst->n ; i++)
+    for (; i < list[n].subst->n ; i++)
     {
+      size_t plen = str_len(p) ;
       int r ;
-      unsigned int plen = str_len(p) ;
       info->sa.len = sabase + l ;
       if (!stralloc_readyplus(&info->sa, plen + wordlen - l)) goto err ;
       stralloc_catb(&info->sa, p, plen) ;
@@ -142,33 +144,37 @@ static int substword (subsuinfo_t *info, unsigned int wordstart, unsigned int wo
   }
 }
 
-int el_substitute (stralloc *dst, char const *src, unsigned int len, char const *vars, char const *values, elsubst_t const *substs, unsigned int nsubst)
+int el_substitute (stralloc *dst, char const *src, size_t len, char const *vars, char const *values, elsubst_t const *substs, unsigned int nsubst)
 {
   subsuinfo_t info = SUBSUINFO_ZERO ;
-  unsigned int nc = 0 ;
-  unsigned int i = 0 ;
-  unsigned int dstbase = dst->len ;
+  size_t i = 0 ;
+  size_t dstbase = dst->len ;
+  int nc = 0 ;
   int wasnull = !dst->s ;
+
   info.dst = *dst ;
   info.values = values ;
 
   while (i < len)
   {
-    int r ;
     genalloc_setlen(elsubsu_t, &info.list, 0) ;
     info.sa.len = 0 ;
-    r = parseword(&info.sa, &info.list, src + i, vars, substs, nsubst) ;
-    if (r < 0) goto err ;
-    i += r ;
-    r = substword(&info, 0, info.sa.len, 0, 0) ;
-    if (r < 0) goto err ;
-    nc += r ;
+    {
+      ssize_t r = parseword(&info.sa, &info.list, src + i, vars, substs, nsubst) ;
+      if (r < 0) goto err ;
+      i += r ;
+    }
+    {
+      int r = substword(&info, 0, info.sa.len, 0, 0) ;
+      if (r < 0) goto err ;
+      nc += r ;
+    }
   }
   genalloc_free(elsubsu_t, &info.list) ;
   stralloc_free(&info.sa) ;
   if (!wasnull) stralloc_free(dst) ;
   *dst = info.dst ;
-  return (int)nc ;
+  return nc ;
 
 err :
   genalloc_free(elsubsu_t, &info.list) ;

@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <sys/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/env.h>
@@ -13,10 +14,11 @@
 
 int main (int argc, char const *const *argv, char const *const *envp)
 {
-  unsigned int n, nbak ;
-  unsigned int envlen = env_len(envp) ;
+  size_t envlen = env_len(envp) ;
   stralloc modif = STRALLOC_ZERO ;
   char const *x = env_get2(envp, "#") ;
+  unsigned int n, nbak ;
+
   PROG = "elgetopt" ;
   if (argc < 3) strerr_dieusage(100, USAGE) ;
   if (!x) strerr_dienotset(100, "#") ;

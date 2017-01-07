@@ -32,7 +32,7 @@ extern exlsnfunc_t exlsn_multidefine ;
 
 extern int exlp (unsigned int, char const *const *, exlsn_t *) ;
 extern void el_substandrun (int, char const *const *, char const *const *, exlsn_t const *) gccattr_noreturn ;
-extern void el_substandrun_str (stralloc *, unsigned int, char const *const *, exlsn_t const *) gccattr_noreturn ;
+extern void el_substandrun_str (stralloc *, size_t, char const *const *, exlsn_t const *) gccattr_noreturn ;
 extern void exlsn_main (int, char const **, char const *const *, exlsnfunc_t *, char const *) gccattr_noreturn ;
 
 #endif

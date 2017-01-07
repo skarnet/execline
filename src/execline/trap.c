@@ -114,12 +114,12 @@ int main (int argc, char const **argv, char const *const *envp)
 
   {
     iopause_fd x = { .fd = spfd, .events = IOPAUSE_READ } ;
+    size_t envlen = env_len(envp) ;
     char modif[2 + UINT64_FMT] = "!=" ;
-    unsigned int envlen = env_len(envp) ;
+    size_t l = 2 + uint64_fmt(modif + 2, pids[NSIG+1]) ;
     char const *newenvp[envlen + 2] ;
-    i = 2 + uint64_fmt(modif + 2, pids[NSIG+1]) ;
-    modif[i++] = 0 ;
-    if (!env_merge(newenvp, envlen + 2, envp, envlen, modif, i))
+    modif[l++] = 0 ;
+    if (!env_merge(newenvp, envlen + 2, envp, envlen, modif, l))
       strerr_diefu1sys(111, "adjust environment") ;
     for (;;)
     {
@@ -142,8 +142,8 @@ int main (int argc, char const **argv, char const *const *envp)
             case SIGCHLD :
               for (;;)
               {
-                int id, wstat ;
-                id = wait_pids_nohang(pids, NSIG + 2, &wstat) ;
+                int wstat ;
+                ssize_t id = wait_pids_nohang(pids, NSIG + 2, &wstat) ;
                 if (id < 0 && errno != ECHILD)
                   strerr_diefu1sys(111, "wait") ;
                 if (id <= 0) break ;
