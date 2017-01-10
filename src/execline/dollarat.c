@@ -53,7 +53,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     else
     {
-      size_t written = 0 ;
+      unsigned int written = 0 ; /* XXX */
       if (!netstring_put(buffer_1, x, str_len(x), &written))
         strerr_diefu1sys(111, "write a netstring to stdout") ;
     }
