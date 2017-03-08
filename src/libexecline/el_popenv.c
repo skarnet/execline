@@ -13,7 +13,8 @@ int el_popenv (stralloc *sa, char const *const *envp, size_t envlen, char const 
   int count = 0 ;
   for (; i < envlen ; i++)
   {
-    size_t equal, colon, n, j = 0 ;
+    size_t equal, colon, j = 0 ;
+    unsigned int n ;
     for (; j < listlen ; j++) if (str_start(envp[i], list[j])) break ;
     if (j == listlen) goto copyit ;
     j = strlen(list[j]) ;
@@ -27,8 +28,8 @@ int el_popenv (stralloc *sa, char const *const *envp, size_t envlen, char const 
     if (n > 1)
     {
       char fmt[UINT_FMT+1] = ":" ;
-      n = 1 + uint_fmt(fmt+1, n-1) ;
-      if (!stralloc_catb(sa, fmt, n)) goto err ;
+      j = 1 + uint_fmt(fmt+1, n-1) ;
+      if (!stralloc_catb(sa, fmt, j)) goto err ;
     }
     if (!stralloc_catb(sa, envp[i] + equal, strlen(envp[i] + equal) + 1)) goto err ;
     continue ;

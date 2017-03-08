@@ -28,12 +28,12 @@ int el_pushenv (stralloc *sa, char const *const *envp, size_t envlen, char const
     }
     else
     {
-      size_t n ;
+      unsigned int n ;
       char fmt[UINT_FMT+1] = ":" ;
       if (colon + 1 + uint_scan(envp[i] + colon + 1, &n) != equal) goto copyit ;
-      n = 1 + uint_fmt(fmt+1, n+1) ;
+      j = 1 + uint_fmt(fmt+1, n+1) ;
       if (!stralloc_catb(sa, envp[i], colon)) goto err ;
-      if (!stralloc_catb(sa, fmt, n)) goto err ;
+      if (!stralloc_catb(sa, fmt, j)) goto err ;
     }
     if (!stralloc_catb(sa, envp[i] + equal, strlen(envp[i] + equal) + 1)) goto err ;
     continue ;

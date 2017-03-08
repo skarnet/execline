@@ -5,7 +5,6 @@
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
-#include <skalibs/ushort.h>
 #include <execline/execline.h>
 
 #define USAGE "if [ -n ] [ -X ] [ -t | -x exitcode ] { command... }"

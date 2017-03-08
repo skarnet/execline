@@ -1,6 +1,7 @@
 /* ISC license. */
 
 #include <string.h>
+#include <strings.h>
 #include <errno.h>
 #include <signal.h>
 #include <skalibs/sgetopt.h>
