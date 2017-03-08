@@ -6,7 +6,7 @@
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <execline/execline.h>
 #include "exlsn.h"
 	
@@ -25,7 +25,7 @@ int exlp (unsigned int nmin, char const *const *envp, exlsn_t *info)
   if (el_vardupl("#", info->vars.s, info->vars.len)) return -2 ;
   if (el_vardupl("@", info->vars.s, info->vars.len)) return -2 ;
   {
-    register unsigned int strict = el_getstrict() ;
+    unsigned int strict = el_getstrict() ;
     if (strict && (n < nmin))
     {
       char fmta[UINT_FMT] ;

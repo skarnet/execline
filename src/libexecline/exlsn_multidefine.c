@@ -23,7 +23,7 @@ int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exl
   si.split = 1 ;
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "0rnCcd:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "0rnCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
@@ -45,7 +45,7 @@ int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exl
   if (argc1 >= argc) return -3 ;
   if (!stralloc_cats(&info->values, x)) return -1 ;
   {
-    register int r = el_transform(&info->values, valbase, &si) ;
+    int r = el_transform(&info->values, valbase, &si) ;
     if (r < 0) goto err ;
     max = r ;
   }

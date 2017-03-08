@@ -1,13 +1,12 @@
 /* ISC license. */
 
 #include <sys/types.h>
-#include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/env.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <execline/execline.h>
 
 #define USAGE "elgetopt optstring prog..."
@@ -27,7 +26,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     char const *args[n+1] ;
-    register unsigned int i = 0 ;
+    unsigned int i = 0 ;
     for ( ; i < n ; i++)
     {
       char fmt[UINT_FMT] ;
@@ -39,7 +38,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     for (;;)
     {
       char hmpf[11] = "ELGETOPT_?" ;
-      register int opt = sgetopt_r(n, args, argv[1], &l) ;
+      int opt = sgetopt_r(n, args, argv[1], &l) ;
       if (opt == -1) break ;
       if (opt == '?') return 1 ;
       hmpf[9] = opt ;

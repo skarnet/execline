@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <skalibs/sgetopt.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
@@ -21,7 +21,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "n:b:", &l) ;
+      int opt = subgetopt_r(argc, argv, "n:b:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -103,7 +103,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
  /* n = shift value; modify the env */
 
   {
-    register unsigned int i = 1 ;
+    unsigned int i = 1 ;
     char fmt[UINT_FMT] ;
     fmt[uint_fmt(fmt, sharp - n)] = 0 ;
     if (!pathexec_env("#", fmt)) strerr_diefu1sys(111, "pathexec_env") ;

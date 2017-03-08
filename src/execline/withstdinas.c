@@ -3,8 +3,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
-#include <skalibs/uint64.h>
-#include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
@@ -23,7 +21,7 @@ int main (int argc, char const **argv, char const *const *envp)
   PROG = "withstdinas" ;
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "iInD:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "iInD:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
@@ -44,7 +42,7 @@ int main (int argc, char const **argv, char const *const *envp)
   if (!slurp(&modif, 0)) strerr_diefu1sys(111, "slurp") ;
   if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_catb") ;
   {
-    size_t reallen = str_len(modif.s) ;
+    size_t reallen = strlen(modif.s) ;
     if (reallen < modif.len - 1)
     {
       if (insist >= 2)
@@ -58,7 +56,7 @@ int main (int argc, char const **argv, char const *const *envp)
       else if (def)
       {
         modif.len = modifstart ;
-        if (!stralloc_catb(&modif, def, str_len(def)+1))
+        if (!stralloc_catb(&modif, def, strlen(def)+1))
           strerr_diefu1sys(111, "stralloc_catb") ;
         strerr_warnw2x("stdin contained a null character", " - using default instead") ;
       }

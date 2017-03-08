@@ -13,7 +13,7 @@
 void el_substandrun_str (stralloc *src, size_t srcbase, char const *const *envp, exlsn_t const *info)
 {
   stralloc dst = STRALLOC_ZERO ;
-  register int r = el_substitute(&dst, src->s + srcbase, src->len, info->vars.s, info->values.s, genalloc_s(elsubst_t const, &info->data), genalloc_len(elsubst_t const, &info->data)) ;
+  int r = el_substitute(&dst, src->s + srcbase, src->len, info->vars.s, info->values.s, genalloc_s(elsubst_t const, &info->data), genalloc_len(elsubst_t const, &info->data)) ;
   if (r < 0) strerr_diefu1sys(111, "el_substitute") ;
   if (!r) _exit(0) ;
   stralloc_free(src) ;

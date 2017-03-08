@@ -23,7 +23,7 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
 
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "iuD:nsCcd:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "iuD:nsCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
@@ -56,7 +56,7 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
   if (!x) blah.n = 0 ;
   else
   {
-    register int r ;
+    int r ;
     if (!stralloc_cats(&info->values, x)) goto err ;
     r = el_transform(&info->values, blah.value, &si) ;
     if (r < 0) goto err ;
@@ -73,6 +73,7 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
 
 int exlsn_import (int argc, char const **argv, char const *const *envp, exlsn_t *info)
 {
+  strerr_warn1x("the import command and directive are obsolescent, please use importas instead!") ;
   return exlsn_import_as(argc, argv, envp, info, 0) ;
 }
 

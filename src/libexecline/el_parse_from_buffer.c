@@ -7,7 +7,7 @@
 
 static int next (unsigned char *c, void *p)
 {
-  register ssize_t r = buffer_get((buffer *)p, (char *)c, 1) ;
+  ssize_t r = buffer_get((buffer *)p, (char *)c, 1) ;
   if (r < 0) return 0 ;
   if (!r) *c = 0 ;
   return 1 ;

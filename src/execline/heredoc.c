@@ -1,10 +1,10 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <string.h>
 #include <unistd.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/allreadwrite.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
@@ -20,7 +20,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "d", &l) ;
+      int opt = subgetopt_r(argc, argv, "d", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -34,7 +34,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   {
     int fd[2] ;
     unsigned int fdr ;
-    int pid ;
+    pid_t pid ;
     if (!uint0_scan(argv[0], &fdr)) strerr_dieusage(100, USAGE) ;
     if (pipe(fd) < 0) strerr_diefu1sys(111, "pipe") ;
     pid = df ? doublefork() : fork() ;
@@ -43,7 +43,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       case -1: strerr_diefu2sys(111, df ? "double" : "", "fork") ;
       case 0:
       {
-        size_t len = str_len(argv[1]) ;
+        size_t len = strlen(argv[1]) ;
         PROG = "heredoc (child)" ;
         fd_close(fd[0]) ;
         if (allwrite(fd[1], argv[1], len) < len)

@@ -1,7 +1,6 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
@@ -23,7 +22,7 @@ int main (int argc, char const **argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "ncla:", &l) ;
+      int opt = subgetopt_r(argc, argv, "ncla:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -50,10 +49,10 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argv0) dom[0] = argv0 ;
   if (dash)
   {
-    register size_t n = str_len(dom[0]) ;
+    size_t n = strlen(dom[0]) ;
     char dashed[n+2] ;
     dashed[0] = '-' ;
-    byte_copy(dashed+1, n+1, dom[0]) ;
+    memcpy(dashed+1, dom[0], n+1) ;
     dom[0] = dashed ;
     pathexec_run(executable, dom, dom_envp) ;
   }

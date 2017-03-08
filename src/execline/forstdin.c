@@ -1,11 +1,11 @@
 /* ISC license. */
 
 #include <sys/types.h>
+#include <string.h>
 #include <errno.h>
+#include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
-#include <skalibs/bytestr.h>
 #include <skalibs/buffer.h>
-#include <skalibs/fmtscan.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
@@ -14,7 +14,6 @@
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
 #include <skalibs/netstring.h>
-#include <skalibs/ushort.h>
 #include <execline/config.h>
 #include <execline/execline.h>
 
@@ -25,7 +24,7 @@ static genalloc pids = GENALLOC_ZERO ; /* pid_t */
 
 static int isok (unsigned short *tab, unsigned int n, int code)
 {
-  register unsigned int i = 0 ;
+  unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
   return i < n ;
 }
@@ -37,7 +36,7 @@ static void parallel_sigchld_handler (int sig)
   int wstat ;
   for (;;)
   {
-    register ssize_t r = wait_pids_nohang(tab, len, &wstat) ;
+    ssize_t r = wait_pids_nohang(tab, len, &wstat) ;
     if (r <= 0) break ;
     tab[r-1] = tab[--len] ;
   }
@@ -48,16 +47,16 @@ static void parallel_sigchld_handler (int sig)
 int main (int argc, char const **argv, char const *const *envp)
 {
   char const *delim = " \n\r\t" ;
-  unsigned int delimlen = 4 ;
+  size_t delimlen = 4 ;
+  size_t nbc = 0 ;
   unsigned short okcodes[256] ;
-  unsigned int nbc = 0 ;
   int crunch = 0, chomp = 0, not = 1 ;
   PROG = "forstdin" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "pnCc0d:o:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "pnCc0d:o:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -71,14 +70,14 @@ int main (int argc, char const **argv, char const *const *envp)
         case 'C' : crunch = 1 ; break ;
         case 'c' : crunch = 0 ; break ;
         case '0' : delim = "" ; delimlen = 1 ; break ;
-        case 'd' : delim = l.arg ; delimlen = str_len(delim) ; break ;
+        case 'd' : delim = l.arg ; delimlen = strlen(delim) ; break ;
         case 'o' :
           not = 0 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
         case 'x' :
           not = 1 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
         default : dieusage() ;
       }
@@ -89,11 +88,11 @@ int main (int argc, char const **argv, char const *const *envp)
   {
     stralloc modif = STRALLOC_ZERO ;
     size_t envlen = env_len(envp) ;
-    size_t modifstart = str_len(argv[0])+1 ;
+    size_t modifstart = strlen(argv[0]) + 1 ;
     char const *newenv[envlen + 2] ;
     if (!stralloc_ready(&modif, modifstart+1))
       strerr_diefu1sys(111, "stralloc_ready") ;
-    byte_copy(modif.s, modifstart-1, argv[0]) ;
+    memcpy(modif.s, argv[0], modifstart - 1) ;
     modif.s[modifstart-1] = '=' ;
     if (pids.s)
     {
@@ -106,7 +105,7 @@ int main (int argc, char const **argv, char const *const *envp)
       modif.len = modifstart ;
       if (delimlen)
       {
-        register int r = skagetlnsep(buffer_0, &modif, delim, delimlen) ;
+        int r = skagetlnsep(buffer_0, &modif, delim, delimlen) ;
         if (!r) break ;
         else if (r < 0)
         {
@@ -118,7 +117,7 @@ int main (int argc, char const **argv, char const *const *envp)
       }
       else
       {
-        unsigned int unread = 0 ; /* XXX: change to size_t when the skalibs API changes */
+        size_t unread = 0 ;
         if (netstring_get(buffer_0, &modif, &unread) <= 0)
         {
           if (netstring_okeof(buffer_0, unread)) break ;

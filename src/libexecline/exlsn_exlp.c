@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <skalibs/sgetopt.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include "exlsn.h"
 
 int exlsn_exlp (int argc, char const **argv, char const *const *envp, exlsn_t *info)
@@ -11,7 +11,7 @@ int exlsn_exlp (int argc, char const **argv, char const *const *envp, exlsn_t *i
   int n ;
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "P:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "P:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {

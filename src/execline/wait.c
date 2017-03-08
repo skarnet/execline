@@ -1,10 +1,8 @@
 /* ISC license. */
 
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
-#include <skalibs/uint64.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/tai.h>
@@ -73,7 +71,7 @@ static inline void mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_
   tain_add_g(deadline, deadline) ;
   while ((*f)(tab, n))
   {
-    register int r = iopause_g(&x, 1, deadline) ;
+    int r = iopause_g(&x, 1, deadline) ;
     if (r < 0) strerr_diefu1sys(111, "iopause") ;
     else if (!r)
     {
@@ -98,7 +96,7 @@ int main (int argc, char const **argv, char const *const *envp)
     unsigned int t = 0 ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "iIrt:", &l) ;
+      int opt = subgetopt_r(argc, argv, "iIrt:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -123,13 +121,9 @@ int main (int argc, char const **argv, char const *const *envp)
     pid_t tab[n] ;
     if (argc1)
     {
-      register unsigned int i = 0 ;
+      unsigned int i = 0 ;
       for (; i < n ; i++)
-      {
-        uint64_t pid ;
-        if (!uint640_scan(argv[i], &pid)) strerr_dieusage(100, USAGE) ;
-        tab[i] = (pid_t)pid ;
-      }
+        if (!pid0_scan(argv[i], tab+i)) strerr_dieusage(100, USAGE) ;
     }
     mainloop(&tto, insist, f, tab, &n) ;
   }

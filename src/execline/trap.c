@@ -1,11 +1,10 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <string.h>
 #include <errno.h>
 #include <signal.h>
-#include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/nsig.h>
 #include <skalibs/sig.h>
 #include <skalibs/strerr2.h>
@@ -47,7 +46,7 @@ int main (int argc, char const **argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "xt:", &l) ;
+      int opt = subgetopt_r(argc, argv, "xt:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -76,8 +75,8 @@ int main (int argc, char const **argv, char const *const *envp)
   while (i < (unsigned int)argc1)
   {
     int argc2 ;
-    unsigned int sig = (unsigned int)sig_number(argv[i] + (case_diffb(argv[i], 3, "sig") ? 0 : 3)) ;
-    if (!sig && !uint0_scan(argv[i], &sig) && case_diffs(argv[i], "timeout"))
+    unsigned int sig = (unsigned int)sig_number(argv[i] + (strncasecmp(argv[i], "sig", 3) ? 0 : 3)) ;
+    if (!sig && !uint0_scan(argv[i], &sig) && strcasecmp(argv[i], "timeout"))
       strerr_dief3x(100, "unrecognized", " directive: ", argv[i]) ;
     argc2 = el_semicolon(argv + ++i) ;
     if (!argc2)
@@ -124,7 +123,7 @@ int main (int argc, char const **argv, char const *const *envp)
     for (;;)
     {
       tain_t deadline ;
-      register int r ;
+      int r ;
       tain_add_g(&deadline, &tto) ;
       r = iopause_g(&x, 1, &deadline) ;
       if (r < 0) strerr_diefu1sys(111, "iopause") ;

@@ -29,7 +29,7 @@ int exlsn_elglob (int argc, char const **argv, char const *const *envp, exlsn_t 
   blah.value = info->values.len ;
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "vwsme0", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "vwsme0", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {

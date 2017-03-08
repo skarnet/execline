@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 #include <sys/resource.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
@@ -13,7 +13,7 @@
 
 unsigned int doit (char *modif, unsigned int i, int fd)
 {
-  register unsigned int pos = 2 ;
+  unsigned int pos = 2 ;
   modif[0] = 'F' ; modif[1] = 'D' ;
   pos += uint_fmt(modif + pos, i) ;
   modif[pos++] = '=' ;
@@ -38,13 +38,13 @@ int main (int argc, char const *const *argv, char const *const *envp)
     unsigned int j = 0 ;
     {
       int fd[n >> 1][2] ;
-      register unsigned int i = 0 ;
+      unsigned int i = 0 ;
       for (; i < (n>>1) ; i++)
         if (pipe(fd[i]) < 0)
           strerr_diefu1sys(111, "reserve fds") ;
       if (n & 1)
       {
-        register int lastfd = open_read("/dev/null") ;
+        int lastfd = open_read("/dev/null") ;
         if (lastfd < 0)
           strerr_diefu1sys(111, "reserve last fd") ;
         fd_close(lastfd) ;

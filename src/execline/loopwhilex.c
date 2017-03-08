@@ -4,7 +4,7 @@
 #include <sys/wait.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/ushort.h>
+#include <skalibs/types.h>
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
@@ -13,7 +13,7 @@
 
 static int isok (unsigned short *tab, unsigned int n, int code)
 {
-  register unsigned int i = 0 ;
+  unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
   return i < n ;
 }
@@ -23,13 +23,13 @@ int main (int argc, char const *const *argv, char const *const *envp)
   int wstat ;
   int not = 0, cont = 1, rev = 0 ;
   unsigned short okcodes[256] ;
-  unsigned int nbc = 0 ; /* XXX */
+  size_t nbc = 0 ;
   PROG = "loopwhilex" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "no:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "no:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {

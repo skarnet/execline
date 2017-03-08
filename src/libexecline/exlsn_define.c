@@ -16,7 +16,7 @@ int exlsn_define (int argc, char const **argv, char const *const *envp, exlsn_t 
   blah.value = info->values.len ;
   for (;;)
   {
-    register int opt = subgetopt_r(argc, argv, "nsCcd:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "nsCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
@@ -35,7 +35,7 @@ int exlsn_define (int argc, char const **argv, char const *const *envp, exlsn_t 
   if (!stralloc_catb(&info->vars, argv[0], str_len(argv[0]) + 1)) return -1 ;
   if (!stralloc_cats(&info->values, argv[1])) goto err ;
   {
-    register int r = el_transform(&info->values, blah.value, &si) ;
+    int r = el_transform(&info->values, blah.value, &si) ;
     if (r < 0) goto err ;
     blah.n = r ;
   }

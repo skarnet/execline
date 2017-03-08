@@ -1,12 +1,11 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/buffer.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/netstring.h>
 
 #define USAGE "dollarat [ -n ] [ -0 | -d delimchar ]"
@@ -23,7 +22,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "nd:0", &l) ;
+      int opt = subgetopt_r(argc, argv, "nd:0", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -53,8 +52,8 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     else
     {
-      unsigned int written = 0 ; /* XXX */
-      if (!netstring_put(buffer_1, x, str_len(x), &written))
+      size_t written = 0 ;
+      if (!netstring_put(buffer_1, x, strlen(x), &written))
         strerr_diefu1sys(111, "write a netstring to stdout") ;
     }
   }

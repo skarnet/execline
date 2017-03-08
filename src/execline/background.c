@@ -2,14 +2,11 @@
 
 #include <sys/types.h>
 #include <unistd.h>
-#ifdef EXECLINE_OLD_VARNAMES
-#include <skalibs/bytestr.h>
-#endif
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
-#include <skalibs/uint64.h>
+#include <skalibs/types.h>
 #include <execline/execline.h>
 
 #define USAGE "background [ -d ] { command... }"
@@ -24,7 +21,7 @@ int main (int argc, char const **argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "d", &l) ;
+      int opt = subgetopt_r(argc, argv, "d", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -59,17 +56,9 @@ int main (int argc, char const **argv, char const *const *envp)
   }
   if (argc1 + 1 == argc) return 0 ;
   {
-#ifdef EXECLINE_OLD_VARNAMES
-    char fmt[UINT64_FMT * 2 + 10] = "!=" ;
-#else
-    char fmt[UINT64_FMT + 2] = "!=" ;
-#endif
-    register size_t i = 2 ;
-    i += uint64_fmt(fmt+i, (uint64)pid) ; fmt[i++] = 0 ;
-#ifdef EXECLINE_OLD_VARNAMES
-    byte_copy(fmt+i, 8, "LASTPID=") ; i += 8 ;
-    i += uint64_fmt(fmt+i, (uint64)pid) ; fmt[i++] = 0 ;
-#endif
+    char fmt[PID_FMT + 2] = "!=" ;
+    size_t i = 2 ;
+    i += pid_fmt(fmt+i, pid) ; fmt[i++] = 0 ;
     pathexec_r(argv + argc1 + 1, envp, env_len(envp), fmt, i) ;
   }
   strerr_dieexec(111, argv[argc1+1]) ;

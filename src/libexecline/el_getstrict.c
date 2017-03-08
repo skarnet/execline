@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <skalibs/env.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <execline/execline.h>
 
 unsigned int el_getstrict (void)

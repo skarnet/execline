@@ -2,7 +2,7 @@
 
 #include <sys/types.h>
 #include <stdint.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
@@ -56,7 +56,7 @@ int el_parse (stralloc *sa, el_chargen_func_t_ref next, void *source)
     if (c & 0x0200)
     {
       char tilde = EXECLINE_BLOCK_QUOTE_CHAR ;
-      register unsigned int i = blevel ;
+      unsigned int i = blevel ;
       if (!stralloc_readyplus(sa, i<<1)) return -1 ;
       while (i--) stralloc_catb(sa, &tilde, 1) ;
     }

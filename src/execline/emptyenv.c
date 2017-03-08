@@ -1,8 +1,7 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
-#include <skalibs/bytestr.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/env.h>
@@ -15,16 +14,13 @@ static void cleanupenv (char const *const *argv, char const *const *envp)
 {
   stralloc sa = STRALLOC_ZERO ;
   if (!pathexec_env("!", 0) || !pathexec_env("?", 0)) goto err ;
-#ifdef EXECLINE_OLD_VARNAMES
-  if (!pathexec_env("LASTPID", 0) || !pathexec_env("LASTEXITCODE", 0)) goto err ;
-#endif
   for (; *envp ; envp++)
   {
     char const *s = *envp ;
     sa.len = 0 ;
-    if (!str_diffn(s, "ELGETOPT_", 9)
-     || !str_diffn(s, "EXECLINE_", 9)
-     || !str_diffn(s, "FD", 2)
+    if (!strncmp(s, "ELGETOPT_", 9)
+     || !strncmp(s, "EXECLINE_", 9)
+     || !strncmp(s, "FD", 2)
      || (s[0] == '#')
      || ((s[0] >= '0') && (s[0] <= '9')))
       if (!stralloc_catb(&sa, s, str_chr(s, '='))
@@ -47,7 +43,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "pcoP", &l) ;
+      int opt = subgetopt_r(argc, argv, "pcoP", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -67,7 +63,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     char const *newenv[2] = { 0, 0 } ;
     if (flagpath)
       for (; *envp ; envp++)
-        if (!str_diffn(*envp, "PATH=", 5))
+        if (!strncmp(*envp, "PATH=", 5))
         {
           newenv[0] = *envp ;
           break ;

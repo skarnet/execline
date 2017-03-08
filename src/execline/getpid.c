@@ -1,9 +1,8 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <string.h>
 #include <unistd.h>
-#include <skalibs/bytestr.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
@@ -15,13 +14,13 @@ int main (int argc, char const *const *argv, char const *const *envp)
   size_t len ;
   PROG = "getpid" ;
   if (argc < 3) strerr_dieusage(100, USAGE) ;
-  len = str_len(argv[1]) ;
-  if (byte_chr(argv[1], len, '=') < len)
+  len = strlen(argv[1]) ;
+  if (!memchr(argv[1], '=', len))
     strerr_dief2x(100, "invalid variable name: ", argv[1]) ;
   {
     size_t i = len+1 ;
     char fmt[UINT_FMT + len + 2] ;
-    byte_copy(fmt, len, argv[1]) ;
+    memcpy(fmt, argv[1], len) ;
     fmt[len] = '=' ;
     i += uint_fmt(fmt+i, getpid()) ; fmt[i++] = 0 ;
     pathexec_r(argv+2, envp, env_len(envp), fmt, i) ;

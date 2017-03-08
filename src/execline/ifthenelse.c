@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <skalibs/sgetopt.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
@@ -20,7 +20,7 @@ int main (int argc, char const **argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "Xs", &l) ;
+      int opt = subgetopt_r(argc, argv, "Xs", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -61,7 +61,7 @@ int main (int argc, char const **argv, char const *const *envp)
     }
     if (magicscope)  /* undocumented voodoo - dangerous and powerful */
     {
-      register unsigned int i = 0 ;
+      unsigned int i = 0 ;
       for (; remainder[i] ; i++) argv[argc2+i] = remainder[i] ;
       argv[argc2+i] = 0 ;
       pathexec0_run(argv, envp) ;

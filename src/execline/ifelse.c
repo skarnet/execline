@@ -5,7 +5,7 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <execline/execline.h>
 
 #define USAGE "ifelse [ -n ] [ -X ] { command-if } { command-then... } command-else..."
@@ -20,7 +20,7 @@ int main (int argc, char const **argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "nX", &l) ;
+      int opt = subgetopt_r(argc, argv, "nX", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {

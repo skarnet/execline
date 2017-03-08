@@ -2,17 +2,17 @@
 
 #include <skalibs/env.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <execline/execline.h>
 
 int el_semicolon (char const **argv)
 {
   static unsigned int nblock = 0 ;
-  register int argc1 = 0 ;
+  int argc1 = 0 ;
   nblock++ ;
   for (;; argc1++, argv++)
   {
-    register char const *arg = *argv ;
+    char const *arg = *argv ;
     if (!arg) return argc1 + 1 ;
     if ((arg[0] == EXECLINE_BLOCK_END_CHAR) && (!EXECLINE_BLOCK_END_CHAR || !arg[1])) return argc1 ;
     else if (arg[0] == EXECLINE_BLOCK_QUOTE_CHAR) ++*argv ;

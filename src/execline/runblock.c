@@ -2,7 +2,7 @@
 
 #include <sys/types.h>
 #include <skalibs/sgetopt.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/env.h>
@@ -25,7 +25,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "Prn:", &l) ;
+      int opt = subgetopt_r(argc, argv, "Prn:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -48,7 +48,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
 
  /* Skip n-1 blocks (n if flagr) */
   {
-    register unsigned int i = 1 ;
+    unsigned int i = 1 ;
     for (; i < n + flagr ; i++)
     {
       unsigned int base = m ;
@@ -134,7 +134,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   {
     char const *list[11] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "#" } ;
     size_t envlen = env_len(envp) ;
-    register int popped = el_popenv(&satmp, envp, envlen, list, 11) ;
+    int popped = el_popenv(&satmp, envp, envlen, list, 11) ;
     if (popped < 0) strerr_diefu1sys(111, "pop environment") ;
     else
     {

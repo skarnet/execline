@@ -1,10 +1,9 @@
 /* ISC license. */
 
+#include <string.h>
 #include <unistd.h>
 #include <errno.h>
-#include <skalibs/ushort.h>
-#include <skalibs/uint.h>
-#include <skalibs/bytestr.h>
+#include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
@@ -26,7 +25,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "epnCc0d:o:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "epnCc0d:o:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -40,7 +39,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'o' :
         {
           unsigned short okcodes[256] ;
-          unsigned int nbc ; /* XXX */
+          size_t nbc ;
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           codes = l.arg ;
           not = 0 ;
@@ -49,7 +48,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'x' :
         {
           unsigned short okcodes[256] ;
-          unsigned int nbc ; /* XXX */
+          size_t nbc ;
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           codes = l.arg ;
           not = 1 ;
@@ -86,7 +85,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (chomp) newargv[m++] = "-n" ;
     if (crunch) newargv[m++] = "-C" ;
     if (!delim) newargv[m++] = "-0" ;
-    else if (str_diff(delim, DELIM_DEFAULT))
+    else if (strcmp(delim, DELIM_DEFAULT))
     {
       newargv[m++] = "-d" ;
       newargv[m++] = delim ;

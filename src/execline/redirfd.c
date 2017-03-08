@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <skalibs/sgetopt.h>
-#include <skalibs/uint.h>
+#include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 
@@ -21,7 +21,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "rwuacxnb", &l) ;
+      int opt = subgetopt_r(argc, argv, "rwuacxnb", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -44,7 +44,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   fd2 = open3(argv[1], flags, 0666) ;
   if ((fd2 == -1) && (what == O_WRONLY) && (errno == ENXIO))
   {
-    register int e ;
+    int e ;
     int fdr = open_read(argv[1]) ;
     if (fdr == -1) strerr_diefu2sys(111, "open_read ", argv[1]) ;
     fd2 = open3(argv[1], flags, 0666) ;

@@ -9,8 +9,8 @@
 
 static void el_crunch (stralloc *sa, size_t base, char const *delim)
 {
-  register size_t i = base, j = base ;
-  register int crunching = 0 ;
+  size_t i = base, j = base ;
+  int crunching = 0 ;
   for (; i < sa->len ; i++)
   {
     if (!crunching) sa->s[j++] = sa->s[i] ;
@@ -27,7 +27,7 @@ static void el_crunch (stralloc *sa, size_t base, char const *delim)
 static int el_split (stralloc *sa, size_t base, eltransforminfo_t const *si, int chomped)
 {
   int n = 0 ;
-  register size_t i = base ;
+  size_t i = base ;
   for (; i < sa->len ; i++)
     if (si->delim[str_chr(si->delim, sa->s[i])])
     {
@@ -51,7 +51,7 @@ static int el_splitnetstring (stralloc *sa, size_t base)
   int n = 0 ;
   while (i < sa->len)
   {
-    register ssize_t r = netstring_decode(&satmp, sa->s + i, sa->len - i) ;
+    ssize_t r = netstring_decode(&satmp, sa->s + i, sa->len - i) ;
     if (r < 0) goto err ;
     if (!stralloc_0(&satmp)) goto err ;
     i += r ; n++ ;

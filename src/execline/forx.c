@@ -1,13 +1,14 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
-#include <skalibs/ushort.h>
+#include <skalibs/types.h>
 #include <execline/config.h>
 #include <execline/execline.h>
 
@@ -16,7 +17,7 @@
 
 static int isok (unsigned short const *tab, unsigned int n, int code)
 {
-  register unsigned int i = 0 ;
+  unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
   return i < n ;
 }
@@ -27,8 +28,8 @@ static int waitn_code (unsigned short const *tab, unsigned int nbc, pid_t *pids,
   while (n)
   {
     int wstat ;
-    register unsigned int i = 0 ;
-    register pid_t pid = wait_nointr(&wstat) ;
+    unsigned int i = 0 ;
+    pid_t pid = wait_nointr(&wstat) ;
     if (pid < 0) return -1 ;
     for (; i < n ; i++) if (pid == pids[i]) break ;
     if (i < n)
@@ -45,14 +46,14 @@ int main (int argc, char const **argv, char const *const *envp)
   char const *x ;
   int argc1 ;
   unsigned short okcodes[256] ;
-  unsigned int nbc = 0 ;
+  size_t nbc = 0 ;
   int flagpar = 0, not = 1 ;
   PROG = "forx" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      register int opt = subgetopt_r(argc, argv, "epo:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "epo:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -60,11 +61,11 @@ int main (int argc, char const **argv, char const *const *envp)
         case 'p' : flagpar = 1 ; break ;
         case 'o' :
           not = 0 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
         case 'x' :
           not = 1 ;
-          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ; /* XXX */
+          if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
         default : dieusage() ;
       }
@@ -82,7 +83,7 @@ int main (int argc, char const **argv, char const *const *envp)
   if (!argc1 || (argc1 + 1 == argc)) return 0 ;
   {
     size_t envlen = env_len(envp) ;
-    size_t varlen = str_len(x) ;
+    size_t varlen = strlen(x) ;
     unsigned int i = 0 ;
     pid_t pids[flagpar ? argc1 : 1] ;
     char const *newenv[envlen + 2] ;
@@ -90,11 +91,11 @@ int main (int argc, char const **argv, char const *const *envp)
     for (; i < (unsigned int)argc1 ; i++)
     {
       pid_t pid ;
-      size_t vallen = str_len(argv[i]) ;
+      size_t vallen = strlen(argv[i]) ;
       char modif[varlen + vallen + 2] ;
-      byte_copy(modif, varlen, x) ;
+      memcpy(modif, x, varlen) ;
       modif[varlen] = '=' ;
-      byte_copy(modif + varlen + 1, vallen, argv[i]) ;
+      memcpy(modif + varlen + 1, argv[i], vallen) ;
       modif[varlen + vallen + 1] = 0 ;
       if (!env_merge(newenv, envlen + 2, envp, envlen, modif, varlen + vallen + 2))
         strerr_diefu1sys(111, "build new environment") ;
@@ -113,7 +114,7 @@ int main (int argc, char const **argv, char const *const *envp)
 
     if (flagpar)
     {
-      register int r = waitn_code(okcodes, nbc, pids, argc1, not) ;
+      int r = waitn_code(okcodes, nbc, pids, argc1, not) ;
       if (r < 0) strerr_diefu1sys(111, "waitn") ;
       else if (!r) return 1 ;
     }
