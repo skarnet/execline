@@ -73,7 +73,7 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
 
 int exlsn_import (int argc, char const **argv, char const *const *envp, exlsn_t *info)
 {
-  strerr_warn1x("the import command and directive are obsolescent, please use importas instead!") ;
+  strerr_warnw1x("the import command and directive are obsolescent, please use importas instead!") ;
   return exlsn_import_as(argc, argv, envp, info, 0) ;
 }
 
