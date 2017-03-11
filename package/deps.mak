@@ -57,7 +57,7 @@ src/libexecline/el_popenv.o src/libexecline/el_popenv.lo: src/libexecline/el_pop
 src/libexecline/el_pushenv.o src/libexecline/el_pushenv.lo: src/libexecline/el_pushenv.c src/include/execline/execline.h
 src/libexecline/el_semicolon.o src/libexecline/el_semicolon.lo: src/libexecline/el_semicolon.c src/include/execline/execline.h
 src/libexecline/el_spawn0.o src/libexecline/el_spawn0.lo: src/libexecline/el_spawn0.c src/include/execline/config.h src/include/execline/execline.h
-src/libexecline/el_spawn1.o src/libexecline/el_spawn1.lo: src/libexecline/el_spawn1.c src/include/execline/execline.h
+src/libexecline/el_spawn1.o src/libexecline/el_spawn1.lo: src/libexecline/el_spawn1.c src/include/execline/config.h src/include/execline/execline.h
 src/libexecline/el_substandrun.o src/libexecline/el_substandrun.lo: src/libexecline/el_substandrun.c src/include-local/exlsn.h
 src/libexecline/el_substandrun_str.o src/libexecline/el_substandrun_str.lo: src/libexecline/el_substandrun_str.c src/include/execline/execline.h src/include-local/exlsn.h
 src/libexecline/el_substitute.o src/libexecline/el_substitute.lo: src/libexecline/el_substitute.c src/include/execline/execline.h
