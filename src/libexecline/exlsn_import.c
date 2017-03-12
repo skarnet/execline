@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
@@ -42,7 +42,7 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
 
   if ((unsigned int)argc < 1+as) return -3 ;
   if (!*argv[0] || el_vardupl(argv[0], info->vars.s, info->vars.len)) return -2 ;
-  if (!stralloc_catb(&info->vars, argv[0], str_len(argv[0]) + 1)) return -1 ;
+  if (!stralloc_catb(&info->vars, argv[0], strlen(argv[0]) + 1)) return -1 ;
   x = env_get2(envp, argv[as]) ;
   if (!x)
   {
@@ -51,7 +51,7 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
   }
   else if (unexport)
   {
-    if (!stralloc_catb(&info->modifs, argv[as], str_len(argv[as]) + 1)) goto err ;
+    if (!stralloc_catb(&info->modifs, argv[as], strlen(argv[as]) + 1)) goto err ;
   }
   if (!x) blah.n = 0 ;
   else

@@ -1,7 +1,6 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/env.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
@@ -42,7 +41,7 @@ int exlp (unsigned int nmin, char const *const *envp, exlsn_t *info)
   blah.value = info->values.len ;
   blah.n = 1 ;
   if (!stralloc_catb(&info->vars, "#\0@", 4)
-   || !stralloc_catb(&info->values, x, str_len(x) + 1)
+   || !stralloc_catb(&info->values, x, strlen(x) + 1)
    || !genalloc_append(elsubst_t, &info->data, &blah)) goto err ;
   ntot = n > nmin ? n : nmin ;
   poszero = info->values.len ;
@@ -58,11 +57,11 @@ int exlp (unsigned int nmin, char const *const *envp, exlsn_t *info)
     blah.value = info->values.len ;
     blah.n = 1 ;
     if (!stralloc_catb(&info->vars, fmt, l+1)
-     || !stralloc_catb(&info->values, x, str_len(x) + 1)
+     || !stralloc_catb(&info->values, x, strlen(x) + 1)
      || !genalloc_append(elsubst_t, &info->data, &blah)) goto err ;
   }
   blah.var = varbase + 2 ;
-  blah.value = poszero + str_len(info->values.s + poszero) + 1 ;
+  blah.value = poszero + strlen(info->values.s + poszero) + 1 ;
   blah.n = n ;
   if (!genalloc_append(elsubst_t, &info->data, &blah)) goto err ;
   return n ;

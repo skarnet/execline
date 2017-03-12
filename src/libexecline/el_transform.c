@@ -1,7 +1,6 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/netstring.h>
 #include <skalibs/skamisc.h>
 #include <skalibs/stralloc.h>
@@ -14,7 +13,7 @@ static void el_crunch (stralloc *sa, size_t base, char const *delim)
   for (; i < sa->len ; i++)
   {
     if (!crunching) sa->s[j++] = sa->s[i] ;
-    if (delim[str_chr(delim, sa->s[i])]) crunching = 1 ;
+    if (strchr(delim, sa->s[i])) crunching = 1 ;
     else if (crunching)
     {
       i-- ;
@@ -29,7 +28,7 @@ static int el_split (stralloc *sa, size_t base, eltransforminfo_t const *si, int
   int n = 0 ;
   size_t i = base ;
   for (; i < sa->len ; i++)
-    if (si->delim[str_chr(si->delim, sa->s[i])])
+    if (strchr(si->delim, sa->s[i]))
     {
       sa->s[i] = 0 ;
       n++ ;
@@ -75,7 +74,7 @@ int el_transform (stralloc *sa, size_t i, eltransforminfo_t const *si)
   int chomped = 0 ;
   if (si->crunch && *si->delim) el_crunch(sa, i, si->delim) ;
   if (si->chomp && (sa->len > i)
-   && si->delim[str_chr(si->delim, sa->s[sa->len-1])])
+   && strchr(si->delim, sa->s[sa->len-1]))
   {
     sa->len-- ;
     chomped = 1 ;

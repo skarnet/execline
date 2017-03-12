@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/strerr2.h>
 #include <execline/execline.h>
 #include "exlsn.h"
@@ -44,7 +44,7 @@ int main (int argc, char const **argv, char const *const *envp)
   {
     int n ;
     unsigned int i = 0 ;
-    for (; commands[i] ; i++) if (!str_diff(*argv, commands[i])) break ;
+    for (; commands[i] ; i++) if (!strcmp(*argv, commands[i])) break ;
     if (!commands[i]) strerr_dief3x(100, "syntax error: unrecognized", " directive ", *argv) ;
     n = (*(functions[i]))(argc1, argv, envp, &info) ;
     if (n < 0) switch (n)

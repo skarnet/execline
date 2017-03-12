@@ -2,7 +2,7 @@
 
 #include <errno.h>
 #include <glob.h>
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
@@ -46,7 +46,7 @@ int exlsn_elglob (int argc, char const **argv, char const *const *envp, exlsn_t 
 
   if (argc < 2) return -3 ;
   if (!*argv[0] || el_vardupl(argv[0], info->vars.s, info->vars.len)) return -2 ;
-  if (!stralloc_catb(&info->vars, argv[0], str_len(argv[0]) + 1)) return -1 ;
+  if (!stralloc_catb(&info->vars, argv[0], strlen(argv[0]) + 1)) return -1 ;
 
   pglob.gl_offs = 0 ;
   switch (glob(argv[1], flags, verbose ? &elgloberrfunc : 0, &pglob))
@@ -61,7 +61,7 @@ int exlsn_elglob (int argc, char const **argv, char const *const *envp, exlsn_t 
     default: goto err ;
   }
   for ( ; i < (unsigned int)pglob.gl_pathc ; i++)
-    if (!stralloc_catb(&info->values, pglob.gl_pathv[i], str_len(pglob.gl_pathv[i]) + 1))
+    if (!stralloc_catb(&info->values, pglob.gl_pathv[i], strlen(pglob.gl_pathv[i]) + 1))
       goto globerr ;
   blah.n = pglob.gl_pathc ;
   globfree(&pglob) ;

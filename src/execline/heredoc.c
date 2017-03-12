@@ -52,7 +52,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       }
     }
     fd_close(fd[1]) ;
-    if (fd_move((int)fdr, fd[0]) == -1)
+    if (fd_move(fdr, fd[0]) == -1)
       strerr_diefu2sys(111, "read on fd ", argv[0]) ;
   }
   pathexec_run(argv[2], argv+2, envp) ;

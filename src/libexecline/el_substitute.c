@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <string.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
@@ -65,12 +65,12 @@ static ssize_t parseword (stralloc *sa, genalloc *list, char const *s, char cons
       unsigned int i = 0 ;
       for (; i < nsubst ; i++)
       {
-        if (!str_diffn(vars + substs[i].var, s + mark, pos - mark) && !vars[substs[i].var + pos - mark])
+        if (!strncmp(vars + substs[i].var, s + mark, pos - mark) && !vars[substs[i].var + pos - mark])
         {
           sa->len -= esc >> 1 ; offset += esc >> 1 ;
           if (esc & 1)
           {
-            byte_copy(sa->s + mark - offset - 2 - supp, pos - mark + 1 + supp, sa->s + mark - offset + (esc>>1) - 1 - supp) ;
+            memcpy(sa->s + mark - offset - 2 - supp, sa->s + mark - offset + (esc>>1) - 1 - supp, pos - mark + 1 + supp) ;
             sa->len-- ; offset++ ;
           }
           else
@@ -118,7 +118,7 @@ static int substword (subsuinfo_t *info, size_t wordstart, size_t wordlen, unsig
     stralloc_catb(&info->sa, info->sa.s + wordstart, l) ;
     for (; i < list[n].subst->n ; i++)
     {
-      size_t plen = str_len(p) ;
+      size_t plen = strlen(p) ;
       int r ;
       info->sa.len = sabase + l ;
       if (!stralloc_readyplus(&info->sa, plen + wordlen - l)) goto err ;

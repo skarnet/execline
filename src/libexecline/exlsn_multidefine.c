@@ -1,8 +1,7 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
-#include <skalibs/bytestr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
 #include <execline/execline.h>
@@ -57,12 +56,12 @@ int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exl
       elsubst_t blah ;
       blah.var = info->vars.len ;
       if (el_vardupl(argv[i], info->vars.s, info->vars.len)) goto err2 ;
-      if (!stralloc_catb(&info->vars, argv[i], str_len(argv[i]) + 1)) goto err ;
+      if (!stralloc_catb(&info->vars, argv[i], strlen(argv[i]) + 1)) goto err ;
       blah.value = i < max ? pos : info->values.len - 1 ;
       blah.n = (i < max) || !zeroword ;
       if (!genalloc_append(elsubst_t, &info->data, &blah)) goto err ;
     }
-    if (i < max) pos += str_len(info->values.s + pos) + 1 ;
+    if (i < max) pos += strlen(info->values.s + pos) + 1 ;
   }
   if ((i < max) && likeread) genalloc_s(elsubst_t, &info->data)[i-1].n = max - i + 1 ;
 

@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <skalibs/bytestr.h>
+#include <string.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
@@ -32,7 +32,7 @@ int exlsn_define (int argc, char const **argv, char const *const *envp, exlsn_t 
  
   if (argc < 2) return -3 ;
   if (!*argv[0] || el_vardupl(argv[0], info->vars.s, info->vars.len)) return -2 ;
-  if (!stralloc_catb(&info->vars, argv[0], str_len(argv[0]) + 1)) return -1 ;
+  if (!stralloc_catb(&info->vars, argv[0], strlen(argv[0]) + 1)) return -1 ;
   if (!stralloc_cats(&info->values, argv[1])) goto err ;
   {
     int r = el_transform(&info->values, blah.value, &si) ;
