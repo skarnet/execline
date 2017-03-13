@@ -1,6 +1,5 @@
 /* ISC license. */
 
-#include <sys/types.h>
 #include <skalibs/djbunix.h>
 #include <execline/config.h>
 #include <execline/execline.h>

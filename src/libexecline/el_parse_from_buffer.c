@@ -2,7 +2,6 @@
 
 #include <sys/types.h>
 #include <skalibs/buffer.h>
-#include <skalibs/stralloc.h>
 #include <execline/execline.h>
 
 static int next (unsigned char *c, void *p)
