@@ -1,0 +1,10 @@
+Changelog for execline.
+
+In 2.3.0.0
+----------
+
+ - Added this NEWS file. :)
+ - Major types overhaul to make them more POSIXly correct:
+compatibility with skalibs-2.5.0.0.
+ - The "import" command is now marked as obsolescent.
+
