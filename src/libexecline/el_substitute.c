@@ -70,7 +70,7 @@ static ssize_t parseword (stralloc *sa, genalloc *list, char const *s, char cons
           sa->len -= esc >> 1 ; offset += esc >> 1 ;
           if (esc & 1)
           {
-            memcpy(sa->s + mark - offset - 2 - supp, sa->s + mark - offset + (esc>>1) - 1 - supp, pos - mark + 1 + supp) ;
+            memmove(sa->s + mark - offset - 2 - supp, sa->s + mark - offset + (esc>>1) - 1 - supp, pos - mark + 1 + supp) ;
             sa->len-- ; offset++ ;
           }
           else
