@@ -41,6 +41,7 @@ int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exl
   x = argv[0] ;
   argv++ ; argc-- ;
   argc1 = el_semicolon(argv) ;
+  if (!argc1) return -4 ;
   if (argc1 >= argc) return -3 ;
   if (!stralloc_cats(&info->values, x)) return -1 ;
   {
