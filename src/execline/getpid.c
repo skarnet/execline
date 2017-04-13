@@ -15,7 +15,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   PROG = "getpid" ;
   if (argc < 3) strerr_dieusage(100, USAGE) ;
   len = strlen(argv[1]) ;
-  if (!memchr(argv[1], '=', len))
+  if (memchr(argv[1], '=', len))
     strerr_dief2x(100, "invalid variable name: ", argv[1]) ;
   {
     size_t i = len+1 ;
