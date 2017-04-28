@@ -112,8 +112,8 @@ int main (int argc, char const **argv, char const *const *envp)
       }
   }
 
-  pids[NSIG] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
-  if (!pids[NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
+  pids[SKALIBS_NSIG] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
+  if (!pids[SKALIBS_NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
 
   {
     iopause_fd x = { .fd = spfd, .events = IOPAUSE_READ } ;
