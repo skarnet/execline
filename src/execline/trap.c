@@ -100,6 +100,8 @@ int main (int argc, char const **argv, char const *const *envp)
     sigset_t full ;
     sigfillset(&full) ;
     sigdelset(&full, SIGCHLD) ;
+    sigdelset(&full, SIGKILL) ;
+    sigdelset(&full, SIGSTOP) ;
     for (i = 1 ; i <= NSIG ; i++)
       if (!argvs[i] && sigismember(&full, i) > 0 && selfpipe_trap(i) < 0)
       {
