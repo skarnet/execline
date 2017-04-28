@@ -19,8 +19,8 @@
 #define USAGE "trap [ -x ] [ -t timeout ] { signal { cmdline } ... } prog..."
 #define dieusage() strerr_dieusage(100, USAGE) ;
 
-static pid_t pids[NSIG + 2] ;
-static char const *const *argvs[NSIG + 1] ;
+static pid_t pids[NSIG + 1] ;
+static char const *const *argvs[NSIG] ;
 
 static void action (unsigned int i, char const *const *envp)
 {
@@ -32,7 +32,7 @@ static void action (unsigned int i, char const *const *envp)
       if (!pids[i]) strerr_diefu2sys(111, "spawn ", argvs[i][0]) ;
     }
   }
-  else kill(pids[NSIG+1], i) ;
+  else kill(pids[NSIG], i) ;
 }
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -40,7 +40,7 @@ int main (int argc, char const **argv, char const *const *envp)
   tain_t tto ;
   int xfersigs = 0 ;
   int argc1, spfd ;
-  unsigned int i = NSIG + 2 ;
+  unsigned int i = NSIG + 1 ;
   PROG = "trap" ;
   {
     unsigned int t = 0 ;
@@ -102,7 +102,7 @@ int main (int argc, char const **argv, char const *const *envp)
     sigdelset(&full, SIGCHLD) ;
     sigdelset(&full, SIGKILL) ;
     sigdelset(&full, SIGSTOP) ;
-    for (i = 1 ; i <= NSIG ; i++)
+    for (i = 1 ; i < NSIG ; i++)
       if (!argvs[i] && sigismember(&full, i) > 0 && selfpipe_trap(i) < 0)
       {
         char fmt[UINT_FMT] ;
@@ -111,14 +111,14 @@ int main (int argc, char const **argv, char const *const *envp)
       }
   }
 
-  pids[NSIG+1] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
-  if (!pids[NSIG+1]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
+  pids[NSIG] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
+  if (!pids[NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
 
   {
     iopause_fd x = { .fd = spfd, .events = IOPAUSE_READ } ;
     size_t envlen = env_len(envp) ;
     char modif[2 + PID_FMT] = "!=" ;
-    size_t l = 2 + pid_fmt(modif + 2, pids[NSIG+1]) ;
+    size_t l = 2 + pid_fmt(modif + 2, pids[NSIG]) ;
     char const *newenvp[envlen + 2] ;
     modif[l++] = 0 ;
     if (!env_merge(newenvp, envlen + 2, envp, envlen, modif, l))
@@ -145,12 +145,12 @@ int main (int argc, char const **argv, char const *const *envp)
               for (;;)
               {
                 int wstat ;
-                ssize_t id = wait_pids_nohang(pids, NSIG + 2, &wstat) ;
+                ssize_t id = wait_pids_nohang(pids, NSIG + 1, &wstat) ;
                 if (id < 0 && errno != ECHILD)
                   strerr_diefu1sys(111, "wait") ;
                 if (id <= 0) break ;
                 pids[id - 1] = 0 ;
-                if (id == NSIG + 2) return wait_estatus(wstat) ;
+                if (id == NSIG + 1) return wait_estatus(wstat) ;
               }
               if (!argvs[SIGCHLD]) break ;
             default :
