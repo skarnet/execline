@@ -116,6 +116,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
         strerr_diefu1sys(111, "pathexec_env") ;
     }
   }
-  pathexec(argv) ;
-  strerr_dieexec(111, argv[0]) ;
+  xpathexec(argv) ;
 }

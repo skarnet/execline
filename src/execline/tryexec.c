@@ -58,6 +58,5 @@ int main (int argc, char const **argv, char const *const *envp)
   }
   else pathexec_run(executable, dom, dom_envp) ;
 
-  pathexec0_run(sub, envp) ;
-  strerr_dieexec(111, sub[0]) ;
+  xpathexec0_run(sub, envp) ;
 }

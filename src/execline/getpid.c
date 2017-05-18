@@ -23,7 +23,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
     memcpy(fmt, argv[1], len) ;
     fmt[len] = '=' ;
     i += uint_fmt(fmt+i, getpid()) ; fmt[i++] = 0 ;
-    pathexec_r(argv+2, envp, env_len(envp), fmt, i) ;
+    xpathexec_r(argv+2, envp, env_len(envp), fmt, i) ;
   }
-  strerr_dieexec(111, argv[2]) ;
 }

@@ -128,6 +128,5 @@ int main (int argc, char const **argv, char const *const *envp)
     mainloop(&tto, insist, f, tab, &n) ;
   }
 
-  pathexec0_run(argv + argc1 + 1, envp) ;
-  strerr_dieexec(111, argv[argc1 + 1]) ;
+  xpathexec0_run(argv + argc1 + 1, envp) ;
 }

@@ -55,6 +55,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (fd_move(fdr, fd[0]) == -1)
       strerr_diefu2sys(111, "read on fd ", argv[0]) ;
   }
-  pathexec_run(argv[2], argv+2, envp) ;
-  strerr_dieexec(111, argv[2]) ;
+  xpathexec_run(argv[2], argv+2, envp) ;
 }

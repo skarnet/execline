@@ -13,6 +13,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if ((argc < 4) || !uint0_scan(argv[1], &fd1) || !uint0_scan(argv[2], &fd2))
     strerr_dieusage(100, USAGE) ;
   if (fd_move2(fd1, fd2, fd2, fd1) < 0) strerr_diefu1sys(111, "swap fds") ;
-  pathexec_run(argv[3], argv+3, envp) ;
-  strerr_dieexec(111, argv[3]) ;
+  xpathexec_run(argv[3], argv+3, envp) ;
 }

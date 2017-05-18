@@ -30,6 +30,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
     strerr_dieusage(100, USAGE) ;
   if ((flagcopy ? fd_copy(to, from) : fd_move(to, from)) == -1)
     strerr_diefu4sys(111, "move fd ", argv[1], " to fd ", argv[0]) ;
-  pathexec_run(argv[2], argv+2, envp) ;
-  strerr_dieexec(111, argv[2]) ;
+  xpathexec_run(argv[2], argv+2, envp) ;
 }

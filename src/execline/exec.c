@@ -41,8 +41,7 @@ int main (int argc, char const **argv, char const *const *envp)
     dashed[0] = '-' ;
     memcpy(dashed+1, argv[0], n+1) ;
     argv[0] = (char const *)dashed ;
-    pathexec_run(executable, argv, envp) ;
+    xpathexec_run(executable, argv, envp) ;
   }
-  else pathexec_run(executable, argv, envp) ;
-  strerr_dieexec(111, executable) ;
+  else xpathexec_run(executable, argv, envp) ;
 }

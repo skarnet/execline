@@ -64,6 +64,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (((flags & O_NONBLOCK) ? ndelay_off(fd) : ndelay_on(fd)) < 0)
       strerr_diefu1sys(111, "change blocking mode") ;
   }
-  pathexec_run(argv[2], argv+2, envp) ;
-  strerr_dieexec(111, argv[2]) ;
+  xpathexec_run(argv[2], argv+2, envp) ;
 }

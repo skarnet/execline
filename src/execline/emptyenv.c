@@ -1,6 +1,7 @@
 /* ISC license. */
 
 #include <string.h>
+#include <skalibs/gccattributes.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
@@ -11,6 +12,7 @@
 
 #define USAGE "emptyenv [ -p | -c | -o | -P ] prog..."
 
+static void cleanupenv (char const *const *, char const *const *) gccattr_noreturn ;
 static void cleanupenv (char const *const *argv, char const *const *envp)
 {
   stralloc sa = STRALLOC_ZERO ;
@@ -30,8 +32,7 @@ static void cleanupenv (char const *const *argv, char const *const *envp)
         goto err ;
   }
   stralloc_free(&sa) ;
-  pathexec(argv) ;
-  strerr_dieexec(111, argv[0]) ;
+  xpathexec(argv) ;
 err:
   strerr_diefu1sys(111, "clean up environment") ;
 }
@@ -69,7 +70,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
           newenv[0] = *envp ;
           break ;
         }
-    pathexec_run(argv[0], argv, newenv) ;
+    xpathexec_run(argv[0], argv, newenv) ;
   }
   else
   {
@@ -82,9 +83,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       char const *v[envlen - n + 1] ;
       if (!env_make(v, envlen-n, sa.s, sa.len)) strerr_diefu1sys(111, "env_make") ;
       v[envlen-n] = 0 ;
-      pathexec_run(argv[0], argv, v) ;
+      xpathexec_run(argv[0], argv, v) ;
     }
-    stralloc_free(&sa) ;
   }
-  strerr_dieexec(111, argv[0]) ;
 }

@@ -59,7 +59,6 @@ int main (int argc, char const **argv, char const *const *envp)
     char fmt[PID_FMT + 2] = "!=" ;
     size_t i = 2 ;
     i += pid_fmt(fmt+i, pid) ; fmt[i++] = 0 ;
-    pathexec_r(argv + argc1 + 1, envp, env_len(envp), fmt, i) ;
+    xpathexec_r(argv + argc1 + 1, envp, env_len(envp), fmt, i) ;
   }
-  strerr_dieexec(111, argv[argc1+1]) ;
 }

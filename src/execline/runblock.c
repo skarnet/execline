@@ -129,7 +129,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   }
 
   if (flagnopop)  /* exec now */
-    pathexec_run(genalloc_s(char const *, &v)[0], genalloc_s(char const *, &v), envp) ;
+    xpathexec_run(genalloc_s(char const *, &v)[0], genalloc_s(char const *, &v), envp) ;
   else  /* popenv, then exec */
   {
     char const *list[11] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "#" } ;
@@ -142,9 +142,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       if (!env_make(w, envlen - popped, satmp.s, satmp.len))
         strerr_diefu1sys(111, "env_make") ;
       w[envlen - popped] = 0 ;
-      pathexec_run(genalloc_s(char const *, &v)[0], genalloc_s(char const *, &v), w) ;
-      stralloc_free(&satmp) ;
+      xpathexec_run(genalloc_s(char const *, &v)[0], genalloc_s(char const *, &v), w) ;
     }
   }
-  strerr_dieexec(111, genalloc_s(char const *, &v)[0]) ;
 }

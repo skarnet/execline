@@ -62,8 +62,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     char const *v[envlen] ;
     if (el_pushenv(&satmp, envp, envlen, list, 1) < 0) goto err ;
     if (!env_make(v, envlen, satmp.s, satmp.len)) goto err ;
-    pathexec_r(argv+2, v, envlen, modif.s, modif.len) ;
-    strerr_dieexec(111, argv[2]) ;
+    xpathexec_r(argv+2, v, envlen, modif.s, modif.len) ;
   }
 err:
   strerr_diefu1sys(111, "update environment") ;

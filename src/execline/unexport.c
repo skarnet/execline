@@ -15,6 +15,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
   len = strlen(argv[1]) ;
   if (memchr(argv[1], '=', len))
     strerr_dief2x(100, "invalid variable name: ", argv[1]) ;
-  pathexec_r(argv+2, envp, env_len(envp), argv[1], len+1) ;
-  strerr_dieexec(111, argv[2]) ;
+  xpathexec_r(argv+2, envp, env_len(envp), argv[1], len+1) ;
 }

@@ -21,7 +21,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
     memcpy(fmt, argv[1], len1) ;
     fmt[len1] = '=' ;
     memcpy(fmt + len1 + 1, argv[2], len2 + 1) ;
-    pathexec_r(argv+3, envp, env_len(envp), fmt, len1 + len2 + 2) ;
+    xpathexec_r(argv+3, envp, env_len(envp), fmt, len1 + len2 + 2) ;
   }
-  strerr_dieexec(111, argv[3]) ;
 }

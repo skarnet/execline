@@ -66,6 +66,5 @@ int main (int argc, char const **argv, char const *const *envp)
       modif.s[--modif.len - 1] = 0 ;
   }
   if (!argv[1]) return 0 ;
-  pathexec_r(argv + 1, envp, env_len(envp), modif.s, modif.len) ;
-  strerr_dieexec(111, argv[1]) ;
+  xpathexec_r(argv + 1, envp, env_len(envp), modif.s, modif.len) ;
 }

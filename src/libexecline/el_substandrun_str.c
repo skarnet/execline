@@ -20,7 +20,6 @@ void el_substandrun_str (stralloc *src, size_t srcbase, char const *const *envp,
     char const *v[r + 1] ;
     if (!env_make(v, r, dst.s, dst.len)) strerr_diefu1sys(111, "env_make") ;
     v[r] = 0 ;
-    pathexec_r(v, envp, env_len(envp), info->modifs.s, info->modifs.len) ;
+    xpathexec_r(v, envp, env_len(envp), info->modifs.s, info->modifs.len) ;
   }
-  strerr_dieexec(111, dst.s) ;
 }

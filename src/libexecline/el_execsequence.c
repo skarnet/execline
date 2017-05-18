@@ -18,6 +18,5 @@ void el_execsequence (char const *const *argv1, char const *const *argv2, char c
     strerr_diefu2sys(111, "wait for ", argv1[0]) ;
   if (!argv2[0]) _exit(0) ;
   j += uint_fmt(fmt + j, wait_status(wstat)) ; fmt[j++] = 0 ;
-  pathexec_r(argv2, envp, env_len(envp), fmt, j) ;
-  strerr_dieexec(111, argv2[0]) ;
+  xpathexec_r(argv2, envp, env_len(envp), fmt, j) ;
 }

@@ -49,6 +49,5 @@ int main (int argc, char const **argv, char const *const *envp)
     strerr_dief2x(128 + WTERMSIG(wstat), "child crashed with signal ", fmt) ;
   }
   if (not != !wait_estatus(wstat)) argv[argc2] = 0 ; else argv += argc2+1 ;
-  pathexec0_run(argv, envp) ;
-  strerr_dieexec(111, *argv) ;
+  xpathexec0_run(argv, envp) ;
 }

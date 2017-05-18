@@ -64,8 +64,7 @@ int main (int argc, char const **argv, char const *const *envp)
       unsigned int i = 0 ;
       for (; remainder[i] ; i++) argv[argc2+i] = remainder[i] ;
       argv[argc2+i] = 0 ;
-      pathexec0_run(argv, envp) ;
-      strerr_dieexec(111, argv[0]) ;
+      xpathexec0_run(argv, envp) ;
     }
     else
     {

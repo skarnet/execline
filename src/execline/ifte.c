@@ -53,6 +53,5 @@ int main (int argc, char const **argv, char const *const *envp)
     argv[argc2] = 0 ;
   }
   else argv[argc1] = 0 ;
-  pathexec0_run(argv, envp) ;
-  strerr_dieexec(111, *argv) ;
+  xpathexec0_run(argv, envp) ;
 }

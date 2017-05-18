@@ -133,7 +133,8 @@ int main (int argc, char const *const *argv, char const *const *envp)
   {
     char fmt[UINT_FMT] ;
     fmt[uint_fmt(fmt, (unsigned int)flagstrict)] = 0 ;
-    if (!env_addmodif(&modif, "EXECLINE_STRICT", flagstrict ? fmt : 0)) goto errenv ;
+    if (!env_addmodif(&modif, "EXECLINE_STRICT", flagstrict ? fmt : 0))
+      goto errenv ;
   }
 
   if (flagpushenv == 3 || flagpushenv == 4)
@@ -158,8 +159,8 @@ int main (int argc, char const *const *argv, char const *const *envp)
     char fmt[UINT_FMT] ;
     unsigned int i = 0 ;
     fmt[uint_fmt(fmt, argc)] = 0 ;
-    if (!env_addmodif(&modif, "#", fmt)) goto errenv ;
-    if (!env_addmodif(&modif, "0", dollar0)) goto errenv ;
+    if (!env_addmodif(&modif, "#", fmt)
+     || !env_addmodif(&modif, "0", dollar0)) goto errenv ;
     for (; i < (unsigned int)argc ; i++)
     {
       fmt[uint_fmt(fmt, i+1)] = 0 ;
@@ -177,18 +178,16 @@ int main (int argc, char const *const *argv, char const *const *envp)
       static char const *const list[11] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "#" } ;
       size_t envlen = env_len(envp) ;
       char const *w[envlen] ;
-      if (el_pushenv(&satmp, envp, envlen, list, 11) < 0) goto errenv ;
-      if (!env_make(w, envlen, satmp.s, satmp.len)) goto errenv ;
-      pathexec_r(v, w, envlen, modif.s, modif.len) ;
-      stralloc_free(&satmp) ;
+      if (el_pushenv(&satmp, envp, envlen, list, 11) < 0
+       || !env_make(w, envlen, satmp.s, satmp.len))
+        goto errenv ;
+      xpathexec_r(v, w, envlen, modif.s, modif.len) ;
     }
     else if (modif.len)
-      pathexec_r(v, envp, env_len(envp), modif.s, modif.len) ;
+      xpathexec_r(v, envp, env_len(envp), modif.s, modif.len) ;
     else
-      pathexec_run(v[0], v, envp) ;
+      xpathexec_run(v[0], v, envp) ;
   }
-  stralloc_free(&modif) ;
-  strerr_dieexec(111, sa.s) ;
-errenv:
+ errenv:
   strerr_diefu1sys(111, "update environment") ;  
 }

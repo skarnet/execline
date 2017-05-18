@@ -96,6 +96,5 @@ int main (int argc, char const **argv, char const *const *envp)
     if (chomp && (modif.s[modif.len - 2] == '\n'))
       modif.s[--modif.len - 1] = 0 ;
   }
-  pathexec_r(argv + argc1 + 1, envp, env_len(envp), modif.s, modif.len) ;
-  strerr_dieexec(111, argv[argc1 + 1]) ;
+  xpathexec_r(argv + argc1 + 1, envp, env_len(envp), modif.s, modif.len) ;
 }

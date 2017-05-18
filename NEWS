@@ -1,5 +1,12 @@
 Changelog for execline.
 
+In 2.3.0.1
+----------
+
+ - Bugfix release.
+ - Code size optimizations via skalibs-2.5.1.0
+
+
 In 2.3.0.0
 ----------
 

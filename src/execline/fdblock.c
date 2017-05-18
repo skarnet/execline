@@ -29,6 +29,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if ((argc < 2) || !uint0_scan(argv[0], &fd)) strerr_dieusage(100, USAGE) ;
   if ((block ? ndelay_off(fd) : ndelay_on(fd)) < 0)
     strerr_diefu1sys(111, block ? "ndelay_off" : "ndelay_on") ;
-  pathexec_run(argv[1], argv+1, envp) ;
-  strerr_dieexec(111, argv[1]) ;
+  xpathexec_run(argv[1], argv+1, envp) ;
 }
