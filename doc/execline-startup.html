@@ -33,7 +33,8 @@ login initialization, then executes <tt>${HOME}/.execline-loginshell</tt>.
  <li> <tt>execline-startup</tt> sets the <tt>SHELL</tt>
 environment variable to <tt>/etc/execline-shell</tt>.
 It then performs some system-specific initialization, and
-transforms itself into <tt>${HOME}/.execline-loginshell $@</tt>. </li>
+transforms itself into <tt>${HOME}/.execline-loginshell $@</tt>
+if available (and <tt>/etc/execline-shell</tt> otherwise). </li>
  <li><tt>${HOME}/.execline-loginshell</tt> must be readable and
 executable by the user. It must exec into <tt>$SHELL $@</tt>. </li>
 </ul>
@@ -46,7 +47,7 @@ executable by the user. It must exec into <tt>$SHELL $@</tt>. </li>
 and modifiable. It is meant to be modified by the system administrator
 to perform system-specific login-time initialization. </li>
  <li> As a modifiable configuration file, execline-startup is provided in execline's
-<tt>etc/</tt> subdirectory, and should be copied by the administrator
+<tt>examples/etc/</tt> subdirectory, and should be copied by the administrator
 to <tt>/etc</tt>. </li>
  <li> <tt>execline-startup</tt> is meant to be used as a login shell.
 System administrators should manually add <tt>/etc/execline-startup</tt>

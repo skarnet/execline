@@ -1,0 +1,15 @@
+#!/bin/execlineb -S0
+
+/bin/multisubstitute
+{
+  importas -i HOME HOME
+  importas -i LOGNAME LOGNAME
+}
+/bin/export USER ${LOGNAME}
+/bin/s6-envdir /etc/env-startup
+/bin/fdblock 0
+/bin/fdblock 1
+/bin/fdblock 2
+
+/bin/tryexec { ${HOME}/.execline-loginshell $@ }
+/etc/execline-shell $@
