@@ -1,7 +1,6 @@
 /* ISC license. */
 
 #include <string.h>
-#include <errno.h>
 #include <skalibs/types.h>
 #include <skalibs/allreadwrite.h>
 #include <skalibs/sgetopt.h>
@@ -108,16 +107,13 @@ int main (int argc, char const *const *argv, char const *const *envp)
     char buf[BUFFER_INSIZE] ;
     buffer b ;
     int fd ;
-    int e ;
     if (!argc--) strerr_dieusage(100, USAGE) ;
     dollar0 = *argv++ ;
     fd = open_readb(dollar0) ;
     if (fd < 0) strerr_diefu3sys(111, "open ", dollar0, " for reading") ;
     buffer_init(&b, &fd_readv, fd, buf, BUFFER_INSIZE) ;
     nc = el_parse_from_buffer(&sa, &b) ;
-    e = errno ;
     fd_close(fd) ;
-    errno = e ;
   }
 
   switch (nc)

@@ -44,13 +44,10 @@ int main (int argc, char const *const *argv, char const *const *envp)
   fd2 = open3(argv[1], flags, 0666) ;
   if ((fd2 == -1) && (what == O_WRONLY) && (errno == ENXIO))
   {
-    int e ;
     int fdr = open_read(argv[1]) ;
     if (fdr == -1) strerr_diefu2sys(111, "open_read ", argv[1]) ;
     fd2 = open3(argv[1], flags, 0666) ;
-    e = errno ;
     fd_close(fdr) ;
-    errno = e ;
   }
   if (fd2 == -1) strerr_diefu2sys(111, "open ", argv[1]) ;
   if (fd_move(fd, fd2) == -1)
