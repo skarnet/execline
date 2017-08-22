@@ -2,6 +2,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <errno.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
@@ -52,7 +53,7 @@ int main (int argc, char const **argv, char const *const *envp)
           fd_close(p[w]) ;
           if (fd_move(!w, p[!w]) < 0) strerr_diefu1sys(111, "fd_move") ;
           pathexec0_run(argv, envp) ;
-          strerr_dieexec(127, argv[0]) ;
+          strerr_dieexec(errno == ENOENT ? 127 : 126, argv[0]) ;
       }
       fd_close(p[!w]) ;
       fd = p[w] ;

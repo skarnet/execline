@@ -94,5 +94,16 @@ a scion of <em>C</em> had problems. </li>
  <li> Exact information is reported in the common case. </li>
 </ul>
 
+<h2> Summary of common exit codes for execline programs </h2>
+
+<ul>
+ <li> 0: success. This code is rarely encountered, because most execline
+programs chainload into something else when they succeed, instead of exiting 0. </li>
+ <li> 100: wrong usage </li>
+ <li> 111: system call failed </li>
+ <li> 126: unable to chainload into another program (any other error than ENOENT) </li>
+ <li> 127: unable to chainload into another program (executable not found) </li>
+</ul>
+
 </body>
 </html>

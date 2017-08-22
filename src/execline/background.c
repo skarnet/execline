@@ -2,6 +2,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <errno.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
@@ -46,7 +47,7 @@ int main (int argc, char const **argv, char const *const *envp)
       case 0:
         PROG = "background (grandchild)" ;
         pathexec0_run(argv, envp) ;
-        strerr_dieexec(127, argv[0]) ;
+        strerr_dieexec(errno == ENOENT ? 127 : 126, argv[0]) ;
     }
   }
   else
