@@ -31,7 +31,7 @@ baz"$1"qux  # This will evaluate to the word baz$1qux
 baz\$1qux   # Same here
 baz$1qux    # Same here in execline-1.y
 
-${PATH}   # This will NOT be replaced by execline ; use the import command
+${PATH}   # This will NOT be replaced by execline ; use the importas command
           # if you need the $PATH value.
 
 'this is not a string'  # it will be parsed as five separate words
