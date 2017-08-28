@@ -4,7 +4,7 @@ In 2.3.0.2
 ----------
 
  - Optimization release to go with skalibs-2.6.0.0
- - xpathexec* exit codes changed.
+ - xpathexec_* exit codes changed.
 
 
 In 2.3.0.1
