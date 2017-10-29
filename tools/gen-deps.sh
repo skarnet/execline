@@ -65,9 +65,13 @@ for dir in $(ls -1 src | grep -v ^include) ; do
         deps="$deps src/$dir/$dep"
       fi
     done < src/$dir/deps-lib/$file
+    echo 'ifeq ($(strip $(DEFAULT_PIE)),)'
     echo "lib${file}.a.xyzzy:$deps"
+    echo else
+    echo "lib${file}.a.xyzzy:$(echo "$deps" | sed 's/\.o$/.lo/g')"
+    echo endif
     echo "lib${file}.so.xyzzy: EXTRA_LIBS :=$libs"
-    echo "lib${file}.so.xyzzy:$(echo "$deps" | sed 's/\.o/.lo/g')"
+    echo "lib${file}.so.xyzzy:$(echo "$deps" | sed 's/\.o$/.lo/g')"
   done
 
   for file in $(ls -1 src/$dir/deps-exe) ; do
