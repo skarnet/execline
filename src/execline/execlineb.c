@@ -148,6 +148,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     nc = myexlp(&sa, argv, argc, nmin, dollar0, flagpushenv == 4) ;
     if (nc < 0) strerr_diefu1sys(111, "substitute positional parameters") ;
+    if (!nc) return 0 ;
     flagpushenv = 0 ;
   }
   else if (flagpushenv)
