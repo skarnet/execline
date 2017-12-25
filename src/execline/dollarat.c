@@ -1,6 +1,7 @@
 /* ISC license. */
 
 #include <string.h>
+#include <stdlib.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/buffer.h>
 #include <skalibs/strerr2.h>
@@ -10,7 +11,7 @@
 
 #define USAGE "dollarat [ -n ] [ -0 | -d delimchar ]"
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   unsigned int n, i = 0 ;
   char const *x ;
@@ -35,14 +36,14 @@ int main (int argc, char const *const *argv, char const *const *envp)
     argc -= l.ind ; argv += l.ind ;
   }
   if (zero) delim = 0 ;
-  x = env_get2(envp, "#") ;
+  x = getenv("#") ;
   if (!x) strerr_dienotset(100, "#") ;
   if (!uint0_scan(x, &n)) strerr_dieinvalid(100, "#") ;
   for (; i < n ; i++)
   {
     char fmt[UINT_FMT] ;
     fmt[uint_fmt(fmt, i+1)] = 0 ;
-    x = env_get2(envp, fmt) ;
+    x = getenv(fmt) ;
     if (!x) strerr_dienotset(100, fmt) ;
     if (delim || zero)
     {
