@@ -10,13 +10,13 @@
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
-#define USAGE "pipeline [ -d ] [ -r | -w ] { command... } command..."
+#define USAGE "| [ -d ] [ -r | -w ] { command... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const **argv, char const *const *envp)
 {
   int df = 0, w = 0 ;
-  PROG = "pipeline" ;
+  PROG = "|" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
@@ -49,7 +49,7 @@ int main (int argc, char const **argv, char const *const *envp)
       {
         case -1: strerr_diefu1sys(111, "doublefork") ;
         case 0:
-          PROG = "pipeline (grandchild)" ;
+          PROG = "| (grandchild)" ;
           fd_close(p[w]) ;
           if (fd_move(!w, p[!w]) < 0) strerr_diefu1sys(111, "fd_move") ;
           pathexec0_run(argv, envp) ;

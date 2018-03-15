@@ -10,14 +10,14 @@
 #include <skalibs/types.h>
 #include <execline/execline.h>
 
-#define USAGE "background [ -d ] { command... }"
+#define USAGE "& [ -d ] { command... }"
 
 int main (int argc, char const **argv, char const *const *envp)
 {
   pid_t pid ;
   int argc1 ;
   int df = 0 ;
-  PROG = "background" ;
+  PROG = "&" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
@@ -45,7 +45,7 @@ int main (int argc, char const **argv, char const *const *envp)
     {
       case -1: strerr_diefu1sys(111, "doublefork") ;
       case 0:
-        PROG = "background (grandchild)" ;
+        PROG = "& (grandchild)" ;
         pathexec0_run(argv, envp) ;
         strerr_dieexec(errno == ENOENT ? 127 : 126, argv[0]) ;
     }

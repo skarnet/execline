@@ -7,7 +7,7 @@
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 
-#define USAGE "redirfd -[ r | w | u | a | c | x ] [ -n ] [ -b ] fd file prog..."
+#define USAGE "< -[ r | w | u | a | c | x ] [ -n ] [ -b ] fd file prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const *const *argv, char const *const *envp)
@@ -16,7 +16,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   unsigned int flags = 0 ;
   int what = -1 ;
   int changemode = 0 ;
-  PROG = "redirfd" ;
+  PROG = "<" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)

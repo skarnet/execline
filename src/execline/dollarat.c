@@ -9,7 +9,7 @@
 #include <skalibs/types.h>
 #include <skalibs/netstring.h>
 
-#define USAGE "dollarat [ -n ] [ -0 | -d delimchar ]"
+#define USAGE "$@ [ -n ] [ -0 | -d delimchar ]"
 
 int main (int argc, char const *const *argv)
 {
@@ -18,7 +18,7 @@ int main (int argc, char const *const *argv)
   char delim = '\n' ;
   int zero = 0 ;
   int nl = 1 ;
-  PROG = "dollarat" ;
+  PROG = "$@" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)

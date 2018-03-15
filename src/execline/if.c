@@ -7,7 +7,7 @@
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
-#define USAGE "if [ -n ] [ -X ] [ -t | -x exitcode ] { command... }"
+#define USAGE "&& [ -n ] [ -X ] [ -t | -x exitcode ] { command... }"
 
 int main (int argc, char const **argv, char const *const *envp)
 {
@@ -15,7 +15,7 @@ int main (int argc, char const **argv, char const *const *envp)
   pid_t pid ;
   int not = 0, flagnormalcrash = 0 ;
   unsigned short e = 1 ;
-  PROG = "if" ;
+  PROG = "&&" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)

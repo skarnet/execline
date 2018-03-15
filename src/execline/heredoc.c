@@ -9,13 +9,13 @@
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 
-#define USAGE "heredoc [ -d ] fd string command..."
+#define USAGE "<< [ -d ] fd string command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   int df = 0 ;
-  PROG = "heredoc" ;
+  PROG = "<<" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
@@ -44,7 +44,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       case 0:
       {
         size_t len = strlen(argv[1]) ;
-        PROG = "heredoc (child)" ;
+        PROG = "<< (child)" ;
         fd_close(fd[0]) ;
         if (allwrite(fd[1], argv[1], len) < len)
           strerr_diefu1sys(111, "allwrite") ;

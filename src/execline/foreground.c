@@ -6,7 +6,7 @@
 int main (int argc, char const **argv, char const *const *envp)
 {
   int argc1 ;
-  PROG = "foreground" ;
+  PROG = ";" ;
   argc1 = el_semicolon(++argv) ;
   if (argc1 >= --argc) strerr_dief1x(100, "unterminated block") ;
   argv[argc1] = 0 ;

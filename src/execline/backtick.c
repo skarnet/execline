@@ -9,7 +9,7 @@
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
-#define USAGE "backtick [ -i | -I | -D default ] [ -n ] var { prog... } remainder..."
+#define USAGE "` [ -i | -I | -D default ] [ -n ] var { prog... } remainder..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -21,7 +21,7 @@ int main (int argc, char const **argv, char const *const *envp)
   size_t modifstart ;
   int insist = 0, chomp = 0 ;
   char const *def = 0 ;
-  PROG = "backtick" ;
+  PROG = "`" ;
   for (;;)
   {
     int opt = subgetopt_r(argc, argv, "iInD:", &localopt) ;

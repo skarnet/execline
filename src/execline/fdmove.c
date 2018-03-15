@@ -5,13 +5,13 @@
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 
-#define USAGE "fdmove [ -c ] to from prog..."
+#define USAGE ">& [ -c ] to from prog..."
 
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   unsigned int to, from ;
   int flagcopy = 0 ;
-  PROG = "fdmove" ;
+  PROG = ">&" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)

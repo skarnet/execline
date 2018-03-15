@@ -6,12 +6,12 @@
 #include <skalibs/buffer.h>
 #include <skalibs/strerr2.h>
 
-#define USAGE "homeof user"
+#define USAGE "~ user"
 
 int main (int argc, char const *const *argv)
 {
   struct passwd *pw ;
-  PROG = "homeof" ;
+  PROG = "~" ;
   if (argc < 2) strerr_dieusage(100, USAGE) ;
   pw = getpwnam(argv[1]) ;
   if (!pw)
