@@ -49,3 +49,5 @@ withstdinas
 LIBEXEC_TARGETS :=
 
 LIB_DEFS := EXECLINE=execline
+
+EXTRA_TARGETS := .built .installed '&' '`' '=' '$$@' '*' '>&-' '>&' '<>' ';' '!' '<<' '~' '&&' '$$' '|' '<'

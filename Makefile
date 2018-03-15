@@ -58,7 +58,10 @@ ALL_BINS := $(LIBEXEC_TARGETS) $(BIN_TARGETS)
 ALL_LIBS := $(SHARED_LIBS) $(STATIC_LIBS) $(INTERNAL_LIBS)
 ALL_INCLUDES := $(wildcard src/include/$(package)/*.h)
 
-all: $(ALL_LIBS) $(ALL_BINS) $(ALL_INCLUDES)
+all: .built
+
+.built: $(ALL_LIBS) $(ALL_BINS) $(ALL_INCLUDES)
+	exec ./tools/rename-bins && touch .built
 
 clean:
 	@exec rm -f $(ALL_LIBS) $(ALL_BINS) $(wildcard src/*/*.o src/*/*.lo) $(EXTRA_TARGETS)
@@ -85,7 +88,12 @@ endif
 install: install-dynlib install-libexec install-bin install-lib install-include
 install-dynlib: $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(dynlibdir)/lib%.so)
 install-libexec: $(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%)
-install-bin: $(BIN_TARGETS:%=$(DESTDIR)$(bindir)/%)
+
+install-bin: .installed
+
+.installed: .built
+	exec ./tools/install-bins $(INSTALL) $(bindir) $(DESTDIR) && touch .installed
+
 install-lib: $(STATIC_LIBS:lib%.a.xyzzy=$(DESTDIR)$(libdir)/lib%.a)
 install-include: $(ALL_INCLUDES:src/include/$(package)/%.h=$(DESTDIR)$(includedir)/$(package)/%.h)
 install-data: $(ALL_DATA:src/etc/%=$(DESTDIR)$(datadir)/%)
@@ -97,7 +105,10 @@ $(DESTDIR)$(exthome): $(DESTDIR)$(home)
 
 update: $(DESTDIR)$(exthome)
 
-global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) $(BIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
+global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) .linked
+
+.linked: .installed
+	exec ./tools/link-bins $(INSTALL) $(bindir) x$(sproot) x$(home) x$(exthome) $(DESTDIR) && touch .linked
 
 $(DESTDIR)$(sproot)/command/%: $(DESTDIR)$(home)/command/%
 	exec $(INSTALL) -D -l ..$(subst $(sproot),,$(exthome))/command/$(<F) $@

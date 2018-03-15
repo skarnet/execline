@@ -1,0 +1,16 @@
+background & &amp;
+backtick ` `
+define = =
+dollarat $@ $@
+elglob * *
+fdclose >&- &gt;&amp;-
+fdmove >& &gt;&amp;
+fdswap <> &lt;&gt;
+foreground ; &semi;
+getpid ! !
+heredoc << &lt;&lt;
+homeof ~ ~
+if && &amp;&amp;
+importas $ $
+pipeline | |
+redirfd < &lt;

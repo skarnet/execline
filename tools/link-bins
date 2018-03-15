@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+install="$1"
+bindir="$2"
+sproot="${3#x}"
+home="${4#x}"
+exthome="${5#x}"
+destdir="$6"
+
+while read old new html ; do
+  "$install" -D -m 600 "$new" "$destdir/$bindir/$new"
+done < ./tools/name-table

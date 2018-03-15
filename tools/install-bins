@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+install="$1"
+bindir="$2"
+destdir="$3"
+
+while read old new html ; do
+  "$install" -D -m 600 "$new" "$destdir/$bindir/$new"
+done < ./tools/name-table
