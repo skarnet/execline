@@ -1,5 +1,0 @@
-#!/bin/sh -e
-
-while read old new html ; do
-  mv -f "./$old" "./$new"
-done < ./tools/name-table

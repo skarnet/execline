@@ -61,7 +61,7 @@ ALL_INCLUDES := $(wildcard src/include/$(package)/*.h)
 all: .built
 
 .built: $(ALL_LIBS) $(ALL_BINS) $(ALL_INCLUDES)
-	exec ./tools/rename-bins && touch .built
+	exec ./tools/link-bins && touch .built
 
 clean:
 	@exec rm -f $(ALL_LIBS) $(ALL_BINS) $(wildcard src/*/*.o src/*/*.lo) $(EXTRA_TARGETS)
@@ -89,7 +89,7 @@ install: install-dynlib install-libexec install-bin install-lib install-include
 install-dynlib: $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(dynlibdir)/lib%.so)
 install-libexec: $(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%)
 
-install-bin: .installed
+install-bin: .installed $(REAL_TARGETS:%=$(DESTDIR)$(bindir)/%)
 
 .installed: .built
 	exec ./tools/install-bins $(INSTALL) $(bindir) $(DESTDIR) && touch .installed
@@ -105,10 +105,10 @@ $(DESTDIR)$(exthome): $(DESTDIR)$(home)
 
 update: $(DESTDIR)$(exthome)
 
-global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) .linked
+global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) .linked $(REAL_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
 
-.linked: .installed
-	exec ./tools/link-bins $(INSTALL) $(bindir) x$(sproot) x$(home) x$(exthome) $(DESTDIR) && touch .linked
+.linked: .installed 
+	exec ./tools/symlink-bins $(INSTALL) $(bindir) x$(sproot) x$(home) x$(exthome) $(DESTDIR) && touch .linked
 
 $(DESTDIR)$(sproot)/command/%: $(DESTDIR)$(home)/command/%
 	exec $(INSTALL) -D -l ..$(subst $(sproot),,$(exthome))/command/$(<F) $@

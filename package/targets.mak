@@ -1,42 +1,25 @@
-BIN_TARGETS := \
-background \
-backtick \
+REAL_TARGETS := \
 cd \
-define \
-dollarat \
 elgetopt \
 elgetpositionals \
-elglob \
 emptyenv \
 exec \
 execlineb \
 exit \
 export \
 fdblock \
-fdclose \
-fdmove \
-fdswap \
-fdreserve \
 forbacktickx \
-foreground \
 forstdin \
 forx \
 getcwd \
-getpid \
-heredoc \
-homeof \
-if \
 ifelse \
 ifte \
 ifthenelse \
 import \
-importas \
 loopwhilex \
 multidefine \
 multisubstitute \
-pipeline \
 piperw \
-redirfd \
 runblock \
 shift \
 trap \
@@ -45,6 +28,27 @@ umask \
 unexport \
 wait \
 withstdinas
+
+CHANGED_TARGETS := \
+background \
+backtick \
+define \
+dollarat \
+elglob \
+fdclose \
+fdmove \
+fdswap \
+fdreserve \
+foreground \
+getpid \
+heredoc \
+homeof \
+if \
+importas \
+pipeline \
+redirfd
+
+BIN_TARGETS := $(REAL_TARGETS) $(CHANGED_TARGETS)
 
 LIBEXEC_TARGETS :=
 
