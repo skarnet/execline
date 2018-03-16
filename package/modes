@@ -30,7 +30,6 @@ if			0755
 ifelse			0755
 ifte			0755
 ifthenelse		0755
-import			0755
 importas		0755
 loopwhilex		0755
 piperw			0755

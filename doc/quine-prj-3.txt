@@ -4,10 +4,10 @@ define e ${q}${E}${q}
 export E $e
 define q ${b}${q}
 define b ${b}${b}
-import E
+importas E E
 echo $e"
 export E $e
 define q \"
 define b \\
-import E
+importas E E
 echo $e

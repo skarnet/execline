@@ -9,7 +9,7 @@
 #include <execline/execline.h>
 #include "exlsn.h"
 
-static int exlsn_import_as (int argc, char const **argv, char const *const *envp, exlsn_t *info, unsigned int as)
+int exlsn_importas (int argc, char const **argv, char const *const *envp, exlsn_t *info)
 {
   eltransforminfo_t si = ELTRANSFORMINFO_ZERO ;
   subgetopt_t localopt = SUBGETOPT_ZERO ;
@@ -40,18 +40,18 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
   }
   argc -= localopt.ind ; argv += localopt.ind ;
 
-  if ((unsigned int)argc < 1+as) return -3 ;
+  if ((unsigned int)argc < 2) return -3 ;
   if (!*argv[0] || el_vardupl(argv[0], info->vars.s, info->vars.len)) return -2 ;
   if (!stralloc_catb(&info->vars, argv[0], strlen(argv[0]) + 1)) return -1 ;
-  x = env_get2(envp, argv[as]) ;
+  x = env_get2(envp, argv[1]) ;
   if (!x)
   {
-    if (insist) strerr_dienotset(100, argv[as]) ;
+    if (insist) strerr_dienotset(100, argv[1]) ;
     x = defaultval ;
   }
   else if (unexport)
   {
-    if (!stralloc_catb(&info->modifs, argv[as], strlen(argv[as]) + 1)) goto err ;
+    if (!stralloc_catb(&info->modifs, argv[1], strlen(argv[1]) + 1)) goto err ;
   }
   if (!x) blah.n = 0 ;
   else
@@ -63,21 +63,10 @@ static int exlsn_import_as (int argc, char const **argv, char const *const *envp
     blah.n = r ;
   }
   if (!genalloc_append(elsubst_t, &info->data, &blah)) goto err ;
-  return localopt.ind + 1 + as ;
+  return localopt.ind + 2 ;
 
  err:
   info->vars.len = blah.var ;
   info->values.len = blah.value ;
   return -1 ;
-}
-
-int exlsn_import (int argc, char const **argv, char const *const *envp, exlsn_t *info)
-{
-  strerr_warnw1x("the import command and directive are obsolescent, please use importas instead!") ;
-  return exlsn_import_as(argc, argv, envp, info, 0) ;
-}
-
-int exlsn_importas (int argc, char const **argv, char const *const *envp, exlsn_t *info)
-{
-  return exlsn_import_as(argc, argv, envp, info, 1) ;
 }

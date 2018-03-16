@@ -25,7 +25,6 @@ typedef exlsnfunc_t *exlsnfunc_t_ref ;
 	
 extern exlsnfunc_t exlsn_define ;
 extern exlsnfunc_t exlsn_importas ;
-extern exlsnfunc_t exlsn_import ;
 extern exlsnfunc_t exlsn_elglob ;
 extern exlsnfunc_t exlsn_exlp ;
 extern exlsnfunc_t exlsn_multidefine ;

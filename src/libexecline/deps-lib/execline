@@ -15,7 +15,7 @@ el_transform.o
 el_vardupl.o
 exlsn_define.o
 exlsn_elglob.o
-exlsn_import.o
+exlsn_importas.o
 exlsn_multidefine.o
 exlsn_exlp.o
 exlsn_main.o

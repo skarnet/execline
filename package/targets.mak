@@ -29,7 +29,6 @@ if \
 ifelse \
 ifte \
 ifthenelse \
-import \
 importas \
 loopwhilex \
 multidefine \
