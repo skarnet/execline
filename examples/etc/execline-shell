@@ -5,10 +5,8 @@
   && -nt
   {
     ` -n defaultuser { id -un }
-    $ -u defaultuser defaultuser
-    $ -D $defaultuser USER USER
-    < -w 2 /dev/null
-    ~ ${USER}
+    $ -u defaultuser defaultuser $ -D $defaultuser USER USER
+    < -w 2 /dev/null ~ ${USER}
   }
   s6-echo /
 }

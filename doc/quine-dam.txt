@@ -53,8 +53,8 @@ multisubstitute ${ob}
 = intron ${q}${intron}${q}
 ${cb} printf %s${b}${b}n ${d}${ob}lin${cb} ${cb}
 ${p} That's all, folks! - Well, that wasn't so hard, was it?
-${p} (This quine was written by <david.madore@ens.fr> - see
-${p} <URL: http://www.eleves.ens.fr:8080/home/madore/computers/quine.html >
+${p} (This quine was written by <david@madore.org> - see
+${p} <URL: http://www.madore.org/~david/computers/quine.html >
 ${p} for more information on quines and how to write them.)"
 # HERE is the end of the quine's data.
 # They represent the following code, with various quotations:
@@ -105,6 +105,6 @@ multisubstitute {
 = intron "NOTICE HOW THIS SENTENCE APPEARS ONLY ONCE IN THIS QUINE?"
 } printf %s\\n ${lin} }
 # That's all, folks! - Well, that wasn't so hard, was it?
-# (This quine was written by <david.madore@ens.fr> - see
-# <URL: http://www.eleves.ens.fr:8080/home/madore/computers/quine.html >
+# (This quine was written by <david@madore.org> - see
+# <URL: http://www.madore.org/~david/computers/quine.html >
 # for more information on quines and how to write them.)
