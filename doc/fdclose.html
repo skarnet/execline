@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>execline: the fdclose program</title>
-    <meta name="Description" content="execline: the fdclose program" />
-    <meta name="Keywords" content="execline command fdclose file descriptor close" />
+    <title>execline: the &gt;&amp;- program</title>
+    <meta name="Description" content="execline: the &gt;&amp;- program" />
+    <meta name="Keywords" content="execline command &gt;&amp;- file descriptor close" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
 <body>
@@ -16,28 +16,28 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>fdclose</tt> program </h1>
+<h1> The <tt>&gt;&amp;-</tt> program </h1>
 
 <p>
-<tt>fdclose</tt> closes a given file descriptor, then
+<tt>&gt;&amp;-</tt> closes a given file descriptor, then
 executes a program.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     fdclose <em>fd</em> <em>prog...</em>
+     &gt;&amp;- <em>fd</em> <em>prog...</em>
 </pre>
 
 <p>
-<tt>fdclose</tt> closes the file descriptor number <em>fd</em>, then
+<tt>&gt;&amp;-</tt> closes the file descriptor number <em>fd</em>, then
 execs into <em>prog</em> with its arguments.
 </p>
 
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>fdclose <em>n</em> prog...</tt> is roughly equivalent to
+ <li> <tt>&gt;&amp;- <em>n</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>n</em>&lt;&amp;-'</tt></li>
 </ul>
 

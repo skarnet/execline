@@ -9,10 +9,10 @@
 
 static char const *const commands[8] =
 {
-  "define",
-  "importas",
+  "=",
+  "$",
   "import",
-  "elglob",
+  "*",
   "elgetpositionals",
   "multidefine",
   0

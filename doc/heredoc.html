@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>execline: the heredoc program</title>
-    <meta name="Description" content="execline: the heredoc program" />
-    <meta name="Keywords" content="execline command heredoc here document" />
+    <title>execline: the &lt;&lt; program</title>
+    <meta name="Description" content="execline: the &lt;&lt; program" />
+    <meta name="Keywords" content="execline command &lt;&lt; here document" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
 <body>
@@ -16,21 +16,21 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>heredoc</tt> program </h1>
+<h1> The <tt>&lt;&lt;</tt> program </h1>
 
 <p>
-<tt>heredoc</tt> runs a command with a certain string fed to a
+<tt>&lt;&lt;</tt> runs a command with a certain string fed to a
 file descriptor.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     heredoc [ -d ] <em>fd</em> <em>string</em> <em>prog...</em>
+     &lt;&lt; [ -d ] <em>fd</em> <em>string</em> <em>prog...</em>
 </pre>
 
 <ul>
- <li> <tt>heredoc</tt> execs into <em>prog...</em> with
+ <li> <tt>&lt;&lt;</tt> execs into <em>prog...</em> with
 <em>string</em> available on the <em>fd</em> file
 descriptor. </li>
  <li> <em>string</em> must not contain a null character. </li>
@@ -40,7 +40,7 @@ descriptor. </li>
 
 <ul>
  <li> <tt>-d</tt>&nbsp;: run the process feeding <em>string</em> to <em>fd</em>
-as a grandchild of <tt>heredoc</tt>. This is meant to prevent a zombie
+as a grandchild of <tt>&lt;&lt;</tt>. This is meant to prevent a zombie
 from hanging around if <em>prog...</em> has read <em>string</em> and fails
 to wait for its children.</li>
 </ul>
@@ -48,7 +48,7 @@ to wait for its children.</li>
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>heredoc</tt> is meant to be used in place of the shell
+ <li> <tt>&lt;&lt;</tt> is meant to be used in place of the shell
 <tt>&lt;&lt;</tt> construct, which includes <em>here-documents</em>
 into scripts. </li>
 </ul>

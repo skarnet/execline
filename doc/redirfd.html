@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>execline: the redirfd command</title>
-    <meta name="Description" content="execline: the redirfd command" />
-    <meta name="Keywords" content="execline command redirfd" />
+    <title>execline: the &lt; command</title>
+    <meta name="Description" content="execline: the &lt; command" />
+    <meta name="Keywords" content="execline command &lt;" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
 <body>
@@ -16,21 +16,21 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>redirfd</tt> program </h1>
+<h1> The <tt>&lt;</tt> program </h1>
 
 <p>
-<tt>redirfd</tt> redirects a given file descriptor to a file, then
+<tt>&lt;</tt> redirects a given file descriptor to a file, then
 executes a program.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     redirfd [ -r | -w | -u | -a | -c | -x ] [ -n | -b ] <em>fd</em> <em>file</em> <em>prog...</em>
+     &lt; [ -r | -w | -u | -a | -c | -x ] [ -n | -b ] <em>fd</em> <em>file</em> <em>prog...</em>
 </pre>
 
 <p>
-<tt>redirfd</tt> redirects the file descriptor number <em>fd</em>
+<tt>&lt;</tt> redirects the file descriptor number <em>fd</em>
 to <em>file</em>, then execs into <em>prog...</em>.
 </p>
 
@@ -57,18 +57,18 @@ to blocking mode if it was. </li>
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>redirfd -r <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
+ <li> <tt>&lt; -r <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>n</em>&lt;<em>file</em>'</tt></li>
- <li> <tt>redirfd -w <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
+ <li> <tt>&lt; -w <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>n</em>&gt;<em>file</em>'</tt></li>
- <li> <tt>redirfd -u <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
+ <li> <tt>&lt; -u <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>n</em>&lt;&gt;<em>file</em>'</tt></li>
- <li> <tt>redirfd -a <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
+ <li> <tt>&lt; -a <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>n</em>&gt;&gt;<em>file</em>'</tt></li>
- <li> <tt>redirfd -c <em>n</em> <em>file</em> prog...</tt> has no portable
+ <li> <tt>&lt; -c <em>n</em> <em>file</em> prog...</tt> has no portable
 shell equivalent. Some shells provide the <em>noclobber</em> option for
 a similar feature. </li>
- <li> <tt>redirfd -x <em>n</em> <em>file</em> prog...</tt> has no portable
+ <li> <tt>&lt; -x <em>n</em> <em>file</em> prog...</tt> has no portable
 shell equivalent.</tt> </li>
 </ul>
 
@@ -81,19 +81,19 @@ named pipes.
 
 <ul>
  <li> Opening a fifo for reading, blocking if there is no writer:
-<tt>redirfd -r <em>n</em> <em>fifo</em> prog...</tt></li>
+<tt>&lt; -r <em>n</em> <em>fifo</em> prog...</tt></li>
  <li> Opening a fifo for reading, with instant success even if
 there is no writer, and blocking at the first attempt to read from it:
-<tt>redirfd -r -nb <em>n</em> <em>fifo</em> prog...</tt></li>
+<tt>&lt; -r -nb <em>n</em> <em>fifo</em> prog...</tt></li>
  <li> Opening a fifo for writing, blocking if there is no reader:
-<tt>redirfd -w <em>n</em> <em>fifo</em> prog...</tt></li>
+<tt>&lt; -w <em>n</em> <em>fifo</em> prog...</tt></li>
  <li> Opening a fifo for writing, with instant success even if
 there is no reader:
-<tt>redirfd -w -nb <em>n</em> <em>fifo</em> prog...</tt>. Warning:
+<tt>&lt; -w -nb <em>n</em> <em>fifo</em> prog...</tt>. Warning:
 the first attempt to write to the fifo will raise a SIGPIPE if there is
 still no reader at that time. The named pipe semantics normally do not
 allow a fifo to be open for writing without a reading end, and you
-should know what you are doing if you're using <tt>redirfd</tt>
+should know what you are doing if you're using <tt>&lt;</tt>
 this way. </li>
 </ul>
 

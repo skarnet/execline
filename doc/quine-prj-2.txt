@@ -1,15 +1,15 @@
 #!/command/execlineb
-define e "#!/command/execlineb
-define e ${q}${E}${q}
+= e "#!/command/execlineb
+= e ${q}${E}${q}
 multisubstitute {
-define q ${b}${q}
-define b ${b}${b}
-define E $e
+= q ${b}${q}
+= b ${b}${b}
+= E $e
 }
 echo $e"
 multisubstitute {
-define q \"
-define b \\
-define E $e
+= q \"
+= b \\
+= E $e
 }
 echo $e

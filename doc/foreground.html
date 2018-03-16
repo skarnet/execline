@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta http-equiv="Content-Language" content="en" />
-  <title>execline: the foreground command</title>
-  <meta name="Description" content="execline: the foreground command" />
-  <meta name="Keywords" content="execline command foreground" />
+  <title>execline: the &semi; command</title>
+  <meta name="Description" content="execline: the &semi; command" />
+  <meta name="Keywords" content="execline command &semi;" />
   <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
  </head>
 <body>
@@ -16,10 +16,10 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>foreground</tt> program </h1>
+<h1> The <tt>&semi;</tt> program </h1>
 
 <p>
-<tt>foreground</tt> executes a sequence of commands.
+<tt>&semi;/tt> executes a sequence of commands.
 </p>
 
 <h2> Interface </h2>
@@ -29,35 +29,35 @@
 </p>
 
 <pre>
-     foreground { <em>prog1...</em> } <em>prog2...</em>
+     &semi; { <em>prog1...</em> } <em>prog2...</em>
 </pre>
 
 <ul>
- <li> <tt>foreground</tt> reads <em>prog1</em> in a
+ <li> <tt>&semi;</tt> reads <em>prog1</em> in a
 <a href="el_semicolon.html">block</a>. It forks and
 executes it, then waits for it to complete. </li>
- <li> <tt>foreground</tt> sets the <tt>?</tt> environment
+ <li> <tt>&semi;</tt> sets the <tt>?</tt> environment
 variable to the exit code of <em>prog1</em>. If <em>prog1...</em>
 was killed by a signal, the <tt>?</tt> value is 256 plus the signal
 number. </li>
- <li> <tt>foreground</tt> then execs into <em>prog2...</em>. </li>
+ <li> <tt>&semi;</tt> then execs into <em>prog2...</em>. </li>
 </ul>
 
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>foreground</tt> is the basic sequence operator: it takes two
+ <li> <tt>&semi;</tt> is the basic sequence operator: it takes two
 commands and executes them one by one. execline scripts require it to
 wrap external commands that exit instead of natively supporting the
 "perform some action, then execute some other program" model. </li>
- <li> <tt>foreground <em>prog1...</em> "" <em>prog2...</em></tt> is
+ <li> <tt>&semi; <em>prog1...</em> "" <em>prog2...</em></tt> is
 equivalent to <tt>sh -c '<em>prog1...</em> ; exec <em>prog2...</em>'</tt>.
  </li>
  <li> 256 and above are not valid exit codes for commands, so when the
 <tt>?</tt> environment variable contains 256 or more, it means that the
 previous command was killed by a signal. There is no ambiguity here, and
 <tt>?</tt> reports exactly what happened to the previous command;
-<tt>foreground</tt> does not exit, so there is no need for
+<tt>&semi;</tt> does not exit, so there is no need for
 <a href="exitcodes.html">exit code approximation</a>. </li>
 </ul>
 

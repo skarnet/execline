@@ -35,10 +35,10 @@ real variables, it provides such a <em>substitution</em> facility
 via <em>substitution commands</em>, namely:
 </p>
 <ul>
- <li> <a href="define.html">define</a> </li>
+ <li> <a href="define.html">=</a> </li>
  <li> <a href="import.html">import</a> </li>
- <li> <a href="importas.html">importas</a> </li>
- <li> <a href="elglob.html">elglob</a> </li>
+ <li> <a href="importas.html">$</a> </li>
+ <li> <a href="elglob.html">*</a> </li>
  <li> <a href="elgetpositionals.html">elgetpositionals</a> </li>
  <li> <a href="multidefine.html">multidefine</a> </li>
  <li> <a href="multisubstitute.html">multisubstitute</a> </li>
@@ -69,7 +69,7 @@ The simplest example is the following:
 
 <pre>
 #!/command/execlineb
-define FOO blah
+= FOO blah
 echo $FOO
 </pre>
 
@@ -148,9 +148,9 @@ nothing special.
 
 <pre>
 #!/command/execlineb
-define A val
-foreground { echo $A \\$A \\\\$A \\\\\\$A \\\\\\\\$A \\\\\\\\\\$A }
-             echo $B \\$B \\\\$B \\\\\\$B \\\\\\\\$B \\\\\\\\\\$B
+= A val
+&semi; { echo $A \\$A \\\\$A \\\\\\$A \\\\\\\\$A \\\\\\\\\\$A }
+         echo $B \\$B \\\\$B \\\\\\$B \\\\\\\\$B \\\\\\\\\\$B
 </pre>
 <p>
  prints
@@ -197,7 +197,7 @@ for <em>A</em>. <br />
 
 <pre>
 #!/command/execlineb
-define -s FOO "v1 v2 v3" echo prefix-${FOO}-postfix
+= -s FOO "v1 v2 v3" echo prefix-${FOO}-postfix
 </pre>
 
 <p>
@@ -228,7 +228,7 @@ right. For instance, in
 
 <pre>
 #!/command/execlineb
-define -s B "1 2 3" echo ${B}x${B}
+= -s B "1 2 3" echo ${B}x${B}
 </pre>
 <p>
  the <tt>${B}x${B}</tt> word will be replaced with <em>nine</em> words:
@@ -241,8 +241,8 @@ define -s B "1 2 3" echo ${B}x${B}
 #!/command/execlineb
 multisubstitute
 {
-  define -s A "a b c d"
-  define -s B "1 2 3"
+  = -s A "a b c d"
+  = -s B "1 2 3"
 }
 echo ${A}x${B}
 </pre>
@@ -252,7 +252,7 @@ echo ${A}x${B}
 <tt>ax1</tt>, <tt>ax2</tt>, <tt>ax3</tt>, <tt>bx1</tt>, <tt>bx2</tt>,
 <tt>bx3</tt>, <tt>cx1</tt>, <tt>cx2</tt>, <tt>cx3</tt>, <tt>dx1</tt>,
 <tt>dx2</tt>, and <tt>dx3</tt>, in that order. You can check that the
-order of the <tt>define</tt> directives in
+order of the <tt>=</tt> directives in
 <a href="multisubstitute.html">multisubstitute</a> does not matter.
 </p>
 
@@ -264,8 +264,8 @@ be replaced with
 
 <pre>
 #!/command/execlineb
-define -s B "1 2 3"
-define -s A "a b c d"
+= -s B "1 2 3"
+= -s A "a b c d"
 echo ${A}x${B}
 </pre>
 <p>

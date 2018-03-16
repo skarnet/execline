@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>execline: the fdmove program</title>
-    <meta name="Description" content="execline: the fdmove program" />
-    <meta name="Keywords" content="execline command fdmove file descriptor dup dup2" />
+    <title>execline: the &gt;&amp; program</title>
+    <meta name="Description" content="execline: the &gt;&amp; program" />
+    <meta name="Keywords" content="execline command &gt;&amp; file descriptor dup dup2" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
 <body>
@@ -16,23 +16,23 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>fdmove</tt> program </h1>
+<h1> The <tt>&gt;&amp;</tt> program </h1>
 
 <p>
-<tt>fdmove</tt> moves or copies a given file descriptor, then
+<tt>&gt;&amp;</tt> moves or copies a given file descriptor, then
 executes a program.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     fdmove [ -c ] <em>fdto</em> <em>fdfrom</em> <em>prog...</em>
+     &gt;&amp; [ -c ] <em>fdto</em> <em>fdfrom</em> <em>prog...</em>
 </pre>
 
 <p>
-<tt>fdmove</tt> moves the file descriptor number <em>fdfrom</em>,
+<tt>&gt;&amp;</tt> moves the file descriptor number <em>fdfrom</em>,
 to number <em>fdto</em>, then execs into <em>prog</em> with its arguments.
-If <em>fdto</em> is open, <tt>fdmove</tt> closes it before moving
+If <em>fdto</em> is open, <tt>&gt;&amp;</tt> closes it before moving
 <em>fdfrom</em> to it.
 </p>
 
@@ -46,9 +46,9 @@ instead of moving it; do not close <em>fdfrom</em>. </li>
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>fdmove -c <em>a</em> <em>b</em> prog...</tt> is roughly equivalent to
+ <li> <tt>&gt;&amp; -c <em>a</em> <em>b</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>a</em>&gt;&amp;<em>b</em>'</tt></li>
- <li> <tt>fdmove <em>a</em> <em>b</em> prog...</tt> is roughly equivalent to
+ <li> <tt>&gt;&amp; <em>a</em> <em>b</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>a</em>&gt;&amp;<em>b</em> <em>b</em>&lt;&amp;-'</tt></li>
 </ul>
 

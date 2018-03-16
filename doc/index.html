@@ -130,17 +130,17 @@ to your installation: the shebang lines for your system might be something like
 <li><a href="emptyenv.html">The <tt>emptyenv</tt> program</a></li>
 <li><a href="export.html">The <tt>export</tt> program</a></li>
 <li><a href="unexport.html">The <tt>unexport</tt> program</a></li>
-<li><a href="fdclose.html">The <tt>fdclose</tt> program</a></li>
+<li><a href="fdclose.html">The <tt>&gt;&amp;-</tt> program</a></li>
 <li><a href="fdblock.html">The <tt>fdblock</tt> program</a></li>
-<li><a href="fdmove.html">The <tt>fdmove</tt> program</a></li>
-<li><a href="fdswap.html">The <tt>fdswap</tt> program</a></li>
+<li><a href="fdmove.html">The <tt>&gt;&amp;</tt> program</a></li>
+<li><a href="fdswap.html">The <tt>&lt;&gt;</tt> program</a></li>
 <li><a href="fdreserve.html">The <tt>fdreserve</tt> program</a></li>
-<li><a href="redirfd.html">The <tt>redirfd</tt> program</a></li>
+<li><a href="redirfd.html">The <tt>&lt;</tt> program</a></li>
 <li><a href="piperw.html">The <tt>piperw</tt> program</a></li>
-<li><a href="heredoc.html">The <tt>heredoc</tt> program</a></li>
+<li><a href="heredoc.html">The <tt>&lt;&lt;</tt> program</a></li>
 <li><a href="wait.html">The <tt>wait</tt> program</a></li>
 <li><a href="getcwd.html">The <tt>getcwd</tt> program</a></li>
-<li><a href="getpid.html">The <tt>getpid</tt> program</a></li>
+<li><a href="getpid.html">The <tt>!</tt> program</a></li>
 <li><a href="exec.html">The <tt>exec</tt> program</a></li>
 <li><a href="tryexec.html">The <tt>tryexec</tt> program</a></li>
 <li><a href="exit.html">The <tt>exit</tt> program</a></li>
@@ -151,24 +151,24 @@ to your installation: the shebang lines for your system might be something like
  (<a href="el_semicolon.html">Basic block management</a>)
 </p>
 <ul>
-<li><a href="foreground.html">The <tt>foreground</tt> program</a></li>
-<li><a href="background.html">The <tt>background</tt> program</a></li>
-<li><a href="if.html">The <tt>if</tt> program</a></li>
+<li><a href="foreground.html">The <tt>&semi;</tt> program</a></li>
+<li><a href="background.html">The <tt>&amp;</tt> program</a></li>
+<li><a href="if.html">The <tt>&amp;&amp;</tt> program</a></li>
 <li><a href="ifelse.html">The <tt>ifelse</tt> program</a></li>
 <li><a href="ifte.html">The <tt>ifte</tt> program</a></li>
 <li><a href="ifthenelse.html">The <tt>ifthenelse</tt> program</a></li>
-<li><a href="backtick.html">The <tt>backtick</tt> program</a></li>
-<li><a href="pipeline.html">The <tt>pipeline</tt> program</a></li>
+<li><a href="backtick.html">The <tt>`</tt> program</a></li>
+<li><a href="pipeline.html">The <tt>|</tt> program</a></li>
 <li><a href="runblock.html">The <tt>runblock</tt> program</a></li>
 </ul>
 <p>
  (<a href="el_substitute.html">Variable management</a>)
 </p>
 <ul>
-<li><a href="define.html">The <tt>define</tt> program</a></li>
-<li><a href="importas.html">The <tt>importas</tt> program</a></li>
+<li><a href="define.html">The <tt>=</tt> program</a></li>
+<li><a href="importas.html">The <tt>$</tt> program</a></li>
 <li><a href="import.html">The <tt>import</tt> program</a></li>
-<li><a href="elglob.html">The <tt>elglob</tt> program</a></li>
+<li><a href="elglob.html">The <tt>*</tt> program</a></li>
 <li><a href="elgetpositionals.html">The <tt>elgetpositionals</tt> program</a></li>
 <li><a href="multidefine.html">The <tt>multidefine</tt> program</a></li>
 <li><a href="multisubstitute.html">The <tt>multisubstitute</tt> program</a></li>
@@ -188,13 +188,13 @@ to your installation: the shebang lines for your system might be something like
 <ul>
 <li><a href="elgetopt.html">The <tt>elgetopt</tt> program</a></li>
 <li><a href="shift.html">The <tt>shift</tt> program</a></li>
-<li><a href="dollarat.html">The <tt>dollarat</tt> program</a></li>
+<li><a href="dollarat.html">The <tt>$@</tt> program</a></li>
 </ul>
 <p>
  (Miscellaneous)
 </p>
 <ul>
-<li><a href="homeof.html">The <tt>homeof</tt> program</a></li>
+<li><a href="homeof.html">The <tt>~</tt> program</a></li>
 </ul>
 
 <h3> Provided scripts: example <tt>.profile</tt> replacement </h3>
@@ -207,10 +207,7 @@ to your installation: the shebang lines for your system might be something like
 <h3> Fun stuff </h3>
 
 <ul>
-<li>An execline <a href="quine-jriou.txt">quine</a>. This was quinely provided by
-<a href="http://jriou.org/">Jo&euml;l Riou</a>. The only
-external command used is <tt>echo</tt>. </li>
-<li> Another <a href="quine-prj.txt">quine</a>, provided by
+<li> A <a href="quine-prj.txt">quine</a>, provided by
 <a href="http://code.dogmap.org/">Paul Jarc</a>. It is much shorter, but
 uses the external commands <tt>echo</tt> and <tt>env</tt>. Later, Paul rewrote
 it <a href="quine-prj-2.txt">using only <tt>echo</tt></a>, then

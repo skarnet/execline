@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
  <meta http-equiv="Content-Language" content="en" />
- <title>execline: the elglob command</title>
- <meta name="Description" content="execline: the elglob command" />
- <meta name="Keywords" content="execline command elglob pattern shell globbing" />
+ <title>execline: the * command</title>
+ <meta name="Description" content="execline: the * command" />
+ <meta name="Keywords" content="execline command * pattern shell globbing" />
  <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
 </head>
 <body>
@@ -16,21 +16,21 @@
 <a href="//skarnet.org/">skarnet.org</a>
 <p />
 
-<h1> The <tt>elglob</tt> program </h1>
+<h1> The <tt>*</tt> program </h1>
 
 <p>
-<tt>elglob</tt> performs globbing on a pattern, then executes
+<tt>*</tt> performs globbing on a pattern, then executes
 another program.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     elglob [ -v ] [ -w ] [ -s ] [ -m ] [ -e ] [ -0 ] <em>variable</em> <em>pattern</em> <em>prog...</em>
+     * [ -v ] [ -w ] [ -s ] [ -m ] [ -e ] [ -0 ] <em>variable</em> <em>pattern</em> <em>prog...</em>
 </pre>
 
 <ul>
- <li> <tt>elglob</tt> performs
+ <li> <tt>*</tt> performs
 <a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/glob.html">globbing</a>
 on <em>pattern</em>. </li>
  <li> It then performs
@@ -38,7 +38,7 @@ on <em>pattern</em>. </li>
 <em>prog...</em>, using <em>variable</em> as key and the result of the
 globbing as value. The value is always split: it contains as many words
 as they are matches for the globbing pattern. </li>
- <li> <tt>elglob</tt> then execs into the modified <em>prog...</em>. </li>
+ <li> <tt>*</tt> then execs into the modified <em>prog...</em>. </li>
 </ul>
 
 <h2> Options </h2>
@@ -57,7 +57,7 @@ literally; do not allow quoting of metacharacters in <em>pattern</em> via
 backslashes. <strong>Warning</strong>: the
 <a href="execlineb.html">execlineb</a> launcher
 uses the backslash as their own escape character - if you want a
-backslash to be passed to <tt>elglob</tt>, do not forget to <em>double</em>
+backslash to be passed to <tt>*</tt>, do not forget to <em>double</em>
 it. </li>
  <li> <tt>-0</tt>&nbsp;: null globbing. By default, if <em>pattern</em>
 matches nothing, it will be substituted as is (verbatim in one word). With

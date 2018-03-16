@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>execline: the getpid program</title>
-    <meta name="Description" content="execline: the getpid program" />
-    <meta name="Keywords" content="execline command getpid process id variable" />
+    <title>execline: the ! program</title>
+    <meta name="Description" content="execline: the ! program" />
+    <meta name="Keywords" content="execline command ! process id variable" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
 <body>
@@ -16,21 +16,21 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>getpid</tt> program </h1>
+<h1> The <tt>!</tt> program </h1>
 
 <p>
-<tt>getpid</tt> stores its process ID in a given environment variable,
+<tt>!</tt> stores its process ID in a given environment variable,
 then executes a program.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     getpid <em>var</em> <em>prog...</em>
+     ! <em>var</em> <em>prog...</em>
 </pre>
 
 <p>
-<tt>getpid</tt> stores its PID in the <em>var</em> variable, then
+<tt>!</tt> stores its PID in the <em>var</em> variable, then
 execs into <em>prog</em> with its arguments.
 </p>
 

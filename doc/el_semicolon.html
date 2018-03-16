@@ -29,14 +29,14 @@ That is precisely what <em>blocks</em> are made for.
 <p>
  execline commands that need more than one linear set of arguments
 use blocks. For instance, the
-<a href="foreground.html">foreground</a> command needs to spawn a
+<a href="foreground.html">&semi;</a> command needs to spawn a
 first process, then execute into a second one. It reads the command
 line for the first process from a block, and the command line for the
 second process from the rest of the argv. In the following script:
 </p>
 <pre>
  #!/command/execlineb
- foreground { echo 1 } echo 2
+ &semi; { echo 1 } echo 2
 </pre>
 <p>
  <tt>echo&nbsp;1</tt> is read from a block and spawned; then
@@ -68,13 +68,13 @@ spaces.
 <p>
  Actually, the block-reading commands know nothing about braces;
 they only understand the "quoted arguments + empty word" syntax.
-So if you want to use <a href="foreground.html">foreground</a>
+So if you want to use <a href="foreground.html">&semi;</a>
 from your shell to sequence <tt>echo&nbsp;1</tt> and
 <tt>echo&nbsp;2</tt>, you will have to write
 </p>
 
 <pre>
- $ foreground ' echo' ' 1' '' echo 2
+ $ &semi; ' echo' ' 1' '' echo 2
 </pre>
 
 <p>
@@ -83,7 +83,7 @@ that simple case. The following command works as well:
 </p>
 
 <pre>
- $ foreground echo 1 '' echo 2
+ $ &semi; echo 1 '' echo 2
 </pre>
 
 <p>
@@ -94,7 +94,7 @@ produce empty words, which may modify your script's execution flow.
 </p>
 
 <pre>
- $ define FOO '' foreground ' echo' ' ${FOO}' ' rm' ' -rf' ' /' '' echo blah
+ \$ = FOO '' \&semi; ' echo' ' ${FOO}' ' rm' ' -rf' ' /' '' echo blah
 </pre>
 
 <p>
@@ -102,7 +102,7 @@ produce empty words, which may modify your script's execution flow.
 </p>
 
 <pre>
- $ define FOO '' foreground echo '${FOO}' rm -rf / '' echo blah
+ \$ = FOO '' \&semi; echo '${FOO}' rm -rf / '' echo blah
 </pre>
 
 <p>

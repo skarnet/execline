@@ -133,12 +133,12 @@ arguments, the <em>arglist</em>, then executes into a (possibly empty)
 <em>instruction</em>. </li>
  <li> Some <em>builtin</em>s are special because they also take a
 non-empty <em>blocklist</em> after their <em>arglist</em>. For instance,
-the <a href="foreground.html">foreground</a> command takes an empty
+the <a href="foreground.html">&semi;</a> command takes an empty
 <em>arglist</em> and one <em>block</em>: <pre>
  #!/command/execlineb -P
- foreground { sleep 1 } echo blah
+ &semi; { sleep 1 } echo blah
 </pre> is a valid <a href="execlineb.html">execlineb</a> script.
-The <a href="foreground.html">foreground</a> command uses the
+The <a href="foreground.html">&semi;</a> command uses the
 <tt>sleep&nbsp;1</tt> <em>block</em> then execs into the
 remaining <tt>echo&nbsp;blah</tt> <em>instruction</em>. </li>
 </ul>

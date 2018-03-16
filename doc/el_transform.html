@@ -123,7 +123,7 @@ split <tt>$1</tt>, for instance, you have to ask for it
 specifically:
 <pre>
 #!/command/<a href="execlineb.html">execlineb</a> -S1
-<a href="define.html">define</a> -sd" " ARG1S $1
+<a href="define.html">=</a> -sd" " ARG1S $1
 blah $ARG1S
 </pre>
  and $ARG1S will be split using the space character as only delimiter.
@@ -174,7 +174,7 @@ in the following command line:
 </p>
 
 <pre>
- $ define -s -d "" A '1:a,2:bb,0:,7:xyz 123,1: ,' echo '$A'
+ $ = -s -d "" A '1:a,2:bb,0:,7:xyz 123,1: ,' echo '$A'
 </pre>
 
 <p>
@@ -195,7 +195,7 @@ substitution command will die with an error message.
 </p>
 
 <p>
- The <a href="dollarat.html">dollarat</a> command, for instance,
+ The <a href="dollarat.html">$@</a> command, for instance,
 can produce a sequence of netstrings (encoding all the arguments
 given to an execline script), meant to be decoded by a substitution
 command with the <tt>-d&nbsp;""</tt> option.

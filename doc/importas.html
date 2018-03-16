@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>execline: the importas program</title>
-    <meta name="Description" content="execline: the importas program" />
-    <meta name="Keywords" content="execline command importas import environment variable" />
+    <title>execline: the $ program</title>
+    <meta name="Description" content="execline: the $ program" />
+    <meta name="Keywords" content="execline command $ import environment variable" />
     <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
   </head>
 <body>
@@ -16,28 +16,28 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>importas</tt> program </h1>
+<h1> The <tt>$</tt> program </h1>
 
 <p>
-<tt>importas</tt> replaces a literal with the value of an
+<tt>$</tt> replaces a literal with the value of an
 environment variable, then executes another program.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     importas [ -i | -D default ] [ -u ] [ -s ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>variable</em> <em>envvar</em> <em>prog...</em>
+     $ [ -i | -D default ] [ -u ] [ -s ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>variable</em> <em>envvar</em> <em>prog...</em>
 </pre>
 
 <ul>
- <li> <tt>importas</tt> fetches the value of <em>envvar</em> in the
+ <li> <tt>$</tt> fetches the value of <em>envvar</em> in the
 environment. If neither the <em>-D</em> nor the <em>-i</em> option is given,
 and <em>envvar</em> is undefined, <strong>no word</strong> is returned
 (that is different from the empty word). </li>
- <li> <tt>importas</tt> then performs
+ <li> <tt>$</tt> then performs
 <a href="el_substitute.html">variable substitution</a> on <em>prog...</em>,
 with <em>variable</em> as key and that string as value.
- <li><tt>importas</tt> then execs into the modified <em>prog...</em>. </li>
+ <li><tt>$</tt> then execs into the modified <em>prog...</em>. </li>
 </ul>
 
 <h2> Options </h2>
@@ -48,11 +48,11 @@ with <em>variable</em> as key and that string as value.
 <em>variable</em> instead of no word. For instance, to substitute
 the empty word, use <tt>-D&nbsp;""</tt>. </li>
  <li> <tt>-i</tt>&nbsp;: Insist. If <em>envvar</em> is undefined,
-<tt>importas</tt> will not do anything; instead, it will exit 100 with an
+<tt>$</tt> will not do anything; instead, it will exit 100 with an
 error message. This has precedence over any <tt>-D</tt> option. </li>
  <li> <tt>-u</tt>&nbsp;: Unexport. <em>envvar</em> will be removed from
-the environment after the substitution. <tt>importas -u <em>variable</em>
-<em>envvar</em></tt> is equivalent to <tt>importas <em>variable</em>
+the environment after the substitution. <tt>$ -u <em>variable</em>
+<em>envvar</em></tt> is equivalent to <tt>$ <em>variable</em>
 <em>envvar</em> unexport <em>envvar</em></tt>. </li>
  <li> Other options are used to <a href="el_transform.html">control
 the substitution mechanism</a>. </li>

@@ -4,7 +4,7 @@
 # silly things on the standard output.
 
 
-foreground     # an unquoted string, evaluated to: foreground
+;              # an unquoted string, evaluated to: ;
 {              # A single opening brace, not included in the argv
   sleep 1      # Two unquoted strings, evaluated to " sleep" and " 1"
                # (without the quotation marks).
@@ -31,7 +31,7 @@ baz"$1"qux  # This will evaluate to the word baz$1qux
 baz\$1qux   # Same here
 baz$1qux    # Same here in execline-1.y
 
-${PATH}   # This will NOT be replaced by execline ; use the importas command
+${PATH}   # This will NOT be replaced by execline ; use the $ command
           # if you need the $PATH value.
 
 'this is not a string'  # it will be parsed as five separate words

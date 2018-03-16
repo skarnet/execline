@@ -1,18 +1,18 @@
 #!/bin/execlineb -S0
 
-backtick -n defaulthome
+` -n defaulthome
 {
-  if -nt
+  && -nt
   {
-    backtick -n defaultuser { id -un }
-    importas -u defaultuser defaultuser
-    importas -D $defaultuser USER USER
-    redirfd -w 2 /dev/null
-    homeof ${USER}
+    ` -n defaultuser { id -un }
+    $ -u defaultuser defaultuser
+    $ -D $defaultuser USER USER
+    < -w 2 /dev/null
+    ~ ${USER}
   }
   s6-echo /
 }
-importas -u defaulthome defaulthome
-importas -D $defaulthome HOME HOME
+$ -u defaulthome defaulthome
+$ -D $defaulthome HOME HOME
 tryexec { ${HOME}/.execline-shell $@ }
 /bin/sh $@

@@ -72,7 +72,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       if (errno != EBADF) strerr_diefu1sys(111, "dup stdin") ;
     }
     else fmt[uint_fmt(fmt, (unsigned int)fd)] = 0 ;
-    newargv[m++] = EXECLINE_BINPREFIX "pipeline" ;
+    newargv[m++] = EXECLINE_BINPREFIX "|" ;
     newargv[m++] = "--" ;
     while (argv[i] && argv[i][0] != EXECLINE_BLOCK_END_CHAR && (!EXECLINE_BLOCK_END_CHAR || (argv[i][0] && argv[i][1])))
       newargv[m++] = argv[i++] ;
@@ -99,12 +99,12 @@ int main (int argc, char const *const *argv, char const *const *envp)
     newargv[m++] = argv[0] ;
     if (fd < 0)
     {
-      newargv[m++] = EXECLINE_BINPREFIX "fdclose" ;
+      newargv[m++] = EXECLINE_BINPREFIX ">&-" ;
       newargv[m++] = "0" ;
     }
     else
     {
-      newargv[m++] = EXECLINE_BINPREFIX "fdmove" ;
+      newargv[m++] = EXECLINE_BINPREFIX ">&" ;
       newargv[m++] = "0" ;
       newargv[m++] = fmt ;
     }

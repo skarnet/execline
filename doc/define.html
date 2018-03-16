@@ -3,9 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
  <meta http-equiv="Content-Language" content="en" />
- <title>execline: the define command</title>
- <meta name="Description" content="execline: the define command" />
- <meta name="Keywords" content="execline command define" />
+ <title>execline: the = command</title>
+ <meta name="Description" content="execline: the = command" />
+ <meta name="Keywords" content="execline command =" />
  <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
 </head>
 <body>
@@ -16,27 +16,27 @@
 <a href="//skarnet.org/">skarnet.org</a>
 </p>
 
-<h1> The <tt>define</tt> program </h1>
+<h1> The <tt>=</tt> program </h1>
 
 <p>
-<tt>define</tt> replaces a literal with a value, then executes
+<tt>=</tt> replaces a literal with a value, then executes
 another program.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     define [ -s ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>variable</em> <em>value</em> <em>prog...</em>
+     = [ -s ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>variable</em> <em>value</em> <em>prog...</em>
 </pre>
 
 <ul>
- <li> <tt>define</tt> performs
+ <li> <tt>=</tt> performs
 <a href="el_substitute.html">variable substitution</a> on
 <em>prog...</em>, using <em>variable</em> as key and
 <em>value</em> as value.
-<tt>define</tt>'s options are used to <a href="el_transform.html">control
+<tt>=</tt>'s options are used to <a href="el_transform.html">control
 the substitution mechanism</a>. </li>
- <li> <tt>define</tt> then execs into the modified <em>prog...</em>. </li>
+ <li> <tt>=</tt> then execs into the modified <em>prog...</em>. </li>
 </ul>
 
 </body>

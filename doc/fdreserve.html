@@ -50,8 +50,8 @@ use:
  fdreserve 2
  multisubstitute
  {
-   importas fdr FD0
-   importas fdw FD1
+   $ fdr FD0
+   $ fdw FD1
   }
  piperw $fdr $fdw
  <em>prog...</em>
@@ -67,15 +67,15 @@ descriptors that are free at the time it is run. A program like
  fdreserve 3
  multisubstitute
  {
-   importas fdr FD0
-   importas fdw FD1
+   $ fdr FD0
+   $ fdw FD1
  }
  piperw $fdr $fdw
  fdreserve 1
  multisubstitute
  {
-   importas oldfd FD2
-   importas newfd FD0
+   $ oldfd FD2
+   $ newfd FD0
  }
  <em>prog...</em>
 </pre>
