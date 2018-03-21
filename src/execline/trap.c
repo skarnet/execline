@@ -1,8 +1,7 @@
 /* ISC license. */
 
-#include <skalibs/nonposix.h>
+#include <skalibs/nonposix.h>  /* for SKALIBS_NSIG to work */
 #include <string.h>
-#include <strings.h>
 #include <errno.h>
 #include <signal.h>
 #include <skalibs/sgetopt.h>
@@ -77,8 +76,8 @@ int main (int argc, char const **argv, char const *const *envp)
   while (i < (unsigned int)argc1)
   {
     int argc2 ;
-    unsigned int sig = (unsigned int)sig_number(argv[i] + (strncasecmp(argv[i], "sig", 3) ? 0 : 3)) ;
-    if (!sig && !uint0_scan(argv[i], &sig) && strcasecmp(argv[i], "timeout"))
+    int sig = 0 ;
+    if (!sig0_scan(argv[i], &sig) && strcasecmp(argv[i], "timeout"))
       strerr_dief3x(100, "unrecognized", " directive: ", argv[i]) ;
     argc2 = el_semicolon(argv + ++i) ;
     if (!argc2)
