@@ -1,5 +1,5 @@
-#!/command/execlineb
-= e "#!/command/execlineb
+#!/bin/execlineb
+= e "#!/bin/execlineb
 = e $q${E}${q}
 env e=$e
 = q ${b}${q}

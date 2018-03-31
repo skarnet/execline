@@ -1,16 +1,15 @@
 #!/bin/execlineb -S0
 
-` -n defaulthome
+` -n home
 {
   && -nt
   {
-    ` -n defaultuser { id -un }
-    $ -u defaultuser defaultuser $ -D $defaultuser USER USER
+    ` -n user { id -un }
+    $ -u user user $ -D $user USER USER
     < -w 2 /dev/null ~ ${USER}
   }
-  s6-echo /
+  echo /
 }
-$ -u defaulthome defaulthome
-$ -D $defaulthome HOME HOME
+$ -u home home $ -D $home HOME HOME
 tryexec { ${HOME}/.execline-shell $@ }
 /bin/sh $@
