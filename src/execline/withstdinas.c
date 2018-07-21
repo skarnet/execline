@@ -6,6 +6,7 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
+#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 
 #define USAGE "withstdinas [ -i | -I | -D default ] [ -n ] var remainder..."

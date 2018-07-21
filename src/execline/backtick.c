@@ -6,6 +6,7 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
+#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 

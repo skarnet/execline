@@ -3,6 +3,7 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
+#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
