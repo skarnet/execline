@@ -121,7 +121,7 @@ getpid: EXTRA_LIBS :=
 getpid: src/execline/getpid.o -lskarnet
 heredoc: EXTRA_LIBS :=
 heredoc: src/execline/heredoc.o -lskarnet
-homeof: EXTRA_LIBS :=
+homeof: EXTRA_LIBS := ${MAYBEPTHREAD_LIB}
 homeof: src/execline/homeof.o ${LIBNSSS} -lskarnet
 if: EXTRA_LIBS := ${SPAWN_LIB}
 if: src/execline/if.o ${LIBEXECLINE} -lskarnet
