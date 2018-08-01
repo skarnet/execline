@@ -4,6 +4,7 @@ In 2.5.0.1
 ----------
 
  - Compatibility with skalibs-2.7.0.0.
+ - Optional nsss support added.
 
 
 In 2.5.0.0
