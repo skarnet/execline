@@ -257,12 +257,19 @@ if $slashpackage ; then
   if $shebangisdefault ; then
     shebangdir=${extbinprefix}
   fi
-  while read dep ; do
-    addincpath="$addincpath -I${sproot}${dep}/include"
-    vpaths="$vpaths ${sproot}${dep}/library"
-    addlibspath="$addlibspath -L${sproot}${dep}/library"
-    vpathd="$vpathd ${sproot}${dep}/library.so"
-    addlibdpath="$addlibdpath -L${sproot}${dep}/library.so"
+  while read dep condvar ; do
+    if test -n "$condvar" ; then
+      eval "cond=$condvar"
+    else
+      cond=true
+    fi
+    if $cond ; then
+      addincpath="$addincpath -I${sproot}${dep}/include"
+      vpaths="$vpaths ${sproot}${dep}/library"
+      addlibspath="$addlibspath -L${sproot}${dep}/library"
+      vpathd="$vpathd ${sproot}${dep}/library.so"
+      addlibdpath="$addlibdpath -L${sproot}${dep}/library.so"
+    fi
   done < package/deps-build
 fi
 
