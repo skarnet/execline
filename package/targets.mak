@@ -8,6 +8,7 @@ elgetopt \
 elgetpositionals \
 elglob \
 emptyenv \
+envfile \
 exec \
 execlineb \
 exit \

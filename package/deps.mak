@@ -11,6 +11,7 @@ src/execline/elgetopt.o src/execline/elgetopt.lo: src/execline/elgetopt.c src/in
 src/execline/elgetpositionals.o src/execline/elgetpositionals.lo: src/execline/elgetpositionals.c src/include-local/exlsn.h
 src/execline/elglob.o src/execline/elglob.lo: src/execline/elglob.c src/include-local/exlsn.h
 src/execline/emptyenv.o src/execline/emptyenv.lo: src/execline/emptyenv.c src/include/execline/execline.h
+src/execline/envfile.o src/execline/envfile.lo: src/execline/envfile.c
 src/execline/exec.o src/execline/exec.lo: src/execline/exec.c
 src/execline/execlineb.o src/execline/execlineb.lo: src/execline/execlineb.c src/include/execline/execline.h src/include-local/exlsn.h
 src/execline/exit.o src/execline/exit.lo: src/execline/exit.c
@@ -89,6 +90,8 @@ elglob: EXTRA_LIBS :=
 elglob: src/execline/elglob.o ${LIBEXECLINE} -lskarnet
 emptyenv: EXTRA_LIBS :=
 emptyenv: src/execline/emptyenv.o ${LIBEXECLINE} -lskarnet
+envfile: EXTRA_LIBS :=
+envfile: src/execline/envfile.o -lskarnet
 exec: EXTRA_LIBS :=
 exec: src/execline/exec.o -lskarnet
 execlineb: EXTRA_LIBS :=

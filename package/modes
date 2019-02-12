@@ -9,6 +9,7 @@ elglob			0755
 multidefine		0755
 multisubstitute		0755
 emptyenv		0755
+envfile			0755
 exec			0755
 exit			0755
 execlineb		0755

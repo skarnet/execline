@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the envfile program</title>
+    <meta name="Description" content="execline: the envfile program" />
+    <meta name="Keywords" content="execline command envfile environment file shell envdir s6-envdir env" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>envfile</tt> program </h1>
+
+<p>
+<tt>envfile</tt> reads a file containing variable assignments,
+adds the variables to the environment, then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     envfile <em>file</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>envfile</tt> reads <em>file</em> and adds the key-value pairs
+defined in <em>file</em> to the environment. Then it
+execs into <em>prog...</em>, i.e. the rest of its command line,
+with the modified environment.
+</p>
+
+<h2> Exit codes </h2>
+
+<ul>
+ <li> 1:&nbsp;syntax error in <em>file</em> </li>
+ <li> 100:&nbsp;wrong usage </li>
+ <li> 111:&nbsp;system call failed </li>
+ <li> 126:&nbsp;execve() on <em>prog</em> failed (unknown reason) </li>
+ <li> 127:&nbsp;execve() on <em>prog</em> failed (<em>prog</em> could not be found) </li>
+</ul>
+
+<p>
+ 0 is not listed because on success, <tt>envfile</tt> does not exit:
+it execs into <em>prog</em>.
+</p>
+
+<h2> File syntax </h2>
+
+<p>
+ <em>file</em> is a text file containing lines of the form <tt>key = value</tt>.
+Whitespace is permitted before and after <em>key</em>, and before or after <em>value</em>,
+but <em>key</em> or <em>value</em> can never contain whitespace. No quoting
+is possible.
+</p>
+
+<p>
+ Empty lines, or lines containing only whitespace, are ignored.
+Lines beginning with <tt>#</tt> (possibly after some whitespace)
+are ignored (and typically used for comments).
+Comments are also possible at the end of lines:
+<tt>key = value # comment</tt> is a valid line. Note that there
+<em>must</em> be whitespace between <em>value</em> and <tt>#</tt>
+in this case (else <tt>#</tt> is just read as a part of <em>value</em>).
+</p>
+
+<p>
+ If <em>value</em> is empty, <em>key</em> is <strong>still</strong>
+added to the environment, with an empty value. If you do not want
+<em>key</em> to be added to the environment at all, comment out the line.
+<tt>envfile</tt> does not offer a way to <em>remove</em> variables from
+the environment.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> If <em>file</em> is <tt>-</tt> then <tt>envfile</tt> reads
+and parses its standard input instead. To read a file literally named
+<tt>-</tt>, you can use <tt>./-</tt> for instance. </li>
+ <li> <tt>The variables and values that can be defined with <tt>envfile</tt>
+are purposefully restricted in order to keep the parsing extremely simple.
+If you need fancy values, for instance values that contain whitespace or
+a newline, you should use an envdir instead: see
+<a href="//skarnet.org/software/s6/s6-envdir.html">s6-envdir</a>. </li>
+</ul>
+
+</body>
+</html>

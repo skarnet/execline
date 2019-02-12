@@ -1,5 +1,12 @@
 Changelog for execline.
 
+In 2.5.1.0
+----------
+
+ - Bugfixes.
+ - New command: envfile.
+
+
 In 2.5.0.1
 ----------
 
