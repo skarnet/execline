@@ -5,6 +5,7 @@ In 2.5.1.0
 
  - Bugfixes.
  - New command: envfile.
+ - Everything builds as PIC by default.
 
 
 In 2.5.0.1
