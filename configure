@@ -315,7 +315,7 @@ if [ "x$target" != "x$(cat $sysdeps/target)" ] ; then
 fi
 
 if $allpic ; then
-  tryflag CFLAGS_AUTO -fPIC
+  tryflag CPPFLAGS_AUTO -fPIC
 fi
 spawn_lib=$(cat $sysdeps/spawn.lib)
 socket_lib=$(cat $sysdeps/socket.lib)
