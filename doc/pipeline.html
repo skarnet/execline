@@ -57,7 +57,7 @@ from hanging around if <em>prog2...</em> fails to wait for its children.</li>
 <h2> Notes </h2>
 
 <ul>
- <li> You can easily create a chain of pipes: <tt>execline -Pc 'pipeline { a } pipeline { b } c'</tt>
+ <li> You can easily create a chain of pipes: <tt>execlineb -Pc 'pipeline { a } pipeline { b } c'</tt>
 is roughly equivalent to
 <tt>sh -c 'exec a | b | c'</tt>, except that shells usually run <tt>c</tt>
 as a child process like <tt>a</tt> and <tt>b</tt>, and <tt>exec</tt> has no
