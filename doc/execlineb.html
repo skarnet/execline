@@ -194,6 +194,24 @@ force it unset, set to 1, or set to 2 by giving respectively the
 <tt>-q</tt>, <tt>-w</tt> or <tt>-W</tt> option to <tt>execlineb</tt>.
 </p>
 
+<p>
+ The <tt>EXECLINE_STRICT</tt> variable (as well as the <tt>-q</tt>,
+<tt>-w</tt> and <tt>-W</tt> options to <tt>execlineb</tt> will also modify
+the behaviour of the <tt>-S&nbsp;<em>nmin</em></tt> and <tt>-s&nbsp;<em>nmin</em></tt>
+options when <tt>execlineb</tt> is called with less than <em>nmin</em>
+positional parameters:
+</p>
+
+<ul>
+ <li> If <tt>EXECLINE_STRICT</tt> is 0 or unset: the script will run
+silently, and missing positional parameters, up to <em>nmin</em>, will
+be substituted with the empty word. </li>
+ <li> If <tt>EXECLINE_STRICT</tt> is 1: same, but the script will
+print a warning message rather than run silently. </li>
+ <li> If <tt>EXECLINE_STRICT</tt> is 2: the script will exit with an
+error message. </li>
+</ul>
+
 <h2> Options for environment management </h2>
 
 <p>
