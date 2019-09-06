@@ -67,8 +67,7 @@ static inline void mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_
   x.fd = selfpipe_init() ;
   if (x.fd < 0) strerr_diefu1sys(111, "create selfpipe") ;
   if (selfpipe_trap(SIGCHLD) < 0) strerr_diefu1sys(111, "trap SIGCHLD") ;
-  tain_now_set_stopwatch() ;
-  tain_now_g() ;
+  tain_now_set_stopwatch_g() ;
   tain_add_g(deadline, deadline) ;
   while ((*f)(tab, n))
   {

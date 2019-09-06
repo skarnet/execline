@@ -69,8 +69,7 @@ int main (int argc, char const **argv, char const *const *envp)
   argv[argc1] = 0 ;
   while (i--) argvs[i] = 0 ;
   i = 0 ;
-  tain_now_set_stopwatch() ;
-  tain_now_g() ;
+  tain_now_set_stopwatch_g() ;
   spfd = selfpipe_init() ;
   if (spfd < 0) strerr_diefu1sys(111, "selfpipe_init") ;
 
