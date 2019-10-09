@@ -16,7 +16,7 @@
 
 #define USAGE "posix-cd [ -L | -P ] [ - | path ] [ prog... ]"
 #define dieusage() strerr_dieusage(100, USAGE)
-#define dienomem() strerr_diefu1sys(100, "stralloc_catb")
+#define dienomem() strerr_diefu1sys(111, "stralloc_catb")
 
 int main (int argc, char const **argv, char const *const *envp)
 {
