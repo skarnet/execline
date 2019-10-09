@@ -60,5 +60,15 @@ exec into <em>prog...</em>. This is the default. </li>
 will print an error message and exit 1. </li>
 </ul>
 
+<h2> Notes </h2>
+
+<ul>
+ <li> For <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/wait.html">POSIX
+compatibility</a>, <tt>wait</tt> also works when it cannot find a block.
+In that case, all its command line is interpreted as <em>pids...</em>
+arguments and it does not execute into a program. Instead, it exits
+with a conforming exit code. </li>
+</ul>
+
 </body>
 </html>

@@ -49,3 +49,12 @@ withstdinas
 LIBEXEC_TARGETS :=
 
 LIB_DEFS := EXECLINE=execline
+
+ifeq ($(PEDANTIC_POSIX),1)
+
+BIN_TARGETS += posix-cd
+
+$(DESTDIR)$(bindir)/cd: $(DESTDIR)$(bindir)/posix-cd
+	exec ./tools/install.sh -l posix-cd $(DESTDIR)$(bindir)/cd
+
+endif

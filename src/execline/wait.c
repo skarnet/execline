@@ -14,36 +14,50 @@
 #define USAGE "wait [ -I | -i ] [ -r | -t timeout ] { pids... }"
 #define dieusage() strerr_dieusage(100, USAGE)
 
-typedef int actfunc_t (pid_t *, unsigned int *) ;
+typedef int actfunc_t (pid_t *, unsigned int *, int *) ;
 typedef actfunc_t *actfunc_t_ref ;
 
-static inline void waitall (void)
+static inline int waitall (void)
 {
+  int wstat = 0 ;
   pid_t r = 1 ;
-  while (r > 0) r = wait(0) ;
-  if (r < 0 && errno != ECHILD) strerr_diefu1sys(111, "wait") ;
+  while (r > 0) r = wait(&wstat) ;
+  if (r < 0)
+  {
+    if (errno != ECHILD) strerr_diefu1sys(111, "wait") ;
+    else return 127 ;
+  }
+  return wait_estatus(wstat) ;
 }
 
-static int waitany (pid_t *dummytab, unsigned int *dummyn)
+static int waitany (pid_t *dummytab, unsigned int *dummyn, int *res)
 {
+  int wstat ;
   pid_t r = 1 ;
-  while (r > 0) r = wait_nohang(0) ;
-  if (!r) return 1 ;
+  while (r > 0) r = wait_nohang(&wstat) ;
+  if (!r) return (*res = wait_estatus(wstat), 1) ;
   if (errno != ECHILD) strerr_diefu1sys(111, "wait") ;
+  *res = 127 ;
   (void)dummytab ;
   (void)dummyn ;
   return 0 ;
 }
 
-static int waitintab (pid_t *tab, unsigned int *n)
+static int waitintab (pid_t *tab, unsigned int *n, int *res)
 {
   unsigned int i = 0 ;
   for (; i < *n ; i++)
   {
-    pid_t r = waitpid(tab[i], 0, WNOHANG) ;
+    int wstat ;
+    pid_t r = waitpid(tab[i], &wstat, WNOHANG) ;
     if (r)
     {
-      if (r < 0 && errno != ECHILD) strerr_diefu1sys(111, "waitpid") ;
+      if (r < 0)
+      {
+        if (errno == ECHILD) *res = 127 ;
+        else strerr_diefu1sys(111, "waitpid") ;
+      }
+      else *res = wait_estatus(wstat) ;
       tab[i--] = tab[--(*n)] ;
     }
   }
@@ -61,15 +75,16 @@ static inline void handle_signals (void)
   }
 }
 
-static inline void mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_t *tab, unsigned int *n)
+static inline int mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_t *tab, unsigned int *n)
 {
   iopause_fd x = { .events = IOPAUSE_READ } ;
+  int res = 0 ;
   x.fd = selfpipe_init() ;
   if (x.fd < 0) strerr_diefu1sys(111, "create selfpipe") ;
   if (selfpipe_trap(SIGCHLD) < 0) strerr_diefu1sys(111, "trap SIGCHLD") ;
   tain_now_set_stopwatch_g() ;
   tain_add_g(deadline, deadline) ;
-  while ((*f)(tab, n))
+  while ((*f)(tab, n, &res))
   {
     int r = iopause_g(&x, 1, deadline) ;
     if (r < 0) strerr_diefu1sys(111, "iopause") ;
@@ -82,6 +97,7 @@ static inline void mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_
     else handle_signals() ;
   }
   selfpipe_finish() ;
+  return res ;
 }
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -90,6 +106,8 @@ int main (int argc, char const **argv, char const *const *envp)
   int argc1 ;
   int hastimeout = 0 ;
   int insist = 0 ;
+  int r ;
+  int hasblock ;
   PROG = "wait" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
@@ -112,8 +130,13 @@ int main (int argc, char const **argv, char const *const *envp)
     else tto = tain_infinite_relative ;
   }
   argc1 = el_semicolon(argv) ;
-  if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
-  if (!argc1 && !hastimeout) waitall() ;
+  if (argc1 >= argc)
+  {
+    hasblock = 0 ;
+    argc1 = argc ;
+  }
+  else hasblock = 1 ;
+  if (!argc1 && !hastimeout) r = waitall() ;
   else
   {
     actfunc_t_ref f = argc1 ? &waitintab : &waitany ;
@@ -125,8 +148,9 @@ int main (int argc, char const **argv, char const *const *envp)
       for (; i < n ; i++)
         if (!pid0_scan(argv[i], tab+i)) strerr_dieusage(100, USAGE) ;
     }
-    mainloop(&tto, insist, f, tab, &n) ;
+    r = mainloop(&tto, insist, f, tab, &n) ;
   }
 
+  if (!hasblock) return r ;
   xpathexec0_run(argv + argc1 + 1, envp) ;
 }

@@ -42,6 +42,7 @@
 /multisubstitute
 /pipeline
 /piperw
+/posix-cd
 /redirfd
 /runblock
 /shift
