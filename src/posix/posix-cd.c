@@ -108,7 +108,8 @@ int main (int argc, char const **argv, char const *const *envp)
     {
       stralloc tmp = STRALLOC_ZERO ;
       if (!stralloc_ready(&tmp, sa.len + 2)) dienomem() ;
-      if (!path_canonicalize(tmp.s, sa.s, 1))
+      tmp.len = path_canonicalize(tmp.s, sa.s, 1) ;
+      if (!tmp.len++)
         strerr_diefu4sys(111, "canonicalize ", sa.s, ": problem with ", tmp.s) ;
       stralloc_free(&sa) ;
       sa = tmp ;
