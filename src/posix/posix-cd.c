@@ -55,7 +55,7 @@ int main (int argc, char const **argv, char const *const *envp)
   }
   if (!where || !where[0]) dieusage() ;
 
-  if ((where[0] != '/' && (where[0] != '.')) || (where[1] && where[1] != '.'))
+  if (!(where[0] == '/' || (where[0] == '.' && (!where[1] || where[1] == '/' || (where[1] == '.' && (!where[2] || where[2] == '/'))))))
   {
     char const *cdpath = getenv("CDPATH") ;
     if (cdpath)
