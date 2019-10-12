@@ -1,6 +1,8 @@
 /* ISC license. */
 
 #include <string.h>
+#include <stdlib.h>
+
 #include <skalibs/types.h>
 #include <skalibs/allreadwrite.h>
 #include <skalibs/sgetopt.h>
@@ -131,6 +133,20 @@ int main (int argc, char const *const *argv, char const *const *envp)
     fmt[uint_fmt(fmt, (unsigned int)flagstrict)] = 0 ;
     if (!env_addmodif(&modif, "EXECLINE_STRICT", flagstrict ? fmt : 0))
       goto errenv ;
+  }
+  else
+  {
+    char const *x = getenv("EXECLINE_STRICT") ;
+    if (x)
+    {
+      unsigned int u ;
+      if (!uint0_scan(x, &u))
+      {
+        strerr_warnw1x("invalid EXECLINE_STRICT value, unsetting it") ;
+        if (!env_addmodif(&modif, "EXECLINE_STRICT", 0)) goto errenv ;
+      }
+      else flagstrict = u ;
+    }
   }
 
   if (flagpushenv == 3 || flagpushenv == 4)
