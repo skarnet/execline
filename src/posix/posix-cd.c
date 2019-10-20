@@ -115,6 +115,7 @@ int main (int argc, char const **argv, char const *const *envp)
       sa = tmp ;
     }
     if (!pathexec_env("PWD", sa.s)) dienomem() ;
+#ifdef PATH_MAX
     if (sa.len > PATH_MAX && strlen(where) < PATH_MAX && x && *x)
     {
       size_t len = strlen(x) ;
@@ -128,6 +129,7 @@ int main (int argc, char const **argv, char const *const *envp)
         }
       }
     }
+#endif
   }
 
  /* fking finally */
