@@ -73,98 +73,98 @@ src/libexecline/exlsn_main.o src/libexecline/exlsn_main.lo: src/libexecline/exls
 src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_multidefine.lo: src/libexecline/exlsn_multidefine.c src/include/execline/execline.h src/include-local/exlsn.h
 src/posix/posix-cd.o src/posix/posix-cd.lo: src/posix/posix-cd.c
 
-background: EXTRA_LIBS := ${SPAWN_LIB}
-background: src/execline/background.o ${LIBEXECLINE} -lskarnet
-backtick: EXTRA_LIBS := ${SPAWN_LIB}
-backtick: src/execline/backtick.o ${LIBEXECLINE} -lskarnet
-cd: EXTRA_LIBS :=
-cd: src/execline/cd.o -lskarnet
-define: EXTRA_LIBS :=
-define: src/execline/define.o ${LIBEXECLINE} -lskarnet
-dollarat: EXTRA_LIBS :=
-dollarat: src/execline/dollarat.o -lskarnet
-elgetopt: EXTRA_LIBS :=
-elgetopt: src/execline/elgetopt.o ${LIBEXECLINE} -lskarnet
-elgetpositionals: EXTRA_LIBS :=
-elgetpositionals: src/execline/elgetpositionals.o ${LIBEXECLINE} -lskarnet
-elglob: EXTRA_LIBS :=
-elglob: src/execline/elglob.o ${LIBEXECLINE} -lskarnet
-emptyenv: EXTRA_LIBS :=
-emptyenv: src/execline/emptyenv.o ${LIBEXECLINE} -lskarnet
-envfile: EXTRA_LIBS :=
-envfile: src/execline/envfile.o -lskarnet
-exec: EXTRA_LIBS :=
-exec: src/execline/exec.o -lskarnet
-execlineb: EXTRA_LIBS :=
-execlineb: src/execline/execlineb.o ${LIBEXECLINE} -lskarnet
-exit: EXTRA_LIBS :=
-exit: src/execline/exit.o -lskarnet
-export: EXTRA_LIBS :=
-export: src/execline/export.o -lskarnet
-fdblock: EXTRA_LIBS :=
-fdblock: src/execline/fdblock.o -lskarnet
-fdclose: EXTRA_LIBS :=
-fdclose: src/execline/fdclose.o -lskarnet
-fdmove: EXTRA_LIBS :=
-fdmove: src/execline/fdmove.o -lskarnet
-fdreserve: EXTRA_LIBS :=
-fdreserve: src/execline/fdreserve.o -lskarnet
-fdswap: EXTRA_LIBS :=
-fdswap: src/execline/fdswap.o -lskarnet
-forbacktickx: EXTRA_LIBS :=
-forbacktickx: src/execline/forbacktickx.o -lskarnet
-foreground: EXTRA_LIBS := ${SPAWN_LIB}
-foreground: src/execline/foreground.o ${LIBEXECLINE} -lskarnet
-forstdin: EXTRA_LIBS := ${SPAWN_LIB}
-forstdin: src/execline/forstdin.o ${LIBEXECLINE} -lskarnet
-forx: EXTRA_LIBS := ${SPAWN_LIB}
-forx: src/execline/forx.o ${LIBEXECLINE} -lskarnet
-getcwd: EXTRA_LIBS :=
-getcwd: src/execline/getcwd.o -lskarnet
-getpid: EXTRA_LIBS :=
-getpid: src/execline/getpid.o -lskarnet
-heredoc: EXTRA_LIBS :=
-heredoc: src/execline/heredoc.o -lskarnet
-homeof: EXTRA_LIBS := ${MAYBEPTHREAD_LIB}
-homeof: src/execline/homeof.o ${LIBNSSS} -lskarnet
-if: EXTRA_LIBS := ${SPAWN_LIB}
-if: src/execline/if.o ${LIBEXECLINE} -lskarnet
-ifelse: EXTRA_LIBS := ${SPAWN_LIB}
-ifelse: src/execline/ifelse.o ${LIBEXECLINE} -lskarnet
-ifte: EXTRA_LIBS := ${SPAWN_LIB}
-ifte: src/execline/ifte.o ${LIBEXECLINE} -lskarnet
-ifthenelse: EXTRA_LIBS := ${SPAWN_LIB}
-ifthenelse: src/execline/ifthenelse.o ${LIBEXECLINE} -lskarnet
-importas: EXTRA_LIBS :=
-importas: src/execline/importas.o ${LIBEXECLINE} -lskarnet
-loopwhilex: EXTRA_LIBS := ${SPAWN_LIB}
-loopwhilex: src/execline/loopwhilex.o ${LIBEXECLINE} -lskarnet
-multidefine: EXTRA_LIBS :=
-multidefine: src/execline/multidefine.o ${LIBEXECLINE} -lskarnet
-multisubstitute: EXTRA_LIBS :=
-multisubstitute: src/execline/multisubstitute.o ${LIBEXECLINE} -lskarnet
-pipeline: EXTRA_LIBS := ${SPAWN_LIB}
-pipeline: src/execline/pipeline.o ${LIBEXECLINE} -lskarnet
-piperw: EXTRA_LIBS :=
-piperw: src/execline/piperw.o -lskarnet
-redirfd: EXTRA_LIBS :=
-redirfd: src/execline/redirfd.o -lskarnet
-runblock: EXTRA_LIBS :=
-runblock: src/execline/runblock.o ${LIBEXECLINE} -lskarnet
-shift: EXTRA_LIBS :=
-shift: src/execline/shift.o ${LIBEXECLINE} -lskarnet
-trap: EXTRA_LIBS := ${SPAWN_LIB}
-trap: src/execline/trap.o ${LIBEXECLINE} -lskarnet
-tryexec: EXTRA_LIBS :=
-tryexec: src/execline/tryexec.o ${LIBEXECLINE} -lskarnet
-umask: EXTRA_LIBS :=
-umask: src/execline/umask.o -lskarnet
-unexport: EXTRA_LIBS :=
-unexport: src/execline/unexport.o -lskarnet
-wait: EXTRA_LIBS :=
-wait: src/execline/wait.o ${LIBEXECLINE} -lskarnet
-withstdinas: EXTRA_LIBS :=
-withstdinas: src/execline/withstdinas.o -lskarnet
+background: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+background: src/execline/background.o ${LIBEXECLINE}
+backtick: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+backtick: src/execline/backtick.o ${LIBEXECLINE}
+cd: EXTRA_LIBS := -lskarnet
+cd: src/execline/cd.o
+define: EXTRA_LIBS := -lskarnet
+define: src/execline/define.o ${LIBEXECLINE}
+dollarat: EXTRA_LIBS := -lskarnet
+dollarat: src/execline/dollarat.o
+elgetopt: EXTRA_LIBS := -lskarnet
+elgetopt: src/execline/elgetopt.o ${LIBEXECLINE}
+elgetpositionals: EXTRA_LIBS := -lskarnet
+elgetpositionals: src/execline/elgetpositionals.o ${LIBEXECLINE}
+elglob: EXTRA_LIBS := -lskarnet
+elglob: src/execline/elglob.o ${LIBEXECLINE}
+emptyenv: EXTRA_LIBS := -lskarnet
+emptyenv: src/execline/emptyenv.o ${LIBEXECLINE}
+envfile: EXTRA_LIBS := -lskarnet
+envfile: src/execline/envfile.o
+exec: EXTRA_LIBS := -lskarnet
+exec: src/execline/exec.o
+execlineb: EXTRA_LIBS := -lskarnet
+execlineb: src/execline/execlineb.o ${LIBEXECLINE}
+exit: EXTRA_LIBS := -lskarnet
+exit: src/execline/exit.o
+export: EXTRA_LIBS := -lskarnet
+export: src/execline/export.o
+fdblock: EXTRA_LIBS := -lskarnet
+fdblock: src/execline/fdblock.o
+fdclose: EXTRA_LIBS := -lskarnet
+fdclose: src/execline/fdclose.o
+fdmove: EXTRA_LIBS := -lskarnet
+fdmove: src/execline/fdmove.o
+fdreserve: EXTRA_LIBS := -lskarnet
+fdreserve: src/execline/fdreserve.o
+fdswap: EXTRA_LIBS := -lskarnet
+fdswap: src/execline/fdswap.o
+forbacktickx: EXTRA_LIBS := -lskarnet
+forbacktickx: src/execline/forbacktickx.o
+foreground: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+foreground: src/execline/foreground.o ${LIBEXECLINE}
+forstdin: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+forstdin: src/execline/forstdin.o ${LIBEXECLINE}
+forx: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+forx: src/execline/forx.o ${LIBEXECLINE}
+getcwd: EXTRA_LIBS := -lskarnet
+getcwd: src/execline/getcwd.o
+getpid: EXTRA_LIBS := -lskarnet
+getpid: src/execline/getpid.o
+heredoc: EXTRA_LIBS := -lskarnet
+heredoc: src/execline/heredoc.o
+homeof: EXTRA_LIBS := -lskarnet ${MAYBEPTHREAD_LIB}
+homeof: src/execline/homeof.o ${LIBNSSS}
+if: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+if: src/execline/if.o ${LIBEXECLINE}
+ifelse: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+ifelse: src/execline/ifelse.o ${LIBEXECLINE}
+ifte: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+ifte: src/execline/ifte.o ${LIBEXECLINE}
+ifthenelse: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+ifthenelse: src/execline/ifthenelse.o ${LIBEXECLINE}
+importas: EXTRA_LIBS := -lskarnet
+importas: src/execline/importas.o ${LIBEXECLINE}
+loopwhilex: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+loopwhilex: src/execline/loopwhilex.o ${LIBEXECLINE}
+multidefine: EXTRA_LIBS := -lskarnet
+multidefine: src/execline/multidefine.o ${LIBEXECLINE}
+multisubstitute: EXTRA_LIBS := -lskarnet
+multisubstitute: src/execline/multisubstitute.o ${LIBEXECLINE}
+pipeline: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+pipeline: src/execline/pipeline.o ${LIBEXECLINE}
+piperw: EXTRA_LIBS := -lskarnet
+piperw: src/execline/piperw.o
+redirfd: EXTRA_LIBS := -lskarnet
+redirfd: src/execline/redirfd.o
+runblock: EXTRA_LIBS := -lskarnet
+runblock: src/execline/runblock.o ${LIBEXECLINE}
+shift: EXTRA_LIBS := -lskarnet
+shift: src/execline/shift.o ${LIBEXECLINE}
+trap: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
+trap: src/execline/trap.o ${LIBEXECLINE}
+tryexec: EXTRA_LIBS := -lskarnet
+tryexec: src/execline/tryexec.o ${LIBEXECLINE}
+umask: EXTRA_LIBS := -lskarnet
+umask: src/execline/umask.o
+unexport: EXTRA_LIBS := -lskarnet
+unexport: src/execline/unexport.o
+wait: EXTRA_LIBS := -lskarnet
+wait: src/execline/wait.o ${LIBEXECLINE}
+withstdinas: EXTRA_LIBS := -lskarnet
+withstdinas: src/execline/withstdinas.o
 ifeq ($(strip $(STATIC_LIBS_ARE_PIC)),)
 libexecline.a.xyzzy: src/libexecline/el_execsequence.o src/libexecline/el_getstrict.o src/libexecline/el_parse.o src/libexecline/el_parse_from_buffer.o src/libexecline/el_parse_from_string.o src/libexecline/el_popenv.o src/libexecline/el_pushenv.o src/libexecline/el_semicolon.o src/libexecline/el_spawn0.o src/libexecline/el_spawn1.o src/libexecline/el_substandrun.o src/libexecline/el_substandrun_str.o src/libexecline/el_substitute.o src/libexecline/el_transform.o src/libexecline/el_vardupl.o src/libexecline/exlsn_define.o src/libexecline/exlsn_elglob.o src/libexecline/exlsn_importas.o src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_exlp.o src/libexecline/exlsn_main.o src/libexecline/exlsn_free.o src/libexecline/exlp.o
 else
@@ -172,5 +172,5 @@ libexecline.a.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getst
 endif
 libexecline.so.xyzzy: EXTRA_LIBS := -lskarnet
 libexecline.so.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_parse.lo src/libexecline/el_parse_from_buffer.lo src/libexecline/el_parse_from_string.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_importas.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
-posix-cd: EXTRA_LIBS :=
-posix-cd: src/posix/posix-cd.o -lskarnet
+posix-cd: EXTRA_LIBS := -lskarnet
+posix-cd: src/posix/posix-cd.o
