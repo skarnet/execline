@@ -53,8 +53,9 @@ used. If <em>delimchar</em> is the empty string, then <tt>dollarat</tt>
 will output the positional parameters as a
 <a href="el_transform.html#netstrings">sequence of netstrings</a> (and the
 <tt>-n</tt> option will be ignored). </li>
- <li> <tt>-0</tt>&nbsp;: use the null character as separator. Any <tt>-d</tt>
-argument will be ignored. Warning: this option should only be used to feed
+ <li> <tt>-0</tt>&nbsp;: use the null character as separator. If this option
+and the <tt>-d</tt> option are given concurrently, the rightmost one wins.
+Warning: <tt>-0</tt> should only be used to feed
 data to programs that know how to handle null-separated lists. </li>
 </ul>
 

@@ -28,7 +28,7 @@ int main (int argc, char const *const *argv)
       switch (opt)
       {
         case 'n' : nl = 0 ; break ;
-        case 'd' : delim = *l.arg ; break ;
+        case 'd' : delim = *l.arg ; zero = 0 ; break ;
         case '0' : zero = 1 ; break ;
         default : strerr_dieusage(100, USAGE) ;
       }
