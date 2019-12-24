@@ -1,0 +1,37 @@
+
+ parsemode() function for posix-umask
+
+ goal: parse the "u+r,g-wx,o=u" symbolic mode string and convert it
+to a numeric value suitable for umask().
+ In the purest skarnet.org tradition, we implement the parser via a DFA.
+
+class	|	0	1	2	3	4	5	6
+st\ev	|	\0	,	+-=	ugo	a	rwxXst	other
+------------------------------------------------------------------------
+START	|			wo	w	w
+0	|	END	START	OP	WHO	WHO	X	X
+
+WHO	|			o	w	w
+1	|	END	X	OP	WHO	WHO	X	X
+
+OP	|		r	o	c		p
+2	|	END	START	OP	PERMCPY	X	PERM	X
+
+PERMCPY	|	!	!rR	!Ro	
+3	|	END	START	OP	X	X	X	X
+
+PERM	|	!	!rR	!Ro			p
+4	|	END	START	OP	X	X	PERM	X
+------------------------------------------------------------------------
+
+END=5, X=6. -> states: 3 bits
+7 actions -> 10 bits total, need uint16_t
+
+ w: 0x020: who |= c
+ o: 0x040: store op
+ c: 0x080: copy perm from c
+ p: 0x100: perm |= c
+ r: 0x200: reset who
+ R: 0x400: reset perm
+ !: 0x800: apply (who, op, perm) change
+ 

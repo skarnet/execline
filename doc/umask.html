@@ -36,10 +36,13 @@ then execs into <em>prog...</em>.
 
 <h2> Notes </h2>
 
-<p>
-<tt>umask</tt> is a standard shell builtin. Be careful if you want to
-use the <tt>umask</tt> command outside of an <tt>execline</tt> script.
-</p>
+<ul>
+<li> <tt>umask</tt> is a standard shell builtin. Be careful if you want to
+use the <tt>umask</tt> command outside of an <tt>execline</tt> script. </li>
+ <li> When execline has been configured with the <tt>--enable-pedantic-posix</tt>
+option, the <tt>umask</tt> binary is actually a symbolic link to the
+<a href="posix-umask.html">posix-umask</a> binary. </li>
+</ul>
 
 </body>
 </html>

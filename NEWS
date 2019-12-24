@@ -1,5 +1,15 @@
 Changelog for execline.
 
+In 2.6.0.0
+----------
+
+ - The dollarat program now has its conflicting -0 and -d options
+handled in the conventional way, with rightmost priority.
+ - New binary: posix-umask. With --enable-pedantic-posix,
+umask is a symbolic link to posix-umask. And, hopefully, this
+completes the "make execline POSIX-compliant" chapter.
+
+
 In 2.5.3.0
 ----------
 

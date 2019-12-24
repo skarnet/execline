@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the posix-umask command</title>
+ <meta name="Description" content="execline: the posix-umask command" />
+ <meta name="Keywords" content="execline command umask mask posix posix-umask" />
+ <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>posix-umask</tt> program </h1>
+
+<p>
+<tt>posix-umask</tt> changes its file mode creation mask, then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     posix-umask [ -S ] [ <em>mask</em> ] [ <em>prog...</em> ]
+</pre>
+
+<p>
+When called with no argument, <tt>posix-umask</tt> prints the value of the
+file mode creation mask of the invoking process, then exits 0.
+</p>
+
+<p>
+ When called with a <em>mask</em> argument, <tt>posix-umask</tt> changes
+its file mode creation mask; then, if <em>prog...</em> is not empty, it execs
+into it.
+</p>
+
+<p>
+ <tt>posix-umask</tt> interprets <em>mask</em> as specified by the
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/umask.html">POSIX
+specification for a <tt>umask</tt> external utility</a>.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>posix-umask</tt> is only available when execline has been configured
+with the <tt>--enable-pedantic-posix</tt> option, and in this case, the
+<a href="umask.html">cd</a> binary is a symbolic link to it. </li>
+ <li> <tt>posix-umask</tt> fully conforms to the
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/umask.html">POSIX
+specification</a>. When <em>prog...</em> is not empty, the behaviour of a
+<tt>umask</tt> utility is not specified by POSIX, so <tt>posix-umask</tt> extends
+the spec to be actually useful and usable in an execline program with the same
+interface as the regular execline <a href="umask.html">umask</a> command. </li>
+ <li> Nobody ever executes or needs the external version (i.e. not a shell
+builtin) of the POSIX <tt>umask</tt> command. Compared to the regular execline
+<a href="umask.html">umask</a>, <tt>posix-umask</tt> is uselessly bloated and slow.
+The only reason it exists is that some distributions refuse to package
+execline correctly unless it is strictly POSIX-compliant; the
+<tt>--enable-pedantic-posix</tt> configure option is there to appease them. </li> 
+</ul>
+
+</body>
+</html>

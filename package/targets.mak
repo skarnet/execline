@@ -52,9 +52,12 @@ LIB_DEFS := EXECLINE=execline
 
 ifeq ($(PEDANTIC_POSIX),1)
 
-BIN_TARGETS += posix-cd
+BIN_TARGETS += posix-cd posix-umask
 
 $(DESTDIR)$(bindir)/cd: $(DESTDIR)$(bindir)/posix-cd
 	exec ./tools/install.sh -l posix-cd $(DESTDIR)$(bindir)/cd
+
+$(DESTDIR)$(bindir)/umask: $(DESTDIR)$(bindir)/posix-umask
+	exec ./tools/install.sh -l posix-umask $(DESTDIR)$(bindir)/umask
 
 endif
