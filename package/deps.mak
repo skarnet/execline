@@ -4,7 +4,6 @@
 
 src/execline/background.o src/execline/background.lo: src/execline/background.c src/include/execline/execline.h
 src/execline/backtick.o src/execline/backtick.lo: src/execline/backtick.c src/include/execline/execline.h
-src/execline/cd.o src/execline/cd.lo: src/execline/cd.c
 src/execline/define.o src/execline/define.lo: src/execline/define.c src/include-local/exlsn.h
 src/execline/dollarat.o src/execline/dollarat.lo: src/execline/dollarat.c
 src/execline/elgetopt.o src/execline/elgetopt.lo: src/execline/elgetopt.c src/include/execline/execline.h
@@ -13,6 +12,8 @@ src/execline/elglob.o src/execline/elglob.lo: src/execline/elglob.c src/include-
 src/execline/emptyenv.o src/execline/emptyenv.lo: src/execline/emptyenv.c src/include/execline/execline.h
 src/execline/envfile.o src/execline/envfile.lo: src/execline/envfile.c
 src/execline/exec.o src/execline/exec.lo: src/execline/exec.c
+src/execline/execline-cd.o src/execline/execline-cd.lo: src/execline/execline-cd.c
+src/execline/execline-umask.o src/execline/execline-umask.lo: src/execline/execline-umask.c
 src/execline/execlineb.o src/execline/execlineb.lo: src/execline/execlineb.c src/include/execline/execline.h src/include-local/exlsn.h
 src/execline/exit.o src/execline/exit.lo: src/execline/exit.c
 src/execline/export.o src/execline/export.lo: src/execline/export.c
@@ -44,7 +45,6 @@ src/execline/runblock.o src/execline/runblock.lo: src/execline/runblock.c src/in
 src/execline/shift.o src/execline/shift.lo: src/execline/shift.c src/include/execline/execline.h
 src/execline/trap.o src/execline/trap.lo: src/execline/trap.c src/include/execline/execline.h
 src/execline/tryexec.o src/execline/tryexec.lo: src/execline/tryexec.c src/include/execline/execline.h
-src/execline/umask.o src/execline/umask.lo: src/execline/umask.c
 src/execline/unexport.o src/execline/unexport.lo: src/execline/unexport.c
 src/execline/wait.o src/execline/wait.lo: src/execline/wait.c src/include/execline/execline.h
 src/execline/withstdinas.o src/execline/withstdinas.lo: src/execline/withstdinas.c
@@ -78,8 +78,6 @@ background: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 background: src/execline/background.o ${LIBEXECLINE}
 backtick: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 backtick: src/execline/backtick.o ${LIBEXECLINE}
-cd: EXTRA_LIBS := -lskarnet
-cd: src/execline/cd.o
 define: EXTRA_LIBS := -lskarnet
 define: src/execline/define.o ${LIBEXECLINE}
 dollarat: EXTRA_LIBS := -lskarnet
@@ -96,6 +94,10 @@ envfile: EXTRA_LIBS := -lskarnet
 envfile: src/execline/envfile.o
 exec: EXTRA_LIBS := -lskarnet
 exec: src/execline/exec.o
+execline-cd: EXTRA_LIBS := -lskarnet
+execline-cd: src/execline/execline-cd.o
+execline-umask: EXTRA_LIBS := -lskarnet
+execline-umask: src/execline/execline-umask.o
 execlineb: EXTRA_LIBS := -lskarnet
 execlineb: src/execline/execlineb.o ${LIBEXECLINE}
 exit: EXTRA_LIBS := -lskarnet
@@ -158,8 +160,6 @@ trap: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 trap: src/execline/trap.o ${LIBEXECLINE}
 tryexec: EXTRA_LIBS := -lskarnet
 tryexec: src/execline/tryexec.o ${LIBEXECLINE}
-umask: EXTRA_LIBS := -lskarnet
-umask: src/execline/umask.o
 unexport: EXTRA_LIBS := -lskarnet
 unexport: src/execline/unexport.o
 wait: EXTRA_LIBS := -lskarnet

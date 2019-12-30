@@ -1,7 +1,6 @@
 BIN_TARGETS := \
 background \
 backtick \
-cd \
 define \
 dollarat \
 elgetopt \
@@ -11,6 +10,8 @@ emptyenv \
 envfile \
 exec \
 execlineb \
+execline-cd \
+execline-umask \
 exit \
 export \
 fdblock \
@@ -36,12 +37,13 @@ multidefine \
 multisubstitute \
 pipeline \
 piperw \
+posix-cd \
+posix-umask \
 redirfd \
 runblock \
 shift \
 trap \
 tryexec \
-umask \
 unexport \
 wait \
 withstdinas
@@ -51,13 +53,15 @@ LIBEXEC_TARGETS :=
 LIB_DEFS := EXECLINE=execline
 
 ifeq ($(PEDANTIC_POSIX),1)
-
-BIN_TARGETS += posix-cd posix-umask
-
-$(DESTDIR)$(bindir)/cd: $(DESTDIR)$(bindir)/posix-cd
-	exec ./tools/install.sh -l posix-cd $(DESTDIR)$(bindir)/cd
-
-$(DESTDIR)$(bindir)/umask: $(DESTDIR)$(bindir)/posix-umask
-	exec ./tools/install.sh -l posix-umask $(DESTDIR)$(bindir)/umask
-
+PEDANTIC_PREFIX := posix
+else
+PEDANTIC_PREFIX := execline
 endif
+
+install-bin: $(DESTDIR)$(bindir)/cd $(DESTDIR)$(bindir)/umask
+
+$(DESTDIR)$(bindir)/cd: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-cd
+	exec ./tools/install.sh -l $(PEDANTIC_PREFIX)-cd $(DESTDIR)$(bindir)/cd
+
+$(DESTDIR)$(bindir)/umask: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-umask
+	exec ./tools/install.sh -l $(PEDANTIC_PREFIX)-umask $(DESTDIR)$(bindir)/umask

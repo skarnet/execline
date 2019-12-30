@@ -494,6 +494,11 @@ fi
 echo "#define ${package_macro_name}_LIBEXECPREFIX \"$libexecdir/\""
 echo "#define ${package_macro_name}_SHEBANGPREFIX \"$shebangdir/\""
 echo
+echo "#undef ${package_macro_name}_PEDANTIC_POSIX"
+if $pposix ; then
+echo "#define ${package_macro_name}_PEDANTIC_POSIX"
+fi
+echo
 echo "#endif"
 exec 1>&3 3>&-
 echo "  ... done."

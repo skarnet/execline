@@ -1,7 +1,13 @@
 /* ISC license. */
 
+#include <execline/config.h>
+
 #include <sys/wait.h>
 #include <errno.h>
+#ifdef EXECLINE_PEDANTIC_POSIX
+#include <locale.h>
+#endif
+
 #include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
@@ -9,6 +15,7 @@
 #include <skalibs/djbunix.h>
 #include <skalibs/selfpipe.h>
 #include <skalibs/iopause.h>
+
 #include <execline/execline.h>
 
 #define USAGE "wait [ -I | -i ] [ -r | -t timeout ] { pids... }"
@@ -109,6 +116,9 @@ int main (int argc, char const **argv, char const *const *envp)
   int r ;
   int hasblock ;
   PROG = "wait" ;
+#ifdef EXECLINE_PEDANTIC_POSIX
+  setlocale(LC_ALL, "") ;  /* but of course, dear POSIX */
+#endif
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     unsigned int t = 0 ;

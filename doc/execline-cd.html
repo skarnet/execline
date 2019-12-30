@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the execline-cd command</title>
+ <meta name="Description" content="execline: the execline-cd command" />
+ <meta name="Keywords" content="execline command cd chdir execline-cd" />
+ <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>execline-cd</tt> program </h1>
+
+<p>
+<tt>execline-cd</tt> changes the current working directory to a
+given directory, then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     execline-cd <em>dir</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>execline-cd</tt> performs a
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/chdir.html">chdir()</a>
+system call on <em>dir</em>, then execs into <em>prog...</em>.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> By default, <tt>execline-cd</tt> can also be invoked as <tt>cd</tt>:
+there is a <tt>cd</tt> program which is a symbolic link to <tt>execline-cd</tt>. </li>
+ <li> When execline has been configured with the <tt>--enable-pedantic-posix</tt>
+option, the <tt>cd</tt> binary is a symbolic link to the
+<a href="posix-cd.html">posix-cd</a> binary instead, so a <tt>cd</tt> command
+in an execline script will invoke <a href="posix-cd.html">posix-cd</a> instead
+of <tt>execline-cd</tt>. </li>
+ <li> Existing scripts that call <tt>cd</tt> will keep working no matter the
+chosen configuration. </li>
+</ul>
+
+
+</body>
+</html>

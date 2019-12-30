@@ -6,7 +6,6 @@
 /src/include/execline/config.h
 /background
 /backtick
-/cd
 /define
 /dollarat
 /elgetopt
@@ -16,6 +15,8 @@
 /envfile
 /exec
 /execlineb
+/execline-cd
+/execline-umask
 /exit
 /export
 /fdblock
@@ -43,6 +44,7 @@
 /pipeline
 /piperw
 /posix-cd
+/posix-umask
 /redirfd
 /runblock
 /shift
@@ -52,4 +54,3 @@
 /unexport
 /wait
 /withstdinas
-

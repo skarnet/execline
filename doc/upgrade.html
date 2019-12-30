@@ -24,6 +24,12 @@
  <li> <a href="dollarat.html">dollarat</a> now has its <tt>-0</tt> and <tt>-d</tt>
 priority unified. (Rightmost priority.) </li>
  <li> New binary: <a href="posix-umask.html">posix-umask</a>. </li>
+ <li> <tt>cd</tt> has been renamed <a href="execline-cd.html">execline-cd</a>. </li>
+ <li> <tt>umask</tt> has been renamed <a href="execline-umask.html">execline-umask</a>. </li>
+ <li> At installation time, <tt>cd</tt> and <tt>umask</tt> symbolic links are created,
+pointing to either the <tt>posix-</tt> or <tt>execline-</tt> -prefixed version of the
+commands, depending on whether the <tt>--enable-pedantic-posix</tt> option
+was given or not. </li>
 </ul>
 
 <h2> in 2.5.3.0 </h2>

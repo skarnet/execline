@@ -8,7 +8,7 @@
 
 int main (int argc, char const *const *argv, char const *const *envp)
 {
-  PROG = "cd" ;
+  PROG = "execline-cd" ;
   if (argc < 3) strerr_dieusage(100, USAGE) ;
   if (chdir(argv[1]) == -1)
     strerr_diefu2sys(111, "chdir to ", argv[1]) ;

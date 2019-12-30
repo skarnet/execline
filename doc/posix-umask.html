@@ -48,21 +48,25 @@ specification for a <tt>umask</tt> external utility</a>.
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>posix-umask</tt> is only available when execline has been configured
-with the <tt>--enable-pedantic-posix</tt> option, and in this case, the
-<a href="umask.html">cd</a> binary is a symbolic link to it. </li>
+ <li> When execline has been configured
+with the <tt>--enable-pedantic-posix</tt> option, the <tt>umask</tt>
+command is a symbolic link to it. So scripts calling <tt>umask</tt>
+will use <tt>posix-umask</tt>. When this configuration option has not
+been given, <tt>umask</tt> is a symbolic link to
+<a href="execline-umask.html">execline-umask</a>. </li>
  <li> <tt>posix-umask</tt> fully conforms to the
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/umask.html">POSIX
 specification</a>. When <em>prog...</em> is not empty, the behaviour of a
 <tt>umask</tt> utility is not specified by POSIX, so <tt>posix-umask</tt> extends
 the spec to be actually useful and usable in an execline program with the same
-interface as the regular execline <a href="umask.html">umask</a> command. </li>
+interface as the regular execline <a href="execline-umask.html">umask</a> command. </li>
  <li> Nobody ever executes or needs the external version (i.e. not a shell
-builtin) of the POSIX <tt>umask</tt> command. Compared to the regular execline
-<a href="umask.html">umask</a>, <tt>posix-umask</tt> is uselessly bloated and slow.
-The only reason it exists is that some distributions refuse to package
-execline correctly unless it is strictly POSIX-compliant; the
-<tt>--enable-pedantic-posix</tt> configure option is there to appease them. </li> 
+builtin) of the POSIX <tt>umask</tt> command. Compared to execline's regular <tt>umask</tt>
+binary, <a href="execline-umask.html">execline-umask</a>, <tt>posix-umask</tt> is
+uselessly bloated and slow. The only reason it exists is that some
+distributions refuse to package execline correctly unless it is strictly
+POSIX-compliant; the <tt>--enable-pedantic-posix</tt> configure option is
+there to satisfy their requirements. </li>
 </ul>
 
 </body>

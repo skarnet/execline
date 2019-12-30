@@ -10,7 +10,7 @@
 int main (int argc, char const *const *argv, char const *const *envp)
 {
   unsigned int m ;
-  PROG = "umask" ;
+  PROG = "execline-umask" ;
   if (argc < 3) strerr_dieusage(100, USAGE) ;
   if (!uint_oscan(argv[1], &m)) strerr_dieusage(100, USAGE) ;
   umask(m) ;

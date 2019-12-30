@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en" />
+  <title>execline: the execline-umask command</title>
+  <meta name="Description" content="execline: the execline-umask command" />
+  <meta name="Keywords" content="execline command umask execline-umask" />
+  <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+ </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>execline-umask</tt> program </h1>
+
+<p>
+<tt>execline-umask</tt> sets the umask (file creation mask),
+then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     execline-umask <em>mask</em> <em>prog...</em>
+</pre>
+
+<p>
+<tt>execline-umask</tt> sets the current umask to <em>mask</em>,
+then execs into <em>prog...</em>.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+<li> By default, at execline installation time, a <tt>umask</tt>
+symbolic link is created, pointing to <tt>execline-umask</tt>.
+ <li> When execline has been configured with the <tt>--enable-pedantic-posix</tt>
+option, the <tt>umask</tt> symbolic link points to the
+<a href="posix-umask.html">posix-umask</a> binary instead. </li>
+ <li> Existing execline scripts calling <tt>umask</tt> will keep working
+no matter the chosen configuration. </li>
+</ul>
+
+</body>
+</html>
