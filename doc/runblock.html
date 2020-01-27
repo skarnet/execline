@@ -23,12 +23,14 @@
 in the execline language. It can only be used inside an execline
 script. If the script has been given blocks as arguments, <tt>runblock</tt>
 allows you to execute one of the blocks individually.
+It also allows you to give those blocks as a set of arguments to
+another command.
 </p>
 
 <h2> Interface </h2>
 
 <pre>
-     runblock [ -P ] [ -n <em>argshift</em> ] [ -r ] <em>n</em>
+     runblock [ -P ] [ -n <em>argshift</em> ] [ -r ] <em>n</em> <em>cmd...</em>
 </pre>
 
 <ul>
@@ -41,6 +43,9 @@ arguments <em>and</em> blocks. </li>
 <em>n</em> blocks and execs into the remaining arguments. </li>
  <li> Else it skips <em>n</em>-1 blocks and execs into the <em>n</em>th
 one. </li>
+ <li> If <em>cmd...<em> is not empty, then instead of directly executing the
+block or the remainder, <tt>runblock</tt> <em>appends</em> the selected
+set of arguments to the <em>cmd...</em> command line. </li>
  <li> Normally <tt>runblock</tt> <a href="el_pushenv.html#pop">pops</a>
 its environment frame before executing. If the <tt>-P</tt> option has
 been given, it <em>does not</em> pop. </li>

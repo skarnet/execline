@@ -5,6 +5,8 @@ In 2.6.0.0
 
  - The dollarat program now has its conflicting -0 and -d options
 handled in the conventional way, with rightmost priority.
+ - runblock now accepts a command line prefix, given as runblock's
+own command line.
  - New binary: posix-umask.
  - cd renamed to execline-cd, umask renamed to execline-umask
  - With --enable-pedantic-posix, umask is a symbolic link to

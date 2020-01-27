@@ -10,7 +10,7 @@
 #include <skalibs/skamisc.h>
 #include <execline/execline.h>
 
-#define USAGE "runblock [ -P ] [ -n argshift ] [ -r ] n"
+#define USAGE "runblock [ -P ] [ -n argshift ] [ -r ] n cmd..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const *const *argv, char const *const *envp)
@@ -37,8 +37,8 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     argc -= l.ind ; argv += l.ind ;
   }
-  if (argc != 1) dieusage() ;
-  if (!uint0_scan(argv[0], &n) || (!n && !flagr)) dieusage() ;
+  if (!argc--) dieusage() ;
+  if (!uint0_scan(*argv++, &n) || (!n && !flagr)) dieusage() ;
 
   {
     char const *x = env_get2(envp, "#") ;
@@ -76,11 +76,18 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
   }
 
+ /* First put args, if any, into v */
+
+  if (!genalloc_ready(char const *, &v, argc))
+    strerr_diefu1sys(111, "genalloc_ready") ;
+  for (unsigned int i = 0 ; i < (unsigned int)argc ; i++)
+    genalloc_append(char const *, &v, argv + i) ;
+
   if (flagr)  /* put remainder envvars into v */
   {
     if (++m > sharp) return 0 ;
-    if (!genalloc_ready(char const *, &v, sharp - m + 2))
-      strerr_diefu1sys(111, "genalloc_ready") ;
+    if (!genalloc_readyplus(char const *, &v, sharp - m + 2))
+      strerr_diefu1sys(111, "genalloc_readyplus") ;
     for (; m <= sharp ; m++)
     {
       char const *x ;
