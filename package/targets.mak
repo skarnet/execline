@@ -58,7 +58,7 @@ else
 PEDANTIC_PREFIX := execline
 endif
 
-install-bin: $(DESTDIR)$(bindir)/cd $(DESTDIR)$(bindir)/umask
+EXTRA_TARGETS := cd umask
 
 $(DESTDIR)$(bindir)/cd: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-cd
 	exec ./tools/install.sh -l $(PEDANTIC_PREFIX)-cd $(DESTDIR)$(bindir)/cd
