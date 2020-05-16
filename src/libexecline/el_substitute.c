@@ -152,7 +152,7 @@ int el_substitute (stralloc *dst, char const *src, size_t len, char const *vars,
   int nc = 0 ;
   int wasnull = !dst->s ;
 
-  info.dst = *dst ;
+  if (!stralloc_copy(&info.dst, dst)) return -1 ;
   info.values = values ;
 
   while (i < len)
