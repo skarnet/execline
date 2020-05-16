@@ -148,7 +148,6 @@ int el_substitute (stralloc *dst, char const *src, size_t len, char const *vars,
 {
   subsuinfo_t info = SUBSUINFO_ZERO ;
   size_t i = 0 ;
-  size_t dstbase = dst->len ;
   int nc = 0 ;
   int wasnull = !dst->s ;
 
@@ -179,7 +178,6 @@ int el_substitute (stralloc *dst, char const *src, size_t len, char const *vars,
 err :
   genalloc_free(elsubsu_t, &info.list) ;
   stralloc_free(&info.sa) ;
-  if (wasnull) stralloc_free(&info.dst) ; else info.dst.len = dstbase ;
-  *dst = info.dst ;
+  stralloc_free(&info.dst) ;
   return -1 ;
 }
