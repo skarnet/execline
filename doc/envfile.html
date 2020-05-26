@@ -26,7 +26,7 @@ adds the variables to the environment, then executes a program.
 <h2> Interface </h2>
 
 <pre>
-     envfile <em>file</em> <em>prog...</em>
+     envfile [ -i | -I ] <em>file</em> <em>prog...</em>
 </pre>
 
 <p>
@@ -50,6 +50,15 @@ with the modified environment.
  0 is not listed because on success, <tt>envfile</tt> does not exit:
 it execs into <em>prog</em>.
 </p>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-i</tt>&nbsp;: strict. If <em>file</em> does not exist, exit 111 with an
+error message. This is the default. </li>
+ <li> <tt>-I</tt>&nbsp;: loose. If <em>file</em> does not exist, exec into
+<em>prog</em> without modifying the environment. </li>
+</ul>
 
 <h2> File syntax </h2>
 
