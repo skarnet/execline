@@ -1,5 +1,14 @@
 Changelog for execline.
 
+In 2.6.1.0
+----------
+
+ - The envfile format has changed; it is now more expressive and
+largely compatible with systemd's EnvironmentFile format. The
+new format is a superset of the old one, so old envfiles should
+still be understood by the new binary.
+
+
 In 2.6.0.2
 ----------
 

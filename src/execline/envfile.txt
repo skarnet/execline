@@ -1,0 +1,60 @@
+envfile parser:
+
+class	|	0	1	2	3	4	5	6	7	8	9	10	11	12	13
+st\ev	|	\0	#	\n	=	space	\	"	abf	nrtv	'?	x	0-7	89cde	other
+
+START	|			n					a	a		a	a	a	a
+0	|	END	COMMENT	START	X	START	X	X	VAR	VAR	X	VAR	VAR	VAR	VAR
+
+COMMENT |			n
+1	|	END	COMMENT	START	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT
+
+VAR	|		a		a				a	a		a	a	a	a
+2	|	X	VAR	X	EQ	WAITEQ	X	X	VAR	VAR	X	VAR	VAR	VAR	VAR
+
+WAITEQ	|				a
+3	|	X	X	X	EQ	WAITEQ	X	X	X	X	X	X	X	X	X
+
+EQ	|	+	a	+ n	a				a	a	a	a	a	a	a
+4	|	END	VAL	START	VAL	EQ	ESC	Q	VAL	VAL	VAL	VAL	VAL	VAL	VAL
+
+VAL	|	+	a	+ n	a	m a			a	a	a	a	a	a	a
+5	|	END	VAL	START	VAL	SPACE	ESC	Q	VAL	VAL	VAL	VAL	VAL	VAL	VAL
+
+SPACE	|	b +	a	b + n	a	a			a	a	a	a	a	a	a
+6	|	END	VAL	START	VAL	SPACE	ESC	Q	VAL	VAL	VAL	VAL	VAL	VAL	VAL
+
+Q	|		a		a	a			a	a	a	a	a	a	a
+7	|	X	Q	X	Q	Q	QESC	VAL	Q	Q	Q	Q	Q	Q	Q
+
+ESC	|			n		a	a	a
+8	|	X	X	VAL	X	VAL	VAL	VAL	X	X	X	X	X	X	X
+
+QESC	|		a	n	a	a	a	a	s a	s a	a		m a	a	a
+9	|	X	Q	Q	Q	Q	Q	Q	Q	Q	Q	HEX0	OCT1	Q	Q
+
+HEX0	|								a				a	a
+a	|	X	X	X	X	X	X	X	HEX1	X	X	X	HEX1	HEX1	X
+
+HEX1	|								a h				a h	a h
+b	|	X	X	X	X	X	X	X	Q	X	X	X	Q	Q	X
+
+OCT1	|		o a		o a	o a	o	o	o a	o a	o a	o a	a	o a	o a
+c	|	X	Q	X	Q	Q	QESC	VAL	Q	Q	Q	Q	OCT2	Q	Q
+
+OCT2	|		o a		o a	o a	o	o	o a	o a	o a	o a	a O	o a	o a
+d	|	X	Q	X	Q	Q	QESC	VAL	Q	Q	Q	Q	Q	Q	Q
+
+END = e, X = f
+
+16 states, 9 actions -> 13 bits
+
+a	0x0010	add cur
+n	0x0020	line++
++	0x0040	add \0 (definition complete)
+b	0x0080	go back to mark
+m	0x0100	set mark
+h	0x0200	calc hex
+o	0x0400	calc oct before a
+O	0x0800	calc oct after a
+s	0x1000	turn cur special before a

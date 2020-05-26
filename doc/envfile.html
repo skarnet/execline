@@ -55,19 +55,32 @@ it execs into <em>prog</em>.
 
 <p>
  <em>file</em> is a text file containing lines of the form <tt>key = value</tt>.
-Whitespace is permitted before and after <em>key</em>, and before or after <em>value</em>,
-but <em>key</em> or <em>value</em> can never contain whitespace. No quoting
-is possible.
+Whitespace is permitted before and after <em>key</em>, and before or after <em>value</em>.
 </p>
 
 <p>
  Empty lines, or lines containing only whitespace, are ignored.
 Lines beginning with <tt>#</tt> (possibly after some whitespace)
 are ignored (and typically used for comments).
-Comments are also possible at the end of lines:
-<tt>key = value # comment</tt> is a valid line. Note that there
-<em>must</em> be whitespace between <em>value</em> and <tt>#</tt>
-in this case (else <tt>#</tt> is just read as a part of <em>value</em>).
+Leading and trailing whitespace is stripped from values; but a
+value can be double-quoted, which allows for inclusion of leading
+and trailing whitespace.
+</p>
+
+<p>
+ A non-commented line that ends with a backslash ("<tt>\</tt>") is
+concatenated with the following one, and the newline character is
+ignored. If a backslashed newline happens before the start of a
+value, then the whitespace at the beginning of the new line will be
+part of the value (i.e. leading whitespace on a new line is not
+stripped).
+</p>
+
+<p>
+ C escapes, including hexadecimal and octal sequences, are supported
+in quoted values. Unicode codepoint sequences are not supported. It
+is possible to include a newline in a quoted value by using <tt>\n</tt>;
+but including newlines in environment variables is not recommended.
 </p>
 
 <p>
@@ -78,16 +91,21 @@ added to the environment, with an empty value. If you do not want
 the environment.
 </p>
 
+<p>
+ The envfile format is largely compatible with systemd's
+<a href="https://www.freedesktop.org/software/systemd/man/systemd.exec.html#EnvironmentFile=">EnvironmentFile</a>
+format, which allows for the reuse of such files outside of systemd.
+</p>
+
 <h2> Notes </h2>
 
 <ul>
  <li> If <em>file</em> is <tt>-</tt> then <tt>envfile</tt> reads
 and parses its standard input instead. To read a file literally named
 <tt>-</tt>, you can use <tt>./-</tt> for instance. </li>
- <li> The variables and values that can be defined with <tt>envfile</tt>
-are purposefully restricted in order to keep the parsing extremely simple.
-If you need fancy values, for instance values that contain whitespace or
-a newline, you should use an envdir instead: see
+ <li> The variables that can be defined with <tt>envfile</tt>
+are purposefully restricted. If you need more expressive power for your
+variable names, or for your values, you should use an envdir instead: see
 <a href="//skarnet.org/software/s6/s6-envdir.html">s6-envdir</a>. </li>
 </ul>
 
