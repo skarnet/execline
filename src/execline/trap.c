@@ -20,7 +20,7 @@
 #define dieusage() strerr_dieusage(100, USAGE) ;
 
 static pid_t pids[SKALIBS_NSIG + 1] ;
-static char const *const *argvs[SKALIBS_NSIG] ;
+static char const *const *argvs[SKALIBS_NSIG] ; /* initted with 0s */
 
 static void action (unsigned int i, char const *const *envp)
 {
@@ -40,7 +40,7 @@ int main (int argc, char const **argv, char const *const *envp)
   tain_t tto ;
   int xfersigs = 0 ;
   int argc1, spfd ;
-  unsigned int i = SKALIBS_NSIG + 1 ;
+  unsigned int i = 0 ;
   PROG = "trap" ;
   {
     unsigned int t = 0 ;
@@ -67,8 +67,6 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
   if (argc1 + 1 == argc) dieusage() ;
   argv[argc1] = 0 ;
-  while (i--) argvs[i] = 0 ;
-  i = 0 ;
   tain_now_set_stopwatch_g() ;
   spfd = selfpipe_init() ;
   if (spfd < 0) strerr_diefu1sys(111, "selfpipe_init") ;
