@@ -26,7 +26,7 @@
  One of the most frequent sources of security problems in programs
 is <em>parsing</em>. Parsing is a complex operation, and it is easy to
 make mistakes while designing and implementing a parser. (See
-<a href="http://cr.yp.to/qmail/guarantee.html">what Dan Bernstein says
+<a href="https://cr.yp.to/qmail/guarantee.html">what Dan Bernstein says
 on the subject</a>, section 5.)
 </p>
 
@@ -34,12 +34,12 @@ on the subject</a>, section 5.)
  But shells parse all the time. Worse, the <em>essence</em>
 of the shell is parsing: the parser and the runner are intimately
 interleaved and cannot be clearly separated, thanks to the
-<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">specification</a>.
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">specification</a>.
 The shell performs several kinds of expansions, automatic filename
 globbing, and automatic word splitting, in an unintuitive order,
 requiring users to memorize numerous arbitrary quoting rules in
 order to achieve what they want. Pages
-<a href="http://www.google.com/search?q=shell+script+pitfalls">abound</a>
+<a href="https://www.google.com/search?q=shell+script+pitfalls">abound</a>
 where common mistakes are listed, more often than not leading to
 security holes. Did you know that <tt>"$@"</tt> is a special case
 of double quoting, because it will split the arguments into
@@ -80,7 +80,7 @@ cannot be used safely with the normalized options, because most shells
 come with a builtin <tt>test</tt> that does <em>not</em> respect the
 specification to the letter. And let's not get started about <tt>echo</tt>,
 which has its own set of problems. Rich Felker has
-<a href="http://www.etalabs.net/sh_tricks.html">a page</a> listing tricks
+<a href="http://etalabs.net/sh_tricks.html">a page</a> listing tricks
 to use to write portable shell scripts. Writing a portable script should
 not be that hard.
 </p>
@@ -128,7 +128,7 @@ you will find with execline, and it is common to every script language.
 <p>
  The real solution to this portability problem is a convention that
 guarantees fixed absolute paths for executables, which the FHS does not do.
-The <a href="http://cr.yp.to/slashpackage.html">slashpackage</a> convention is
+The <a href="https://cr.yp.to/slashpackage.html">slashpackage</a> convention is
 such an initiative, and is well-designed; but as with every
 convention, it only works if everyone follows it, and unfortunately,
 slashpackage has not
@@ -143,7 +143,7 @@ can be configured to follow the slashpackage convention.
  I originally wanted a shell that could be used on an embedded system.
 Even the <tt>ash</tt> shell seemed big, so I thought of writing my
 own. Hence I had a look at the
-<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">sh
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">sh
 specification</a>... and ran away screaming.
 This specification
 is <em>insane</em>. It goes against every good programming
@@ -155,7 +155,7 @@ to wannabe <tt>sh</tt> implementors.
  POSIX cannot really be blamed for that: it only normalizes existing, historical
 behaviour. One can argue whether it is a good idea to normalize atrocious
 behaviour for historical reasons, as is the case with the infamous
-<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/gets.html">gets</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/gets.html">gets</a>
 function, but this is the way it is.
 </p>
 

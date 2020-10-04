@@ -30,7 +30,7 @@ to <em>C</em>, with as much precision as possible&nbsp;?
 <p>
  The problem is, there's more information in a wstat (the
 structure filled in by
-<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/waitpid.html">waitpid()</a>)
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/waitpid.html">waitpid()</a>)
 than a process can report by
 simply exiting. <em>P</em> could exit with the same exit code as <em>C</em>,
 but then what should it do if C has been killed by a signal&nbsp;?
@@ -52,7 +52,7 @@ can report.
 
 <p>
 Shells have their own
-<a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_08_02">convention</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_08_02">convention</a>
 for reporting crashes, but since any exit code greater than 127 is reported
 as is, the information given by the shell is unreliable: "child exited 129"
 and "child was killed by SIGHUP" are indistinguishable. When shells get
