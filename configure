@@ -57,7 +57,7 @@ exit 0
 
 # If your system does not have printf, you can comment this, but it is
 # generally not a good idea to use echo.
-# See http://www.etalabs.net/sh_tricks.html
+# See http://etalabs.net/sh_tricks.html
 echo () {
   IFS=" "
   printf %s\\n "$*"
