@@ -1,5 +1,12 @@
 Changelog for execline.
 
+In 2.7.0.0
+----------
+
+ - New -e option to forstdin.
+ - New "default" directive to trap, replacing the irrelevant "timeout".
+
+
 In 2.6.1.1
 ----------
 

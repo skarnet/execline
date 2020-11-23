@@ -28,12 +28,12 @@ to the signals it catches.
 </p>
 
 <pre>
-     trap [ -x ] [ -t <em>millisecs</em> ]
+     trap [ -x ]
      {
-       [ timeout { <em>progtimeout...</em> } ]
        [ SIGTERM { <em>progsigterm...</em> } ]
        [ quit { <em>progsigquit...</em> } ]
        [ 1 { <em>progsighup</em>... } ]
+       [ default { <em>progdefault</em>... } ]
        ...
      }
      <em>prog...</em>
@@ -50,12 +50,12 @@ name (case-insensitive, with or without the <tt>SIG</tt> prefix),
 run when the specified event occurs. </li>
  <li> <tt>trap</tt> sets traps for the various directives it reads.
 A trap for <tt>SIGTERM</tt> will be triggered when the <tt>trap</tt>
-program receives a SIGTERM.
-A trap for <tt>timeout</tt> will be triggered when <em>millisecs</em>
-milliseconds elapse without a signal being caught. </li>
+program receives a SIGTERM. A <tt>default</tt>
+trap will be used for any signal that is not caught by another trap. </li>
  <li> It spawns a child executing <em>prog...</em>. </li>
  <li> It sets the <tt>!</tt> environment
-variable to the pid of the <em>prog...</em> process. </li>
+variable to the pid of the <em>prog...</em> process, and the <tt>SIGNAL</tt>
+environment variable to the trapped signal. </li>
  <li> Whenever it catches a signal, it spawns the program described in the
 corresponding directive. It will not spawn a program for the same signal
 twice: if the first subprocess is still active when another instance of the
@@ -75,12 +75,8 @@ SIGTERM, unless caught by a <tt>SIGTERM</tt> directive, will kill the
 <tt>trap</tt> process (and leave <em>prog</em> running). With the
 <tt>-x</tt> option, without a <tt>SIGTERM</tt> directive, a SIGTERM
 will be still be caught by <tt>trap</tt>, that will send it to
-<em>prog</em>. </li>
- <li> <tt>-t&nbsp;<em>millisecs</em></tt>&nbsp;: if a <tt>timeout</tt>
-directive exists, the corresponding <em>progtimeout...</em> will be run
-every time <em>millisecs</em> milliseconds elapse without <tt>trap</tt>
-receiving a signal. By default, <em>millisecs</em> is 0, which means
-infinite (i.e. a <tt>timeout</tt> directive will never trigger). </li>
+<em>prog</em>. Note that if a <tt>default</tt> directive is present,
+this option does nothing. </li>
 </ul>
 
 <h2> Notes </h2>
@@ -88,7 +84,10 @@ infinite (i.e. a <tt>timeout</tt> directive will never trigger). </li>
 <ul>
  <li> Programs defined in command line directives can start with
 <tt><a href="importas.html">importas</a> ! !</tt> to retrieve the pid of
-<em>prog</em> in <tt>${!}</tt> </li>
+<em>prog</em> in <tt>$!</tt>. If they need the signal number, which
+can be the case in <tt>default</tt> directives, they can for instance use
+<tt><a href="multisubstitute.html">multisubstitute</a> { importas ! ! importas SIGNAL SIGNAL }</tt>
+to get both <tt>$!</tt> and <tt>$SIGNAL</tt> substitutions. </li>
  <li> <tt>trap</tt> is a standard shell builtin, with similar
 functionality. It is more idiomatic, and probably more efficient,
 to use that builtin in shell scripts, and to only use the
