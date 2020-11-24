@@ -3,8 +3,8 @@ Changelog for execline.
 In 2.7.0.0
 ----------
 
- - forstdin QoL changes: new -e option to exit nonzero on EOF,
-and it now only splits on newlines by default.
+ - forstdin QoL changes: now it exits 1 if it doesn't read anything,
+and it only splits on newlines by default.
  - New "default" directive to trap, replacing the irrelevant "timeout".
 
 

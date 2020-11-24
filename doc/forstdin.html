@@ -30,7 +30,7 @@ run another program.
 </p>
 
 <pre>
-     forstdin [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] [ -e eofcode ] [ -n ] [ -C | -c ] [ -0 | -d <em>delim</em> ] <em>variable</em> <em>loop...</em>
+     forstdin [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] [ -E firsteofcode ] [ -e eofcode ] [ -n ] [ -C | -c ] [ -0 | -d <em>delim</em> ] <em>variable</em> <em>loop...</em>
 </pre>
 
 <ul>
@@ -39,7 +39,8 @@ run another program.
  <li> For every argument <em>x</em> in the split output,
 <tt>forstdin</tt> runs <em>loop...</em> as a child process, with
 <em>variable</em>=<em>x</em> added to its environment. </li>
- <li><tt>forstdin</tt> then exits 0.
+ <li><tt>forstdin</tt> then exits 0 if it has read something on stdin,
+and 1 if it hasn't read anything. </li>
 </ul>
 
 <h2> Options </h2>
@@ -63,8 +64,10 @@ not listed in <em>okcodes</em>, forstdin will exit immediately with an
 option, but with inverted meaning - the listed exit codes are codes
 that will make forstdin break the loop and exit, and the unlisted exit
 codes will make it keep looping. </li>
- <li> <tt>-e</tt>&nbsp;<em>eofcode</em>&nbsp;: if forstdin reads EOF,
-exit <em>eofcode</em>. Default is 0. </li>
+ <li> <tt>-E</tt>&nbsp;<em>firsteofcode</em>&nbsp;: if forstdin encounters
+EOF on its first attempt to read data, exit <em>firsteofcode</em>. Default is 1. </li>
+ <li> <tt>-e</tt>&nbsp;<em>eofcode</em>&nbsp;: if forstdin has already
+read data, and encounters EOF, exit <em>eofcode</em>. Default is 0. </li>
  <li> Other options are used to <a href="el_transform.html">control
 the substitution mechanism</a> for every <em>x</em>. Of course, you can't
 split <em>x</em>. The default delimiter for <tt>forstdin</tt> is a

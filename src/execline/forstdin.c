@@ -18,7 +18,7 @@
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forstdin [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -e eofcode ] [ -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
+#define USAGE "forstdin [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static genalloc pids = GENALLOC_ZERO ; /* pid_t */
@@ -51,14 +51,13 @@ int main (int argc, char const **argv, char const *const *envp)
   size_t delimlen = 4 ;
   size_t nbc = 0 ;
   unsigned short okcodes[256] ;
-  int crunch = 0, chomp = 0, not = 1 ;
-  unsigned short eofcode = 0 ;
+  int crunch = 0, chomp = 0, not = 1, eofcode = 1 ;
   PROG = "forstdin" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "pnCc0d:o:x:e:", &l) ;
+      int opt = subgetopt_r(argc, argv, "pnCc0d:o:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -80,9 +79,6 @@ int main (int argc, char const **argv, char const *const *envp)
         case 'x' :
           not = 1 ;
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
-          break ;
-        case 'e' :
-          if (!ushort_scan(l.arg, &eofcode)) dieusage() ;
           break ;
         default : dieusage() ;
       }
@@ -118,7 +114,6 @@ int main (int argc, char const **argv, char const *const *envp)
           if (chomp) break ;
         }
         else modif.len-- ;
-        if ((modif.len == modifstart) && crunch) continue ;
       }
       else
       {
@@ -129,6 +124,8 @@ int main (int argc, char const **argv, char const *const *envp)
           else strerr_diefu1sys(111, "netstring_get") ;
         }
       }
+      eofcode = 0 ;
+      if (crunch && modif.len == modifstart) continue ;
       if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_0") ;
       if (!env_merge(newenv, envlen+2, envp, envlen, modif.s, modif.len))
         strerr_diefu1sys(111, "merge environment") ;
