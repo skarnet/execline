@@ -35,7 +35,7 @@ run another program.
 
 <ul>
  <li> <tt>forstdin</tt> reads its standard input as it becomes available,
-<a href="el_transform.html#split">splitting</a> it automatically. </li>
+<a href="el_transform.html#split">splitting</a> it on every line automatically. </li>
  <li> For every argument <em>x</em> in the split output,
 <tt>forstdin</tt> runs <em>loop...</em> as a child process, with
 <em>variable</em>=<em>x</em> added to its environment. </li>
@@ -67,7 +67,9 @@ codes will make it keep looping. </li>
 exit <em>eofcode</em>. Default is 0. </li>
  <li> Other options are used to <a href="el_transform.html">control
 the substitution mechanism</a> for every <em>x</em>. Of course, you can't
-split <em>x</em>. </li>
+split <em>x</em>. The default delimiter for <tt>forstdin</tt> is a
+newline; you need a <tt>-d</tt> option to split <em>x</em> around
+other values. </li>
 </ul>
 
 <h2> Notes </h2>
