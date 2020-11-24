@@ -48,7 +48,7 @@ static void parallel_sigchld_handler (int sig)
 int main (int argc, char const **argv, char const *const *envp)
 {
   char const *delim = "\n" ;
-  size_t delimlen = 4 ;
+  size_t delimlen = 1 ;
   size_t nbc = 0 ;
   unsigned short okcodes[256] ;
   int crunch = 0, chomp = 0, not = 1, eofcode = 1 ;
