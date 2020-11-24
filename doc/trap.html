@@ -83,11 +83,13 @@ this option does nothing. </li>
 
 <ul>
  <li> Programs defined in command line directives can start with
-<tt><a href="importas.html">importas</a> ! !</tt> to retrieve the pid of
+<code><a href="importas.html">importas</a> ! !</code> to retrieve the pid of
 <em>prog</em> in <tt>$!</tt>. If they need the signal number, which
 can be the case in <tt>default</tt> directives, they can for instance use
-<tt><a href="multisubstitute.html">multisubstitute</a> { importas ! ! importas SIGNAL SIGNAL }</tt>
+<code><a href="multisubstitute.html">multisubstitute</a> { importas ! ! importas SIGNAL SIGNAL }<code>
 to get both <tt>$!</tt> and <tt>$SIGNAL</tt> substitutions. </li>
+ <li> The <tt>-x</tt> option is basically a shortcut for a <code>default {
+multisusbstitute { importas ! ! importas SIGNAL SIGNAL } kill -$SIGNAL $! }</code> directive. </li>
  <li> <tt>trap</tt> is a standard shell builtin, with similar
 functionality. It is more idiomatic, and probably more efficient,
 to use that builtin in shell scripts, and to only use the
