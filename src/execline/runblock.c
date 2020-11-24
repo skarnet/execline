@@ -1,13 +1,16 @@
 /* ISC license. */
 
 #include <sys/types.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/stralloc.h>
 #include <skalibs/env.h>
+#include <skalibs/stralloc.h>
+#include <skalibs/genalloc.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
+
 #include <execline/execline.h>
 
 #define USAGE "runblock [ -P ] [ -n argshift ] [ -r ] n cmd..."
