@@ -10,27 +10,25 @@
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forbacktickx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
+#define USAGE "forbacktickx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
-
-#define DELIM_DEFAULT " \n\r\t"
 
 int main (int argc, char const *const *argv, char const *const *envp)
 {
-  char const *delim = DELIM_DEFAULT ;
+  char const *delim = "\n" ;
   char const *codes = 0 ;
-  int crunch = 0, chomp = 0, not = 1, par = 0 ;
+  int crunch = 0, chomp = 1, not = 1, par = 0 ;
   PROG = "forbacktickx" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "epnCc0d:o:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
-	case 'e' : break ; /* compat */
         case 'p' : par = 1 ; break ;
+        case 'N' : chomp = 0 ; break ;
         case 'n' : chomp = 1 ; break ;
         case 'C' : crunch = 1 ; break ;
         case 'c' : crunch = 0 ; break ;
@@ -82,10 +80,10 @@ int main (int argc, char const *const *argv, char const *const *envp)
     newargv[m++] = "!" ;
     newargv[m++] = EXECLINE_BINPREFIX "forstdin" ;
     if (par) newargv[m++] = "-p" ;
-    if (chomp) newargv[m++] = "-n" ;
+    newargv[m++] = chomp ? "-n" : "-N" ;
     if (crunch) newargv[m++] = "-C" ;
     if (!delim) newargv[m++] = "-0" ;
-    else if (strcmp(delim, DELIM_DEFAULT))
+    else if (strcmp(delim, "\n"))
     {
       newargv[m++] = "-d" ;
       newargv[m++] = delim ;

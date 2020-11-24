@@ -16,10 +16,11 @@ int exlsn_define (int argc, char const **argv, char const *const *envp, exlsn_t 
   blah.value = info->values.len ;
   for (;;)
   {
-    int opt = subgetopt_r(argc, argv, "nsCcd:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "NnsCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
+      case 'N' : si.chomp = 0 ; break ;
       case 'n' : si.chomp = 1 ; break ;
       case 's' : si.split = 1 ; break ;
       case 'C' : si.crunch = 1 ; break ;

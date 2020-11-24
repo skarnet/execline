@@ -22,12 +22,13 @@ int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exl
   si.split = 1 ;
   for (;;)
   {
-    int opt = subgetopt_r(argc, argv, "0rnCcd:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "0rNnCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
       case '0' : zeroword = 1 ; break ;
       case 'r' : likeread = 1 ; break ;
+      case 'N' : si.chomp = 0 ; break ;
       case 'n' : si.chomp = 1 ; break ;
       case 'C' : si.crunch = 1 ; break ;
       case 'c' : si.crunch = 0 ; break ;

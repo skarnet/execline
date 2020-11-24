@@ -30,7 +30,7 @@ run another program.
 </p>
 
 <pre>
-     forbacktickx [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] [ -n ] [ -C | -c ] [ -0 | -d <em>delim</em> ] <em>variable</em> { <em>gen...</em> } <em>loop...</em>
+     forbacktickx [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] [ -N | -n ] [ -C | -c ] [ -0 | -d <em>delim</em> ] <em>variable</em> { <em>gen...</em> } <em>loop...</em>
 </pre>
 
 <ul>
@@ -54,9 +54,6 @@ output must not contain a null character. </li>
 instance to finish before spawning the next one. <em>forbacktickx</em> will
 still wait for all instances of <em>loop</em> to terminate before
 exiting, though. </li>
- <li> <tt>-0</tt>&nbsp;: accept null characters from <em>gen</em>'s output,
-using them as delimiters. If this option and a <tt>-d</tt> option are
-used simultaneously, the rightmost one wins. </li>
  <li> <tt>-o</tt>&nbsp;<em>okcodes</em>&nbsp;: <em>okcodes</em> must
 be a comma-separated list of exit codes. If the <tt>-p</tt> flag
 hasn't been given and <em>loop</em> exits with one of the codes in
@@ -68,9 +65,32 @@ not listed in <em>okcodes</em>, forbacktickx will exit immediately with an
 option, but with inverted meaning - the listed exit codes are codes
 that will make forbacktickx break the loop and exit, and the unlisted exit
 codes will make it keep looping. </li>
- <li> Other options are used to <a href="el_transform.html">control
-the substitution mechanism</a> for every <em>x</em>. Of course, you can't
-split <em>x</em>. </li>
+</ul>
+
+<p>
+ Other options are similar (in name and functionality) to the switches
+passed to <a href="el_transform.html">control a substitution mechanism</a>,
+on purpose; however, <tt>forbacktickx</tt> does not call the substitution
+mechanism and has its own semantics for those options.
+</p>
+
+<ul>
+ <li> <tt>-N</tt>&nbsp;: store the whole line in <em>variable</em>,
+including the terminating newline (or other delimiter). </li>
+ <li> <tt>-n</tt>&nbsp;: chomp a terminating delimiter from the line from
+stdin before storing it into <em>variable</em>. This is the default. </li>
+ <li> <tt>-C</tt>&nbsp;: crunch. If there is an empty line (i.e. that
+only contains a delimiter), do not call <em>loop</em>. If this option is
+given, <em>and</em> chomping is active, <em>and</em> the last line of stdin
+is not terminated by a delimiter, then this last line will not be processed. </li>
+ <li> <tt>-c</tt>&nbsp;: do not crunch, call <em>loop</em> even if
+the line is empty. This is the default. </li>
+ <li> <tt>-0</tt>&nbsp;: accept null characters on its stdin,
+using them as delimiters. If this option and a <tt>-d</tt> option are
+used simultaneously, the rightmost one wins. </li>
+ <li> <tt>-d&nbsp;<em>delim</em></tt>&nbsp;: use the characters in string
+<em>delim</em> as delimiters for a line. Default is "<tt>\n</tt>", meaning
+the input is only split on newlines. </li>
 </ul>
 
 <h2> Notes </h2>

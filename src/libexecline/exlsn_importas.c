@@ -23,13 +23,14 @@ int exlsn_importas (int argc, char const **argv, char const *const *envp, exlsn_
 
   for (;;)
   {
-    int opt = subgetopt_r(argc, argv, "iuD:nsCcd:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "iuD:NnsCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
       case 'i' : insist = 1 ; break ;
       case 'u' : unexport = 1 ; break ;
       case 'D' : defaultval = localopt.arg ; break ;
+      case 'N' : si.chomp = 0 ; break ;
       case 'n' : si.chomp = 1 ; break ;
       case 's' : si.split = 1 ; break ;
       case 'C' : si.crunch = 1 ; break ;

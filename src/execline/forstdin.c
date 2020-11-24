@@ -15,10 +15,11 @@
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
 #include <skalibs/netstring.h>
+
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forstdin [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
+#define USAGE "forstdin [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static genalloc pids = GENALLOC_ZERO ; /* pid_t */
@@ -51,13 +52,13 @@ int main (int argc, char const **argv, char const *const *envp)
   size_t delimlen = 1 ;
   size_t nbc = 0 ;
   unsigned short okcodes[256] ;
-  int crunch = 0, chomp = 0, not = 1, eofcode = 1 ;
+  int crunch = 0, chomp = 1, not = 1, eofcode = 1 ;
   PROG = "forstdin" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "pnCc0d:o:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -67,6 +68,7 @@ int main (int argc, char const **argv, char const *const *envp)
             strerr_diefu1sys(111, "genalloc_ready") ;
           break ;
         }
+        case 'N' : chomp = 0 ; break ;
         case 'n' : chomp = 1 ; break ;
         case 'C' : crunch = 1 ; break ;
         case 'c' : crunch = 0 ; break ;
@@ -113,7 +115,8 @@ int main (int argc, char const **argv, char const *const *envp)
           if (errno != EPIPE) strerr_diefu1sys(111, "skagetlnsep") ;
           if (chomp) break ;
         }
-        else modif.len-- ;
+        if (crunch && modif.len == modifstart + 1) continue ;
+        if (chomp) modif.len-- ;
       }
       else
       {
@@ -125,7 +128,6 @@ int main (int argc, char const **argv, char const *const *envp)
         }
       }
       eofcode = 0 ;
-      if (crunch && modif.len == modifstart) continue ;
       if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_0") ;
       if (!env_merge(newenv, envlen+2, envp, envlen, modif.s, modif.len))
         strerr_diefu1sys(111, "merge environment") ;

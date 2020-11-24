@@ -53,11 +53,10 @@ int main (int argc, char const **argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "epo:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "po:x:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
-        case 'e' : break ; /* compat */
         case 'p' : flagpar = 1 ; break ;
         case 'o' :
           not = 0 ;

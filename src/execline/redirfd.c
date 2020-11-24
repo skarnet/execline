@@ -2,12 +2,13 @@
 
 #include <fcntl.h>
 #include <errno.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
 
-#define USAGE "redirfd -[ r | w | u | a | c | x ] [ -n ] [ -b ] fd file prog..."
+#define USAGE "redirfd -[ r | w | u | a | x ] [ -n ] [ -b ] fd file prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const *const *argv, char const *const *envp)
@@ -21,7 +22,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "rwuacxnb", &l) ;
+      int opt = subgetopt_r(argc, argv, "rwuaxnb", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -29,7 +30,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'w' : what = O_WRONLY ; flags |= O_CREAT|O_TRUNC ; flags &= ~(O_APPEND|O_EXCL) ; break ;
         case 'u' : what = O_RDWR ; flags &= ~(O_APPEND|O_CREAT|O_TRUNC|O_EXCL) ; break ;
         case 'a' : what = O_WRONLY ; flags |= O_CREAT|O_APPEND ; flags &= ~(O_TRUNC|O_EXCL) ; break ;
-        case 'c' : what = O_WRONLY ; flags |= O_APPEND ; flags &= ~(O_CREAT|O_TRUNC|O_EXCL) ; break ;
         case 'x' : what = O_WRONLY ; flags |= O_CREAT|O_EXCL ; flags &= ~(O_APPEND|O_TRUNC) ; break ;
         case 'n' : flags |= O_NONBLOCK ; break ;
         case 'b' : changemode = 1 ; break ;

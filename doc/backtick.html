@@ -30,7 +30,7 @@ environment variable, then executes another program.
 </p>
 
 <pre>
-     backtick [ -i | -I | -D <em>default</em> ] [ -n ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
+     backtick [ -i | -I | -D <em>default</em> ] [ -N | -n ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
 </pre>
 
 <ul>
@@ -46,8 +46,8 @@ output as a value. </li>
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-n</tt>&nbsp;: chomp an ending newline off <em>prog1...</em>'s
-output. </li>
+ <li> <tt>-N</tt>&nbsp;: store <em>prog1...</em>'s output as is, including the last newline, if any. </li>
+ <li> <tt>-n</tt>&nbsp;: chomp an ending newline off <em>prog1...</em>'s output. This is the default. </li>
 </ul>
 
 <p>

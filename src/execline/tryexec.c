@@ -6,7 +6,7 @@
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
-#define USAGE "tryexec [ -n ] [ -c ] [ -l ] [ -a argv0 ] { command... }"
+#define USAGE "tryexec [ -n ] [ -c ] [ -l ] [ -a argv0 ] { command... } remainder..."
 
 int main (int argc, char const **argv, char const *const *envp)
 {

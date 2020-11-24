@@ -41,6 +41,10 @@ is used, which means that the default delimiters are spaces, newlines,
 carriage returns and tabs.
 </p>
 
+<p>
+ (The <a href="forstdin.html">forstdin</a> command is a small exception:
+by default, it only recognizes newlines as delimiters.)
+</p>
 
 <a name="crunch">
 <h2> Crunching </h2>
@@ -53,6 +57,8 @@ three consecutive spaces, or a space and 4 tab characters, with a
 single space. This is called <em>crunching</em>, and it is done
 by giving the <tt>-C</tt> switch to the substitution command. The
 remaining delimiter will always be the first in the sequence.
+Chomping is <em>off</em> by default, or if you give the <tt>-c</tt>
+switch.
 </p>
 
 <p>
@@ -66,8 +72,10 @@ remaining delimiter will always be the first in the sequence.
 <p>
  Sometimes you don't want the last delimiter in a value.
  <em>Chomping</em> deletes the last character of a value if it is a
-delimiter. It can be requested by giving the <tt>-n</tt> switch to the
-substitution command. Note that chomping always happens <em>after</em>
+delimiter. It is requested by giving the <tt>-n</tt> switch to the
+substitution command. You can turn it off by giving the <tt>-N</tt>
+switch. It is off by default unless mentioned in the documentation
+page of specific binaries. Note that chomping always happens <em>after</em>
 crunching, which means you can use crunching+chomping to ignore, for
 instance, a set of trailing spaces.
 </p>
@@ -112,11 +120,11 @@ several advantages over the shell's:
 </p>
 
 <ul>
- <li> Splitting has to be explicitly requested, by specifying the
-<tt>-s</tt> option to commands that perform
-<a href="el_substitute.html">substitution</a>. By default,
-substitutions are performed as is, without interpreting the
-characters in the value. </li>
+ <li> Splitting is off by default, which means that substitutions
+are performed as is, without interpreting the characters in the
+value. In execline, splitting has to be explicitly requested
+by specifying the <tt>-s</tt> option to commands that perform
+<a href="el_substitute.html">substitution</a>. </li>
  <li> Positional parameters are never split, so that execline
 scripts can handle arguments the way the user intended to. To
 split <tt>$1</tt>, for instance, you have to ask for it

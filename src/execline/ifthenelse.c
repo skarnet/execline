@@ -59,7 +59,7 @@ int main (int argc, char const **argv, char const *const *envp)
       argv += argc2 + 1 ;
       argc2 = argc3 ;
     }
-    if (magicscope)  /* undocumented voodoo - dangerous and powerful */
+    if (magicscope)  /* undocumented on purpose: powerful but dangerous */
     {
       unsigned int i = 0 ;
       for (; remainder[i] ; i++) argv[argc2+i] = remainder[i] ;

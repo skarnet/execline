@@ -26,7 +26,7 @@ executes a program.
 <h2> Interface </h2>
 
 <pre>
-     redirfd [ -r | -w | -u | -a | -c | -x ] [ -n ] [ -b ] <em>fd</em> <em>file</em> <em>prog...</em>
+     redirfd [ -r | -w | -u | -a | -x ] [ -n ] [ -b ] <em>fd</em> <em>file</em> <em>prog...</em>
 </pre>
 
 <p>
@@ -37,7 +37,7 @@ to <em>file</em>, then execs into <em>prog...</em>.
 <h2> Options </h2>
 
 <p>
- One and only one of the -r, -w, -u, -a, -c, or -x options must be given;
+ One and only one of the -r, -w, -u, -a, or -x options must be given;
 the -n and -b options may be added in any case.
 </p>
 
@@ -46,7 +46,6 @@ the -n and -b options may be added in any case.
  <li> <tt>-w</tt>&nbsp;: open <em>file</em> for writing, truncating it if it already exists. </li>
  <li> <tt>-u</tt>&nbsp;: open <em>file</em> for reading and writing. </li>
  <li> <tt>-a</tt>&nbsp;: open <em>file</em> for appending, creating it if it doesn't exist. </li>
- <li> <tt>-c</tt>&nbsp;: open <em>file</em> for appending. Do not create it if it doesn't exist. </li>
  <li> <tt>-x</tt>&nbsp;: open <em>file</em> for writing, creating it, failing if it already exists. </li>
  <li> <tt>-n</tt>&nbsp;: open <em>file</em> in non-blocking mode. </li>
  <li> <tt>-b</tt>&nbsp;: change mode of <em>file</em> after opening it:
@@ -65,9 +64,6 @@ to blocking mode if it was. </li>
 <tt>sh -c 'exec prog... <em>n</em>&lt;&gt;<em>file</em>'</tt></li>
  <li> <tt>redirfd -a <em>n</em> <em>file</em> prog...</tt> is roughly equivalent to
 <tt>sh -c 'exec prog... <em>n</em>&gt;&gt;<em>file</em>'</tt></li>
- <li> <tt>redirfd -c <em>n</em> <em>file</em> prog...</tt> has no portable
-shell equivalent. Some shells provide the <em>noclobber</em> option for
-a similar feature. </li>
  <li> <tt>redirfd -x <em>n</em> <em>file</em> prog...</tt> has no portable
 shell equivalent. </li>
 </ul>

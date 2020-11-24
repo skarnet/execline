@@ -30,7 +30,7 @@ then executes another program.
 </p>
 
 <pre>
-     multidefine [ -0 ] [ -r ] [ -C | -c ] [ -n ] [ -d <em>delim</em> ] <em>value</em> { <em>variables...</em> } <em>prog...</em>
+     multidefine [ -0 ] [ -r ] [ -C | -c ] [ -N | -n ] [ -d <em>delim</em> ] <em>value</em> { <em>variables...</em> } <em>prog...</em>
 </pre>
 
 <ul>
@@ -64,6 +64,8 @@ If there are more words in the split <em>value</em> than there are
 <em>variables</em> in the block, the last variable will be replaced with all
 the remaining words (and will be split). Without this option, the last variable
 is replaced with a single word, and the excess words are lost. </li>
+ <li> Other options are used to <a href="el_transform.html">control</a> the
+substitution mechanism. Note that the value is always split. </li>
 </ul>
 
 </body>

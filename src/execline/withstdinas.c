@@ -9,7 +9,7 @@
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 
-#define USAGE "withstdinas [ -i | -I | -D default ] [ -n ] var remainder..."
+#define USAGE "withstdinas [ -i | -I | -D default ] [ -N | -n ] var remainder..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -17,17 +17,18 @@ int main (int argc, char const **argv, char const *const *envp)
   subgetopt_t localopt = SUBGETOPT_ZERO ;
   stralloc modif = STRALLOC_ZERO ;
   size_t modifstart ;
-  int insist = 0, chomp = 0 ;
+  int insist = 0, chomp = 1 ;
   char const *def = 0 ;
   PROG = "withstdinas" ;
   for (;;)
   {
-    int opt = subgetopt_r(argc, argv, "iInD:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "iINnD:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
       case 'i' : insist = 2 ; break ;
       case 'I' : insist = 1 ; break ;
+      case 'N' : chomp = 0 ; break ;
       case 'n' : chomp = 1 ; break ;
       case 'D' : def = localopt.arg ; break ;
       default : dieusage() ;
