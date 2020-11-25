@@ -11,7 +11,7 @@
 #define USAGE "redirfd -[ r | w | u | a | x ] [ -n ] [ -b ] fd file prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   int fd, fd2 ;
   unsigned int flags = 0 ;
@@ -61,5 +61,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (((flags & O_NONBLOCK) ? ndelay_off(fd) : ndelay_on(fd)) < 0)
       strerr_diefu1sys(111, "change blocking mode") ;
   }
-  xpathexec_run(argv[2], argv+2, envp) ;
+  xexec(argv+2) ;
 }

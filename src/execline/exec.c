@@ -1,9 +1,10 @@
 /* ISC license. */
 
 #include <string.h>
-#include <skalibs/djbunix.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
+#include <skalibs/exec.h>
 
 #define USAGE "exec [ -c ] [ -l ] [ -a argv0 ] prog..."
 
@@ -41,7 +42,7 @@ int main (int argc, char const **argv, char const *const *envp)
     dashed[0] = '-' ;
     memcpy(dashed+1, argv[0], n+1) ;
     argv[0] = (char const *)dashed ;
-    xpathexec_run(executable, argv, envp) ;
+    xexec_ae(executable, argv, envp) ;
   }
-  else xpathexec_run(executable, argv, envp) ;
+  else xexec_ae(executable, argv, envp) ;
 }

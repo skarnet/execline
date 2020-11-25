@@ -1,13 +1,14 @@
 /* ISC license. */
 
-#include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/env.h>
+#include <skalibs/exec.h>
 #include <skalibs/djbunix.h>
+
 #include <execline/execline.h>
 
 #define USAGE "pipeline [ -d ] [ -r | -w ] { command... } command..."
@@ -52,8 +53,7 @@ int main (int argc, char const **argv, char const *const *envp)
           PROG = "pipeline (grandchild)" ;
           fd_close(p[w]) ;
           if (fd_move(!w, p[!w]) < 0) strerr_diefu1sys(111, "fd_move") ;
-          pathexec0_run(argv, envp) ;
-          strerr_dieexec(errno == ENOENT ? 127 : 126, argv[0]) ;
+          xexec0_e(argv, envp) ;
       }
       fd_close(p[!w]) ;
       fd = p[w] ;
@@ -69,7 +69,7 @@ int main (int argc, char const **argv, char const *const *envp)
       char fmt[PID_FMT + 2] = "!=" ;
       size_t i = 2 ;
       i += pid_fmt(fmt+i, pid) ; fmt[i++] = 0 ;
-      xpathexec_r(argv + argc1 + 1, envp, env_len(envp), fmt, i) ;
+      xmexec_en(argv + argc1 + 1, envp, fmt, i, 1) ;
     }
   }
 }

@@ -1,10 +1,13 @@
 /* ISC license. */
 
 #include <sys/wait.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
+
 #include <execline/execline.h>
 
 #define USAGE "ifte [ -X ] [ -n ] { command-then... } { command-else... } command-if..."
@@ -53,5 +56,5 @@ int main (int argc, char const **argv, char const *const *envp)
     argv[argc2] = 0 ;
   }
   else argv[argc1] = 0 ;
-  xpathexec0_run(argv, envp) ;
+  xexec0_e(argv, envp) ;
 }

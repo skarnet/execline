@@ -1,12 +1,14 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <skalibs/sgetopt.h>
-#include <skalibs/env.h>
-#include <skalibs/strerr2.h>
-#include <skalibs/djbunix.h>
-#include <skalibs/skamisc.h>
+#include <stdlib.h>
+
 #include <skalibs/types.h>
+#include <skalibs/sgetopt.h>
+#include <skalibs/strerr2.h>
+#include <skalibs/env.h>
+#include <skalibs/exec.h>
+#include <skalibs/skamisc.h>
+
 #include <execline/execline.h>
 
 #define USAGE "elgetopt optstring prog..."
@@ -15,7 +17,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
 {
   size_t envlen = env_len(envp) ;
   stralloc modif = STRALLOC_ZERO ;
-  char const *x = env_get2(envp, "#") ;
+  char const *x = getenv("#") ;
   unsigned int n, nbak ;
 
   PROG = "elgetopt" ;
@@ -31,7 +33,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     {
       char fmt[UINT_FMT] ;
       fmt[uint_fmt(fmt, i)] = 0 ;
-      args[i] = env_get2(envp, fmt) ;
+      args[i] = getenv(fmt) ;
       if (!args[i]) strerr_dienotset(100, fmt) ;
     }
     args[n] = 0 ;
@@ -62,7 +64,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     char const *v[envlen] ;
     if (el_pushenv(&satmp, envp, envlen, list, 1) < 0) goto err ;
     if (!env_make(v, envlen, satmp.s, satmp.len)) goto err ;
-    xpathexec_r(argv+2, v, envlen, modif.s, modif.len) ;
+    xmexec_fm(argv+2, v, envlen, modif.s, modif.len) ;
   }
 err:
   strerr_diefu1sys(111, "update environment") ;

@@ -4,10 +4,11 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "fdblock [ -n ] fd prog..."
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   unsigned int fd ;
   int block = 1 ;
@@ -29,5 +30,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if ((argc < 2) || !uint0_scan(argv[0], &fd)) strerr_dieusage(100, USAGE) ;
   if ((block ? ndelay_off(fd) : ndelay_on(fd)) < 0)
     strerr_diefu1sys(111, block ? "ndelay_off" : "ndelay_on") ;
-  xpathexec_run(argv[1], argv+1, envp) ;
+  xexec(argv+1) ;
 }

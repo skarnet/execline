@@ -1,7 +1,7 @@
 /* ISC license. */
 
-#include <sys/wait.h>
 #include <string.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/strerr2.h>
@@ -9,6 +9,7 @@
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
 #include <skalibs/types.h>
+
 #include <execline/config.h>
 #include <execline/execline.h>
 
@@ -96,7 +97,7 @@ int main (int argc, char const **argv, char const *const *envp)
       modif[varlen] = '=' ;
       memcpy(modif + varlen + 1, argv[i], vallen) ;
       modif[varlen + vallen + 1] = 0 ;
-      if (!env_merge(newenv, envlen + 2, envp, envlen, modif, varlen + vallen + 2))
+      if (!env_mergen(newenv, envlen + 2, envp, envlen, modif, varlen + vallen + 2, 1))
         strerr_diefu1sys(111, "build new environment") ;
       pid = el_spawn0(argv[argc1+1], argv + argc1 + 1, newenv) ;
       if (!pid) strerr_diefu2sys(111, "spawn ", argv[argc1+1]) ;

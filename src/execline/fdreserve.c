@@ -2,10 +2,11 @@
 
 #include <unistd.h>
 #include <sys/resource.h>
+
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "fdreserve n prog..."
 
@@ -22,7 +23,7 @@ unsigned int doit (char *modif, unsigned int i, int fd)
   return pos ;
 }
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   unsigned int n ;
   PROG = "fdreserve" ;
@@ -44,7 +45,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
           strerr_diefu1sys(111, "reserve fds") ;
       if (n & 1)
       {
-        int lastfd = open_read("/dev/null") ;
+        int lastfd = openb_read("/dev/null") ;
         if (lastfd < 0)
           strerr_diefu1sys(111, "reserve last fd") ;
         fd_close(lastfd) ;
@@ -58,6 +59,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
         j += doit(modif + j, (i<<1)|1, fd[i][1]) ;
       }
     }
-    xpathexec_r(argv+2, envp, env_len(envp), modif, j) ;
+    xmexec_n(argv+2, modif, j, n) ;
   }
 }

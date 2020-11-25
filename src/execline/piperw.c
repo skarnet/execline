@@ -1,13 +1,15 @@
 /* ISC license. */
 
 #include <unistd.h>
+
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "piperw fdr fdw prog..."
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   int fdr, fdw ;
   int p[2] ;
@@ -24,5 +26,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
    || (fd_move(fdr, p[0]) == -1)
    || (fd_move(fdw, p[1]) == -1))
     strerr_diefu1sys(111, "move fds") ;
-  xpathexec_run(argv[3], argv+3, envp) ;
+  xexec(argv+3) ;
 }

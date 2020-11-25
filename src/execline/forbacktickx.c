@@ -3,17 +3,19 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+
 #include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
+
 #include <execline/config.h>
 #include <execline/execline.h>
 
 #define USAGE "forbacktickx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   char const *delim = "\n" ;
   char const *codes = 0 ;
@@ -108,6 +110,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     while (argv[i]) newargv[m++] = argv[i++] ;
     newargv[m++] = 0 ;
-    xpathexec_run(newargv[0], newargv, envp) ;
+    xexec(newargv) ;
   }
 }

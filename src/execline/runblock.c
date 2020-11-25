@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <sys/types.h>
+#include <stdlib.h>
 
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
@@ -44,7 +44,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if (!uint0_scan(*argv++, &n) || (!n && !flagr)) dieusage() ;
 
   {
-    char const *x = env_get2(envp, "#") ;
+    char const *x = getenv("#") ;
     if (!x) strerr_dienotset(100, "#") ;
     if (!uint0_scan(x, &sharp)) strerr_dieinvalid(100, "#") ;
   }
@@ -61,7 +61,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         char fmt[UINT_FMT] ;
         if (++m > sharp) strerr_dief1x(100, "too few arguments") ;
         fmt[uint_fmt(fmt, m)] = 0 ;
-        x = env_get2(envp, fmt) ;
+        x = getenv(fmt) ;
         if (!x) strerr_dienotset(100, fmt) ;
         if ((x[0] == EXECLINE_BLOCK_END_CHAR) && (!EXECLINE_BLOCK_END_CHAR || !x[1])) break ;
         if ((x[0] != EXECLINE_BLOCK_QUOTE_CHAR) && strict)
@@ -96,7 +96,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       char const *x ;
       char fmt[UINT_FMT] ;
       fmt[uint_fmt(fmt, m)] = 0 ;
-      x = env_get2(envp, fmt) ;
+      x = getenv(fmt) ;
       if (!x) strerr_dienotset(100, fmt) ;
       genalloc_append(char const *, &v, &x) ;
     }
@@ -110,7 +110,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       char fmt[UINT_FMT] ;
       if (++m > sharp) strerr_dief1x(100, "too few arguments") ;
       fmt[uint_fmt(fmt, m)] = 0 ;
-      x = env_get2(envp, fmt) ;
+      x = getenv(fmt) ;
       if (!x) strerr_dienotset(100, fmt) ;
       if ((x[0] == EXECLINE_BLOCK_END_CHAR) && (!EXECLINE_BLOCK_END_CHAR || !x[1])) break ;
       if (x[0] != EXECLINE_BLOCK_QUOTE_CHAR)
@@ -139,7 +139,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   }
 
   if (flagnopop)  /* exec now */
-    xpathexec_run(genalloc_s(char const *, &v)[0], genalloc_s(char const *, &v), envp) ;
+    xexec_e(genalloc_s(char const *, &v), envp) ;
   else  /* popenv, then exec */
   {
     char const *list[11] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "#" } ;
@@ -152,7 +152,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       if (!env_make(w, envlen - popped, satmp.s, satmp.len))
         strerr_diefu1sys(111, "env_make") ;
       w[envlen - popped] = 0 ;
-      xpathexec_run(genalloc_s(char const *, &v)[0], genalloc_s(char const *, &v), w) ;
+      xexec_e(genalloc_s(char const *, &v), w) ;
     }
   }
 }

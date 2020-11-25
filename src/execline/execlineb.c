@@ -12,7 +12,9 @@
 #include <skalibs/genalloc.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 #include <skalibs/skamisc.h>
+
 #include <execline/execline.h>
 #include "exlsn.h"
 
@@ -111,7 +113,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     int fd ;
     if (!argc--) strerr_dieusage(100, USAGE) ;
     dollar0 = *argv++ ;
-    fd = open_readb(dollar0) ;
+    fd = openb_read(dollar0) ;
     if (fd < 0) strerr_diefu3sys(111, "open ", dollar0, " for reading") ;
     buffer_init(&b, &fd_readv, fd, buf, BUFFER_INSIZE) ;
     nc = el_parse_from_buffer(&sa, &b) ;
@@ -194,12 +196,12 @@ int main (int argc, char const *const *argv, char const *const *envp)
       if (el_pushenv(&satmp, envp, envlen, list, 11) < 0
        || !env_make(w, envlen, satmp.s, satmp.len))
         goto errenv ;
-      xpathexec_r(v, w, envlen, modif.s, modif.len) ;
+      xmexec_fm(v, w, envlen, modif.s, modif.len) ;
     }
     else if (modif.len)
-      xpathexec_r(v, envp, env_len(envp), modif.s, modif.len) ;
+      xmexec_em(v, envp, modif.s, modif.len) ;
     else
-      xpathexec_run(v[0], v, envp) ;
+      xexec_e(v, envp) ;
   }
  errenv:
   strerr_diefu1sys(111, "update environment") ;  

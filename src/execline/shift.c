@@ -1,16 +1,18 @@
 /* ISC license. */
 
+#include <stdlib.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/env.h>
-#include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
+
 #include <execline/execline.h>
 
 #define USAGE "shift [ -n arg# ] [ -b block# ] prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   unsigned int strict = el_getstrict() ;
   unsigned int b = 0 ;
@@ -42,7 +44,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if (!argc) dieusage() ;
   if (i) i = 0 ; else n = 1 ;
   {
-    char const *x = env_get2(envp, "#") ;
+    char const *x = getenv("#") ;
     if (!x) strerr_dienotset(100, "#") ;
     if (!uint0_scan(x, &sharp)) strerr_dieinvalid(100, "#") ;
   }
@@ -83,7 +85,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         fmti[uint_fmt(fmt, i)] = 0 ;
         strerr_diefu6x(100, "shift", " block ", fmti, ": too few arguments (", fmt, ")") ;
       }
-      x = env_get2(envp, fmt) ;
+      x = getenv(fmt) ;
       if (!x) strerr_dienotset(100, fmt) ;
       if ((x[0] == EXECLINE_BLOCK_END_CHAR) && (!EXECLINE_BLOCK_END_CHAR || !x[1])) break ;
       if ((x[0] != EXECLINE_BLOCK_QUOTE_CHAR) && strict)
@@ -107,15 +109,15 @@ int main (int argc, char const *const *argv, char const *const *envp)
     unsigned int i = 1 ;
     char fmt[UINT_FMT] ;
     fmt[uint_fmt(fmt, sharp - n)] = 0 ;
-    if (!pathexec_env("#", fmt)) strerr_diefu1sys(111, "pathexec_env") ;
+    if (!env_mexec("#", fmt)) strerr_diefu1sys(111, "env_mexec") ;
     for (; i <= sharp ; i++)
     {
       char fmu[UINT_FMT] ;
       fmt[uint_fmt(fmt, i)] = 0 ;
       fmu[uint_fmt(fmu, i + n)] = 0 ;
-      if (!pathexec_env(fmt, i <= (sharp - n) ? env_get2(envp, fmu) : 0))
+      if (!env_mexec(fmt, i <= (sharp - n) ? getenv(fmu) : 0))
         strerr_diefu1sys(111, "pathexec_env") ;
     }
   }
-  xpathexec(argv) ;
+  xmexec(argv) ;
 }

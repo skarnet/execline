@@ -13,6 +13,7 @@
 #include <skalibs/env.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "envfile [ -i | -I ] file prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
@@ -132,7 +133,7 @@ static inline void parse_config (char const *file, buffer *b, stralloc *sa)
   }
 }
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   stralloc modif = STRALLOC_ZERO ;
   int fd ;
@@ -179,5 +180,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
     parse_config(name, &b, &modif) ;
     fd_close(fd) ;
   }
-  xpathexec_r(argv + 1, envp, env_len(envp), modif.s, modif.len) ;
+  xmexec_m(argv + 1, modif.s, modif.len) ;
 }

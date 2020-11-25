@@ -2,17 +2,19 @@
 
 #include <string.h>
 #include <unistd.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
 #include <skalibs/types.h>
 #include <skalibs/allreadwrite.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "heredoc [ -d ] fd string command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   int df = 0 ;
   PROG = "heredoc" ;
@@ -55,5 +57,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
     if (fd_move(fdr, fd[0]) == -1)
       strerr_diefu2sys(111, "read on fd ", argv[0]) ;
   }
-  xpathexec_run(argv[2], argv+2, envp) ;
+  xexec(argv+2) ;
 }

@@ -1,11 +1,13 @@
 /* ISC license. */
 
-#include <sys/types.h>
 #include <sys/wait.h>
+
+#include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
-#include <skalibs/types.h>
+#include <skalibs/exec.h>
+
 #include <execline/execline.h>
 
 #define USAGE "ifelse [ -n ] [ -X ] { command-if } { command-then... } command-else..."
@@ -49,5 +51,5 @@ int main (int argc, char const **argv, char const *const *envp)
     strerr_dief2x(128 + WTERMSIG(wstat), "child crashed with signal ", fmt) ;
   }
   if (not != !wait_estatus(wstat)) argv[argc2] = 0 ; else argv += argc2+1 ;
-  xpathexec0_run(argv, envp) ;
+  xexec0_e(argv, envp) ;
 }

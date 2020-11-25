@@ -1,11 +1,13 @@
 /* ISC license. */
 
 #include <unistd.h>
-#include <skalibs/djbunix.h>
+
+#include <skalibs/exec.h>
 #include <skalibs/env.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
+
 #include <execline/execline.h>
 #include "exlsn.h"
 
@@ -20,6 +22,6 @@ void el_substandrun_str (stralloc *src, size_t srcbase, char const *const *envp,
     char const *v[r + 1] ;
     if (!env_make(v, r, dst.s, dst.len)) strerr_diefu1sys(111, "env_make") ;
     v[r] = 0 ;
-    xpathexec_r(v, envp, env_len(envp), info->modifs.s, info->modifs.len) ;
+    xmexec_em(v, envp, info->modifs.s, info->modifs.len) ;
   }
 }

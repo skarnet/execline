@@ -4,10 +4,11 @@
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "fdmove [ -c ] to from prog..."
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   unsigned int to, from ;
   int flagcopy = 0 ;
@@ -30,5 +31,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
     strerr_dieusage(100, USAGE) ;
   if ((flagcopy ? fd_copy(to, from) : fd_move(to, from)) == -1)
     strerr_diefu4sys(111, "move fd ", argv[1], " to fd ", argv[0]) ;
-  xpathexec_run(argv[2], argv+2, envp) ;
+  xexec(argv+2) ;
 }

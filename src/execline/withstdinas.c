@@ -1,18 +1,17 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <string.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
-#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "withstdinas [ -i | -I | -D default ] [ -N | -n ] var remainder..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const **argv)
 {
   subgetopt_t localopt = SUBGETOPT_ZERO ;
   stralloc modif = STRALLOC_ZERO ;
@@ -67,6 +66,5 @@ int main (int argc, char const **argv, char const *const *envp)
     if (chomp && (modif.s[modif.len - 2] == '\n'))
       modif.s[--modif.len - 1] = 0 ;
   }
-  if (!argv[1]) return 0 ;
-  xpathexec_r(argv + 1, envp, env_len(envp), modif.s, modif.len) ;
+  xmexec0_n(argv + 1, modif.s, modif.len, 1) ;
 }

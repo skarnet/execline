@@ -1,9 +1,11 @@
 /* ISC license. */
 
 #include <string.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
+
 #include <execline/execline.h>
 
 #define USAGE "tryexec [ -n ] [ -c ] [ -l ] [ -a argv0 ] { command... } remainder..."
@@ -54,9 +56,9 @@ int main (int argc, char const **argv, char const *const *envp)
     dashed[0] = '-' ;
     memcpy(dashed+1, dom[0], n+1) ;
     dom[0] = dashed ;
-    pathexec_run(executable, dom, dom_envp) ;
+    exec_ae(executable, dom, dom_envp) ;
   }
-  else pathexec_run(executable, dom, dom_envp) ;
+  else exec_ae(executable, dom, dom_envp) ;
 
-  xpathexec0_run(sub, envp) ;
+  xexec0_e(sub, envp) ;
 }

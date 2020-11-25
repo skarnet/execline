@@ -1,13 +1,13 @@
 /* ISC license. */
 
 #include <string.h>
+
 #include <skalibs/strerr2.h>
-#include <skalibs/env.h>
-#include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "export variable value prog..."
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   size_t len1 ;
   PROG = "export" ;
@@ -21,6 +21,6 @@ int main (int argc, char const *const *argv, char const *const *envp)
     memcpy(fmt, argv[1], len1) ;
     fmt[len1] = '=' ;
     memcpy(fmt + len1 + 1, argv[2], len2 + 1) ;
-    xpathexec_r(argv+3, envp, env_len(envp), fmt, len1 + len2 + 2) ;
+    xmexec_n(argv+3, fmt, len1 + len2 + 2, 1) ;
   }
 }

@@ -3,11 +3,13 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
-#include <skalibs/env.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
+
 #include <execline/execline.h>
 
 #define USAGE "backtick [ -i | -I | -D default ] [ -N | -n ] var { prog... } remainder..."
@@ -98,5 +100,5 @@ int main (int argc, char const **argv, char const *const *envp)
     if (chomp && (modif.s[modif.len - 2] == '\n'))
       modif.s[--modif.len - 1] = 0 ;
   }
-  xpathexec_r(argv + argc1 + 1, envp, env_len(envp), modif.s, modif.len) ;
+  xmexec_en(argv + argc1 + 1, envp, modif.s, modif.len, 1) ;
 }

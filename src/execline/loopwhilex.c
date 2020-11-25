@@ -1,11 +1,10 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/types.h>
 #include <skalibs/djbunix.h>
+
 #include <execline/execline.h>
 
 #define USAGE "loopwhilex [ -n ] [ -o okcode,okcode,... | -x exitcode,exitcode,... ] prog..."

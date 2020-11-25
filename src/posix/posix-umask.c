@@ -10,7 +10,7 @@
 #include <skalibs/sgetopt.h>
 #include <skalibs/buffer.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "posix-umask [ -S ] [ mask ] [ prog... ]"
 #define dieusage() strerr_dieusage(100, USAGE)
@@ -146,7 +146,7 @@ static inline unsigned int parsemode (char const *s)
   return ((unsigned int)modes[2] << 6) | ((unsigned int)modes[1] << 3) | modes[0] ;
 }
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const **argv)
 {
   int sym = 0 ;
   unsigned int mode ;
@@ -170,5 +170,5 @@ int main (int argc, char const **argv, char const *const *envp)
   if (!argc) return output(sym) ;
   if (!uint0_oscan(argv[0], &mode)) mode = ~parsemode(argv[0]) ;
   umask(mode & 00777) ;
-  xpathexec0_run(argv+1, envp) ;
+  xexec0(argv+1) ;
 }

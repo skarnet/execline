@@ -1,13 +1,14 @@
 /* ISC license. */
 
 #include <string.h>
+
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
-#include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "unexport variable prog..."
 
-int main (int argc, char const *const *argv, char const *const *envp)
+int main (int argc, char const *const *argv)
 {
   size_t len ;
   PROG = "unexport" ;
@@ -15,5 +16,5 @@ int main (int argc, char const *const *argv, char const *const *envp)
   len = strlen(argv[1]) ;
   if (memchr(argv[1], '=', len))
     strerr_dief2x(100, "invalid variable name: ", argv[1]) ;
-  xpathexec_r(argv+2, envp, env_len(envp), argv[1], len+1) ;
+  xmexec_n(argv+2, argv[1], len+1, 1) ;
 }

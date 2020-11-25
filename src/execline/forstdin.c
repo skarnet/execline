@@ -1,6 +1,5 @@
 /* ISC license. */
 
-#include <sys/types.h>
 #include <string.h>
 #include <errno.h>
 
@@ -129,7 +128,7 @@ int main (int argc, char const **argv, char const *const *envp)
       }
       eofcode = 0 ;
       if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_0") ;
-      if (!env_merge(newenv, envlen+2, envp, envlen, modif.s, modif.len))
+      if (!env_mergen(newenv, envlen+2, envp, envlen, modif.s, modif.len, 1))
         strerr_diefu1sys(111, "merge environment") ;
       if (pids.s) sig_block(SIGCHLD) ;
       pid = el_spawn0(argv[1], argv + 1, newenv) ;

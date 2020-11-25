@@ -1,13 +1,11 @@
 /* ISC license. */
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <errno.h>
+#include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
-#include <skalibs/types.h>
+
 #include <execline/execline.h>
 
 #define USAGE "background [ -d ] { command... }"
@@ -46,8 +44,7 @@ int main (int argc, char const **argv, char const *const *envp)
       case -1: strerr_diefu1sys(111, "doublefork") ;
       case 0:
         PROG = "background (grandchild)" ;
-        pathexec0_run(argv, envp) ;
-        strerr_dieexec(errno == ENOENT ? 127 : 126, argv[0]) ;
+        xexec0_e(argv, envp) ;
     }
   }
   else
@@ -60,6 +57,6 @@ int main (int argc, char const **argv, char const *const *envp)
     char fmt[PID_FMT + 2] = "!=" ;
     size_t i = 2 ;
     i += pid_fmt(fmt+i, pid) ; fmt[i++] = 0 ;
-    xpathexec_r(argv + argc1 + 1, envp, env_len(envp), fmt, i) ;
+    xmexec_en(argv + argc1 + 1, envp, fmt, i, 1) ;
   }
 }

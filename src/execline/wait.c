@@ -15,6 +15,7 @@
 #include <skalibs/djbunix.h>
 #include <skalibs/selfpipe.h>
 #include <skalibs/iopause.h>
+#include <skalibs/exec.h>
 
 #include <execline/execline.h>
 
@@ -107,7 +108,7 @@ static inline int mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_t
   return res ;
 }
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const **argv)
 {
   tain_t tto ;
   int argc1 ;
@@ -162,5 +163,5 @@ int main (int argc, char const **argv, char const *const *envp)
   }
 
   if (!hasblock) return r ;
-  xpathexec0_run(argv + argc1 + 1, envp) ;
+  xexec0(argv + argc1 + 1) ;
 }

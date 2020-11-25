@@ -37,7 +37,7 @@ static inline void action (unsigned int i, char const *const *envp, size_t envle
       memcpy(modif + m, "SIGNAL=", 7) ; m += 7 ;
       m += uint_fmt(modif + m, i) ;
       modif[m++] = 0 ;
-      if (!env_merge(newenvp, envlen + 3, envp, envlen, modif, m))
+      if (!env_mergen(newenvp, envlen + 3, envp, envlen, modif, m, 2))
         strerr_diefu1sys(111, "adjust environment for child") ;
       pids[i] = child_spawn0(argvs[i][0], argvs[i], newenvp) ;
       if (!pids[i]) strerr_diefu2sys(111, "spawn ", argvs[i][0]) ;

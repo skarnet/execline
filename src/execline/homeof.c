@@ -1,6 +1,5 @@
 /* ISC license. */
 
-#include <sys/types.h>
 #include <pwd.h>
 #include <errno.h>
 #include <skalibs/buffer.h>
