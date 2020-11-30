@@ -13,12 +13,14 @@
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/env.h>
+#include <skalibs/exec.h>
 
 #define USAGE "posix-cd [ -L | -P ] [ - | path ] [ prog... ]"
 #define dieusage() strerr_dieusage(100, USAGE)
 #define dienomem() strerr_diefu1sys(111, "stralloc_catb")
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const **argv)
 {
   int phy = 0 ;
   int dopwd = 0 ;

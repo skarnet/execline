@@ -8,8 +8,8 @@
 #include <skalibs/env.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
-#include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
+#include <skalibs/exec.h>
 
 #include <execline/execline.h>
 

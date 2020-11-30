@@ -7,6 +7,7 @@
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #define USAGE "redirfd -[ r | w | u | a | x ] [ -n ] [ -b ] fd file prog..."
 #define dieusage() strerr_dieusage(100, USAGE)

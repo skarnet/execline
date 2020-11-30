@@ -6,6 +6,7 @@
 #include <skalibs/types.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/djbunix.h>
+#include <skalibs/exec.h>
 
 #include <execline/execline.h>
 

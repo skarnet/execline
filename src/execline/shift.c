@@ -116,7 +116,7 @@ int main (int argc, char const *const *argv)
       fmt[uint_fmt(fmt, i)] = 0 ;
       fmu[uint_fmt(fmu, i + n)] = 0 ;
       if (!env_mexec(fmt, i <= (sharp - n) ? getenv(fmu) : 0))
-        strerr_diefu1sys(111, "pathexec_env") ;
+        strerr_diefu1sys(111, "modify environment") ;
     }
   }
   xmexec(argv) ;
