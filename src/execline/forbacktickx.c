@@ -12,20 +12,20 @@
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forbacktickx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
+#define USAGE "forbacktickx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -E | -e ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const *const *argv)
 {
   char const *delim = "\n" ;
   char const *codes = 0 ;
-  int crunch = 0, chomp = 1, not = 1, par = 0 ;
+  int crunch = 0, chomp = 1, not = 1, par = 0, doimport = 0 ;
   PROG = "forbacktickx" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:Ee", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -54,6 +54,8 @@ int main (int argc, char const *const *argv)
           not = 1 ;
           break ;
         }
+        case 'E' : doimport = 1 ; break ;
+        case 'e' : doimport = 0 ; break ;
         default : dieusage() ;
       }
     }
@@ -65,7 +67,7 @@ int main (int argc, char const *const *argv)
   {
     unsigned int m = 0, i = 1 ;
     int fd = dup(0) ;
-    char const *newargv[argc + 18] ;
+    char const *newargv[argc + 19] ;
     char fmt[UINT_FMT] ;
     if (fd < 0)
     {
@@ -81,6 +83,7 @@ int main (int argc, char const *const *argv)
     newargv[m++] = EXECLINE_BINPREFIX "unexport" ;
     newargv[m++] = "!" ;
     newargv[m++] = EXECLINE_BINPREFIX "forstdin" ;
+    newargv[m++] = doimport ? "-E" : "-e" ;
     if (par) newargv[m++] = "-p" ;
     newargv[m++] = chomp ? "-n" : "-N" ;
     if (crunch) newargv[m++] = "-C" ;

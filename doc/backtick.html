@@ -30,7 +30,7 @@ environment variable, then executes another program.
 </p>
 
 <pre>
-     backtick [ -i | -I | -D <em>default</em> ] [ -N | -n ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
+     backtick [ -i | -I | -D <em>default</em> ] [ -N | -n ] [ -E | -e ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
 </pre>
 
 <ul>
@@ -48,6 +48,11 @@ output as a value. </li>
 <ul>
  <li> <tt>-N</tt>&nbsp;: store <em>prog1...</em>'s output as is, including the last newline, if any. </li>
  <li> <tt>-n</tt>&nbsp;: chomp an ending newline off <em>prog1...</em>'s output. This is the default. </li>
+ <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
+ <li> <tt>-E</tt>&nbsp;: autoimport. Instead of exec'ing into
+<em>prog2...</em>, exec into <tt>importas -ui <em>variable</em> <em>variable</em>
+<em>prog2...</em></tt>. This substitutes <em>variable</em> into the command
+line instead of putting it into the environment. </li>
 </ul>
 
 <p>
@@ -67,13 +72,6 @@ is set to <em>default</em>, and execution proceeds. </li>
 the start of <em>prog1...</em>'s output is, up to the first null character,
 or to whatever <em>prog1...</em> wrote before crashing;
 then execution proceeds. </li>
-</ul>
-
-<h2> Notes </h2>
-
-<ul>
- <li> You can start <em>prog2...</em> with "importas -u <em>variable</em> <em>variable</em>"
-to perform variable substitution. </li>
 </ul>
 
 </body>

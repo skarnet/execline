@@ -30,7 +30,7 @@ run another program.
 </p>
 
 <pre>
-     forbacktickx [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] [ -N | -n ] [ -C | -c ] [ -0 | -d <em>delim</em> ] <em>variable</em> { <em>gen...</em> } <em>loop...</em>
+     forbacktickx [ -E | -e ] [ -p | -o <em>okcodes</em> | -x <em>breakcodes</em> ] [ -N | -n ] [ -C | -c ] [ -0 | -d <em>delim</em> ] <em>variable</em> { <em>gen...</em> } <em>loop...</em>
 </pre>
 
 <ul>
@@ -65,6 +65,11 @@ not listed in <em>okcodes</em>, forbacktickx will exit immediately with an
 option, but with inverted meaning - the listed exit codes are codes
 that will make forbacktickx break the loop and exit, and the unlisted exit
 codes will make it keep looping. </li>
+ <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
+ <li> <tt>-E</tt>&nbsp;: autoimport. Instead of spawning
+<em>loop...</em>, spawn <tt>importas -ui <em>variable</em> <em>variable</em>
+<em>loop...</em></tt>. This substitutes <em>variable</em> into the command
+line instead of putting it into the environment. </li>
 </ul>
 
 <p>

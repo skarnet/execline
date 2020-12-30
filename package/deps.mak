@@ -24,10 +24,10 @@ src/execline/fdreserve.o src/execline/fdreserve.lo: src/execline/fdreserve.c
 src/execline/fdswap.o src/execline/fdswap.lo: src/execline/fdswap.c
 src/execline/forbacktickx.o src/execline/forbacktickx.lo: src/execline/forbacktickx.c src/include/execline/config.h src/include/execline/execline.h
 src/execline/foreground.o src/execline/foreground.lo: src/execline/foreground.c src/include/execline/execline.h
-src/execline/forstdin.o src/execline/forstdin.lo: src/execline/forstdin.c src/include/execline/config.h src/include/execline/execline.h
+src/execline/forstdin.o src/execline/forstdin.lo: src/execline/forstdin.c src/include/execline/execline.h
 src/execline/forx.o src/execline/forx.lo: src/execline/forx.c src/include/execline/config.h src/include/execline/execline.h
-src/execline/getcwd.o src/execline/getcwd.lo: src/execline/getcwd.c
-src/execline/getpid.o src/execline/getpid.lo: src/execline/getpid.c
+src/execline/getcwd.o src/execline/getcwd.lo: src/execline/getcwd.c src/include/execline/execline.h
+src/execline/getpid.o src/execline/getpid.lo: src/execline/getpid.c src/include/execline/execline.h
 src/execline/heredoc.o src/execline/heredoc.lo: src/execline/heredoc.c
 src/execline/homeof.o src/execline/homeof.lo: src/execline/homeof.c
 src/execline/if.o src/execline/if.lo: src/execline/if.c src/include/execline/execline.h
@@ -46,10 +46,12 @@ src/execline/shift.o src/execline/shift.lo: src/execline/shift.c src/include/exe
 src/execline/trap.o src/execline/trap.lo: src/execline/trap.c src/include/execline/execline.h
 src/execline/tryexec.o src/execline/tryexec.lo: src/execline/tryexec.c src/include/execline/execline.h
 src/execline/unexport.o src/execline/unexport.lo: src/execline/unexport.c
-src/execline/wait.o src/execline/wait.lo: src/execline/wait.c src/include/execline/execline.h
-src/execline/withstdinas.o src/execline/withstdinas.lo: src/execline/withstdinas.c
+src/execline/wait.o src/execline/wait.lo: src/execline/wait.c src/include/execline/config.h src/include/execline/execline.h
+src/execline/withstdinas.o src/execline/withstdinas.lo: src/execline/withstdinas.c src/include/execline/execline.h
 src/libexecline/el_execsequence.o src/libexecline/el_execsequence.lo: src/libexecline/el_execsequence.c src/include/execline/execline.h
 src/libexecline/el_getstrict.o src/libexecline/el_getstrict.lo: src/libexecline/el_getstrict.c src/include/execline/execline.h
+src/libexecline/el_modif_and_exec.o src/libexecline/el_modif_and_exec.lo: src/libexecline/el_modif_and_exec.c src/include/execline/config.h src/include/execline/execline.h
+src/libexecline/el_modif_and_spawn.o src/libexecline/el_modif_and_spawn.lo: src/libexecline/el_modif_and_spawn.c src/include/execline/config.h src/include/execline/execline.h
 src/libexecline/el_parse.o src/libexecline/el_parse.lo: src/libexecline/el_parse.c src/include/execline/execline.h
 src/libexecline/el_parse_from_buffer.o src/libexecline/el_parse_from_buffer.lo: src/libexecline/el_parse_from_buffer.c src/include/execline/execline.h
 src/libexecline/el_parse_from_string.o src/libexecline/el_parse_from_string.lo: src/libexecline/el_parse_from_string.c src/include/execline/execline.h
@@ -123,9 +125,9 @@ forstdin: src/execline/forstdin.o ${LIBEXECLINE}
 forx: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 forx: src/execline/forx.o ${LIBEXECLINE}
 getcwd: EXTRA_LIBS := -lskarnet
-getcwd: src/execline/getcwd.o
+getcwd: src/execline/getcwd.o ${LIBEXECLINE}
 getpid: EXTRA_LIBS := -lskarnet
-getpid: src/execline/getpid.o
+getpid: src/execline/getpid.o ${LIBEXECLINE}
 heredoc: EXTRA_LIBS := -lskarnet
 heredoc: src/execline/heredoc.o
 homeof: EXTRA_LIBS := -lskarnet ${MAYBEPTHREAD_LIB}
@@ -165,14 +167,14 @@ unexport: src/execline/unexport.o
 wait: EXTRA_LIBS := -lskarnet
 wait: src/execline/wait.o ${LIBEXECLINE}
 withstdinas: EXTRA_LIBS := -lskarnet
-withstdinas: src/execline/withstdinas.o
+withstdinas: src/execline/withstdinas.o ${LIBEXECLINE}
 ifeq ($(strip $(STATIC_LIBS_ARE_PIC)),)
-libexecline.a.xyzzy: src/libexecline/el_execsequence.o src/libexecline/el_getstrict.o src/libexecline/el_parse.o src/libexecline/el_parse_from_buffer.o src/libexecline/el_parse_from_string.o src/libexecline/el_popenv.o src/libexecline/el_pushenv.o src/libexecline/el_semicolon.o src/libexecline/el_spawn0.o src/libexecline/el_spawn1.o src/libexecline/el_substandrun.o src/libexecline/el_substandrun_str.o src/libexecline/el_substitute.o src/libexecline/el_transform.o src/libexecline/el_vardupl.o src/libexecline/exlsn_define.o src/libexecline/exlsn_elglob.o src/libexecline/exlsn_importas.o src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_exlp.o src/libexecline/exlsn_main.o src/libexecline/exlsn_free.o src/libexecline/exlp.o
+libexecline.a.xyzzy: src/libexecline/el_execsequence.o src/libexecline/el_getstrict.o src/libexecline/el_modif_and_exec.o src/libexecline/el_modif_and_spawn.o src/libexecline/el_parse.o src/libexecline/el_parse_from_buffer.o src/libexecline/el_parse_from_string.o src/libexecline/el_popenv.o src/libexecline/el_pushenv.o src/libexecline/el_semicolon.o src/libexecline/el_spawn0.o src/libexecline/el_spawn1.o src/libexecline/el_substandrun.o src/libexecline/el_substandrun_str.o src/libexecline/el_substitute.o src/libexecline/el_transform.o src/libexecline/el_vardupl.o src/libexecline/exlsn_define.o src/libexecline/exlsn_elglob.o src/libexecline/exlsn_importas.o src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_exlp.o src/libexecline/exlsn_main.o src/libexecline/exlsn_free.o src/libexecline/exlp.o
 else
-libexecline.a.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_parse.lo src/libexecline/el_parse_from_buffer.lo src/libexecline/el_parse_from_string.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_importas.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
+libexecline.a.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_modif_and_exec.lo src/libexecline/el_modif_and_spawn.lo src/libexecline/el_parse.lo src/libexecline/el_parse_from_buffer.lo src/libexecline/el_parse_from_string.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_importas.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
 endif
 libexecline.so.xyzzy: EXTRA_LIBS := -lskarnet
-libexecline.so.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_parse.lo src/libexecline/el_parse_from_buffer.lo src/libexecline/el_parse_from_string.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_importas.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
+libexecline.so.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_modif_and_exec.lo src/libexecline/el_modif_and_spawn.lo src/libexecline/el_parse.lo src/libexecline/el_parse_from_buffer.lo src/libexecline/el_parse_from_string.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_spawn1.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_importas.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
 posix-cd: EXTRA_LIBS := -lskarnet
 posix-cd: src/posix/posix-cd.o
 posix-umask: EXTRA_LIBS := -lskarnet

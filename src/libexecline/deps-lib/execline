@@ -1,5 +1,7 @@
 el_execsequence.o
 el_getstrict.o
+el_modif_and_exec.o
+el_modif_and_spawn.o
 el_parse.o
 el_parse_from_buffer.o
 el_parse_from_string.o

@@ -31,7 +31,7 @@ environment variable.
 </p>
 
 <pre>
-     withstdinas [ -i | -I | -D <em>default</em> ] [ -N | -n ] <em>variable</em> <em>prog...</em>
+     withstdinas [ -i | -I | -D <em>default</em> ] [ -N | -n ] [ -E | -e ] <em>variable</em> <em>prog...</em>
 </pre>
 
 <ul>
@@ -46,6 +46,11 @@ environment variable.
 <ul>
  <li> <tt>-N</tt>&nbsp;: do not chomp an ending newline off stdin. </li>
  <li> <tt>-n</tt>&nbsp;: chomp an ending newline off stdin. This is the default. </li>
+ <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
+ <li> <tt>-E</tt>&nbsp;: autoimport. Instead of exec'ing into
+<em>prog...</em>, exec into <tt>importas -ui <em>variable</em> <em>variable</em>
+<em>prog...</em></tt>. This substitutes <em>variable</em> into the command
+line instead of putting it into the environment. </li>
 </ul>
 
 <p>

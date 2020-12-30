@@ -4,25 +4,37 @@
 #include <unistd.h>
 
 #include <skalibs/types.h>
+#include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
-#include <skalibs/exec.h>
 
-#define USAGE "getpid variable prog..."
+#include <execline/execline.h>
+
+#define USAGE "getpid [ -E | -e ] variable prog..."
+#define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const *const *argv)
 {
-  size_t len ;
+  int doimport = 0 ;
+  char fmt[PID_FMT] ;
   PROG = "getpid" ;
-  if (argc < 3) strerr_dieusage(100, USAGE) ;
-  len = strlen(argv[1]) ;
-  if (memchr(argv[1], '=', len))
-    strerr_dief2x(100, "invalid variable name: ", argv[1]) ;
   {
-    size_t i = len+1 ;
-    char fmt[PID_FMT + len + 2] ;
-    memcpy(fmt, argv[1], len) ;
-    fmt[len] = '=' ;
-    i += pid_fmt(fmt+i, getpid()) ; fmt[i++] = 0 ;
-    xmexec_n(argv+2, fmt, i, 1) ;
+    subgetopt_t l = SUBGETOPT_ZERO ;
+    for (;;)
+    {
+      int opt = subgetopt_r(argc, argv, "Ee", &l) ;
+      if (opt == -1) break ;
+      switch (opt)
+      {
+        case 'E' : doimport = 1 ; break ;
+        case 'e' : doimport = 0 ; break ;
+        default : dieusage() ;
+      }
+    }
+    argc -= l.ind ; argv += l.ind ;
   }
+  if (argc < 2) dieusage() ;
+  if (!argv[0][0] || strchr(argv[0], '=')) strerr_dief1x(100, "invalid variable name") ;
+
+  fmt[pid_fmt(fmt, getpid())] = 0 ;
+  el_modif_and_exec(argv + 1, argv[0], fmt, doimport) ;
 }

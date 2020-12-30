@@ -13,7 +13,7 @@
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forx [ -p ] [ -o okcode,okcode,... | -x breakcode,breakcode,... ] var { values... } command..."
+#define USAGE "forx [ -E | -e ] [ -p ] [ -o okcode,okcode,... | -x breakcode,breakcode,... ] var { values... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static int isok (unsigned short const *tab, unsigned int n, int code)
@@ -42,19 +42,19 @@ static int waitn_code (unsigned short const *tab, unsigned int nbc, pid_t *pids,
   return ok ;
 }
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const **argv)
 {
-  char const *x ;
-  int argc1 ;
+  char const *var ;
   unsigned short okcodes[256] ;
   size_t nbc = 0 ;
-  int flagpar = 0, not = 1 ;
+  int flagpar = 0, not = 1, doimport = 0 ;
+  unsigned int argc1 ;
   PROG = "forx" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "po:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "po:x:Ee", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -67,6 +67,8 @@ int main (int argc, char const **argv, char const *const *envp)
           not = 1 ;
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
+        case 'E' : doimport = 1 ; break ;
+        case 'e' : doimport = 0 ; break ;
         default : dieusage() ;
       }
     }
@@ -74,32 +76,17 @@ int main (int argc, char const **argv, char const *const *envp)
   }
 
   if (argc < 2) dieusage() ;
-  x = argv[0] ; if (!*x) dieusage() ;
-  if (x[0] == EXECLINE_BLOCK_QUOTE_CHAR)
-    strerr_warnw3x("variable ", x, " starts with a block quoting character") ;
-  argv++ ; argc-- ;
+  if (!argv[0][0] || strchr(argv[0], '=')) strerr_dief1x(100, "invalid variable name") ;
+  var = *argv++ ; argc-- ;
   argc1 = el_semicolon(argv) ;
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
   if (!argc1 || (argc1 + 1 == argc)) return 0 ;
-  {
-    size_t envlen = env_len(envp) ;
-    size_t varlen = strlen(x) ;
-    unsigned int i = 0 ;
-    pid_t pids[flagpar ? argc1 : 1] ;
-    char const *newenv[envlen + 2] ;
 
-    for (; i < (unsigned int)argc1 ; i++)
+  {
+    pid_t pids[flagpar ? argc1 : 1] ;
+    for (unsigned int i = 0 ; i < argc1 ; i++)
     {
-      pid_t pid ;
-      size_t vallen = strlen(argv[i]) ;
-      char modif[varlen + vallen + 2] ;
-      memcpy(modif, x, varlen) ;
-      modif[varlen] = '=' ;
-      memcpy(modif + varlen + 1, argv[i], vallen) ;
-      modif[varlen + vallen + 1] = 0 ;
-      if (!env_mergen(newenv, envlen + 2, envp, envlen, modif, varlen + vallen + 2, 1))
-        strerr_diefu1sys(111, "build new environment") ;
-      pid = el_spawn0(argv[argc1+1], argv + argc1 + 1, newenv) ;
+      pid_t pid = el_modif_and_spawn(argv + argc1 + 1, var, argv[i], doimport) ;
       if (!pid) strerr_diefu2sys(111, "spawn ", argv[argc1+1]) ;
       if (flagpar) pids[i] = pid ;
       else

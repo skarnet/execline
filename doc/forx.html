@@ -29,7 +29,7 @@
 </p>
 
 <pre>
-     forx [ -p ] [ -o <em>okcodes</em> | -x <em>breakcodes</em> ] <em>variable</em> { <em>args...</em> } <em>loop...</em>
+     forx [ -E | -e ] [ -p ] [ -o <em>okcodes</em> | -x <em>breakcodes</em> ] <em>variable</em> { <em>args...</em> } <em>loop...</em>
 </pre>
 
 <ul>
@@ -63,6 +63,11 @@ will exit 0 if all of the exit codes are in the values listed in the <em>okcodes
 list, else it will exit 1. If the <tt>-x</tt> option has been given,
 <tt>forx</tt> will exit 0 if none of the exit codes are in the values
 listed in the <em>breakcodes</em> list, else it will exit 1. </li>
+ <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
+ <li> <tt>-E</tt>&nbsp;: autoimport. Instead of spawning
+<em>loop...</em>, spawn <tt>importas -ui <em>variable</em> <em>variable</em>
+<em>loop...</em></tt>. This substitutes <em>variable</em> into the command
+line instead of putting it into the environment. </li>
 </ul>
 
 <h2> Notes </h2>

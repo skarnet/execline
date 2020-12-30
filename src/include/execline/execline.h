@@ -4,6 +4,7 @@
 #define EXECLINE_H
 
 #include <sys/types.h>
+
 #include <skalibs/gccattributes.h>
 #include <skalibs/buffer.h>
 #include <skalibs/stralloc.h>
@@ -75,5 +76,11 @@ struct elsubst_s
 } ;
 
 extern int el_substitute (stralloc *, char const *, size_t, char const *, char const *, elsubst_t const *, unsigned int) ;
+
+
+/* Execution with or without substitution */
+
+extern void el_modif_and_exec (char const *const *, char const *, char const *, int) gccattr_noreturn ;
+extern pid_t el_modif_and_spawn (char const *const *, char const *, char const *, int) ;
 
 #endif

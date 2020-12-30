@@ -9,16 +9,14 @@
 #include <skalibs/strerr2.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
-#include <skalibs/env.h>
 #include <skalibs/sig.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>
 #include <skalibs/netstring.h>
 
-#include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forstdin [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
+#define USAGE "forstdin [ -E | -e ] [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 static genalloc pids = GENALLOC_ZERO ; /* pid_t */
@@ -45,19 +43,20 @@ static void parallel_sigchld_handler (int sig)
   (void)sig ;
 }
 
-int main (int argc, char const **argv, char const *const *envp)
+int main (int argc, char const **argv)
 {
+  stralloc value = STRALLOC_ZERO ;
   char const *delim = "\n" ;
   size_t delimlen = 1 ;
   size_t nbc = 0 ;
   unsigned short okcodes[256] ;
-  int crunch = 0, chomp = 1, not = 1, eofcode = 1 ;
+  int crunch = 0, chomp = 1, not = 1, eofcode = 1, doimport = 0 ;
   PROG = "forstdin" ;
   {
     subgetopt_t l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:", &l) ;
+      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:Ee", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -81,81 +80,74 @@ int main (int argc, char const **argv, char const *const *envp)
           not = 1 ;
           if (!ushort_scanlist(okcodes, 256, l.arg, &nbc)) dieusage() ;
           break ;
+        case 'E' : doimport = 1 ; break ;
+        case 'e' : doimport = 0 ; break ;
         default : dieusage() ;
       }
     }
     argc -= l.ind ; argv += l.ind ;
   }
   if (argc < 2) dieusage() ;
+  if (!argv[0][0] || strchr(argv[0], '=')) strerr_dief1x(100, "invalid variable name") ;
+
+  if (pids.s)
   {
-    stralloc modif = STRALLOC_ZERO ;
-    size_t envlen = env_len(envp) ;
-    size_t modifstart = strlen(argv[0]) + 1 ;
-    char const *newenv[envlen + 2] ;
-    if (!stralloc_ready(&modif, modifstart+1))
-      strerr_diefu1sys(111, "stralloc_ready") ;
-    memcpy(modif.s, argv[0], modifstart - 1) ;
-    modif.s[modifstart-1] = '=' ;
+    if (sig_catch(SIGCHLD, &parallel_sigchld_handler) < 0)
+      strerr_diefu1sys(111, "install SIGCHLD handler") ;
+  }
+  for (;;)
+  {
+    pid_t pid ;
+    value.len = 0 ;
+    if (delimlen)
+    {
+      int r = skagetlnsep(buffer_0, &value, delim, delimlen) ;
+      if (!r) break ;
+      else if (r < 0)
+      {
+        if (errno != EPIPE) strerr_diefu1sys(111, "skagetlnsep") ;
+        if (chomp) break ;
+      }
+      if (crunch && value.len == 1) continue ;
+      if (chomp) value.len-- ;
+    }
+    else
+    {
+      size_t unread = 0 ;
+      if (netstring_get(buffer_0, &value, &unread) <= 0)
+      {
+        if (netstring_okeof(buffer_0, unread)) break ;
+        else strerr_diefu1sys(111, "netstring_get") ;
+      }
+    }
+    eofcode = 0 ;
+    if (!stralloc_0(&value)) strerr_diefu1sys(111, "stralloc_0") ;
+    if (pids.s) sig_block(SIGCHLD) ;
+    pid = el_modif_and_spawn(argv + 1, argv[0], value.s, doimport) ;
+    if (!pid) strerr_diefu2sys(111, "spawn ", argv[1]) ;
     if (pids.s)
     {
-      if (sig_catch(SIGCHLD, &parallel_sigchld_handler) < 0)
-        strerr_diefu1sys(111, "install SIGCHLD handler") ;
+      if (!genalloc_append(pid_t, &pids, &pid))
+        strerr_diefu1sys(111, "genalloc_append") ;
+      sig_unblock(SIGCHLD) ;
     }
-    for (;;)
+    else
     {
-      pid_t pid ;
-      modif.len = modifstart ;
-      if (delimlen)
-      {
-        int r = skagetlnsep(buffer_0, &modif, delim, delimlen) ;
-        if (!r) break ;
-        else if (r < 0)
-        {
-          if (errno != EPIPE) strerr_diefu1sys(111, "skagetlnsep") ;
-          if (chomp) break ;
-        }
-        if (crunch && modif.len == modifstart + 1) continue ;
-        if (chomp) modif.len-- ;
-      }
-      else
-      {
-        size_t unread = 0 ;
-        if (netstring_get(buffer_0, &modif, &unread) <= 0)
-        {
-          if (netstring_okeof(buffer_0, unread)) break ;
-          else strerr_diefu1sys(111, "netstring_get") ;
-        }
-      }
-      eofcode = 0 ;
-      if (!stralloc_0(&modif)) strerr_diefu1sys(111, "stralloc_0") ;
-      if (!env_mergen(newenv, envlen+2, envp, envlen, modif.s, modif.len, 1))
-        strerr_diefu1sys(111, "merge environment") ;
-      if (pids.s) sig_block(SIGCHLD) ;
-      pid = el_spawn0(argv[1], argv + 1, newenv) ;
-      if (!pid) strerr_diefu2sys(111, "spawn ", argv[1]) ;
-      if (pids.s)
-      {
-        if (!genalloc_append(pid_t, &pids, &pid))
-          strerr_diefu1sys(111, "genalloc_append") ;
-        sig_unblock(SIGCHLD) ;
-      }
-      else
-      {
-        int wstat ;
-        if (wait_pid(pid, &wstat) < 0)
-          strerr_diefu2sys(111, "wait for ", argv[1]) ;
-        if (not == isok(okcodes, nbc, wait_estatus(wstat)))
-          return wait_estatus(wstat) ;
-      }
+      int wstat ;
+      if (wait_pid(pid, &wstat) < 0)
+        strerr_diefu2sys(111, "wait for ", argv[1]) ;
+      if (not == isok(okcodes, nbc, wait_estatus(wstat)))
+        return wait_estatus(wstat) ;
     }
-    stralloc_free(&modif) ;
   }
   if (pids.s)
+  {
     for (;;)
     {
       sig_block(SIGCHLD) ;
       if (!pids.len) break ;
       sig_pause() ;
     }
+  }
   return eofcode ;
 }

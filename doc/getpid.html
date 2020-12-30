@@ -26,13 +26,23 @@ then executes a program.
 <h2> Interface </h2>
 
 <pre>
-     getpid <em>var</em> <em>prog...</em>
+     getpid [ -E | -e ] <em>var</em> <em>prog...</em>
 </pre>
 
 <p>
 <tt>getpid</tt> stores its PID in the <em>var</em> variable, then
 execs into <em>prog</em> with its arguments.
 </p>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
+ <li> <tt>-E</tt>&nbsp;: autoimport. Instead of exec'ing into
+<em>prog...</em>, exec into <tt>importas -ui <em>var</em> <em>var</em>
+<em>prog...</em></tt>. This substitutes <em>var</em> into the command
+line instead of putting it into the environment. </li>
+</ul>
 
 <h2> Notes </h2>
 
