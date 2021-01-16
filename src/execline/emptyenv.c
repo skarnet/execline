@@ -34,7 +34,7 @@ static void cleanupenv (char const *const *argv, char const *const *envp)
         goto err ;
   }
   stralloc_free(&sa) ;
-  xmexec_e(argv, envp) ;
+  xmexec(argv) ;
 err:
   strerr_diefu1sys(111, "clean up environment") ;
 }
