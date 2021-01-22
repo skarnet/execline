@@ -74,7 +74,7 @@ not forward any signals, and does not ignore them either - for instance a
 SIGTERM, unless caught by a <tt>SIGTERM</tt> directive, will kill the
 <tt>trap</tt> process (and leave <em>prog</em> running). With the
 <tt>-x</tt> option, without a <tt>SIGTERM</tt> directive, a SIGTERM
-will be still be caught by <tt>trap</tt>, that will send it to
+will still be caught by <tt>trap</tt>, that will send it to
 <em>prog</em>. Note that if a <tt>default</tt> directive is present,
 this option does nothing. </li>
 </ul>
@@ -89,7 +89,7 @@ can be the case in <tt>default</tt> directives, they can for instance use
 <code><a href="multisubstitute.html">multisubstitute</a> { importas ! ! importas SIGNAL SIGNAL }<code>
 to get both <tt>$!</tt> and <tt>$SIGNAL</tt> substitutions. </li>
  <li> The <tt>-x</tt> option is basically a shortcut for a <code>default {
-multisusbstitute { importas ! ! importas SIGNAL SIGNAL } kill -$SIGNAL $! }</code> directive. </li>
+multisubstitute { importas ! ! importas SIGNAL SIGNAL } kill -$SIGNAL $! }</code> directive. </li>
  <li> <tt>trap</tt> is a standard shell builtin, with similar
 functionality. It is more idiomatic, and probably more efficient,
 to use that builtin in shell scripts, and to only use the
