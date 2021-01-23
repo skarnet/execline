@@ -109,13 +109,13 @@ int main (int argc, char const **argv, char const *const *envp)
   if (xfersigs)
   {
     sigfillset(&set) ;
-    sigdelset(&set, SIGCHLD) ;
     sigdelset(&set, SIGKILL) ;
     sigdelset(&set, SIGSTOP) ;
   }
   else
   {
     sigemptyset(&set) ;
+    sigaddset(&set, SIGCHLD) ;
     for (i = 1 ; i < SKALIBS_NSIG ; i++)
       if (argvs[i])
         sigaddset(&set, i) ;
