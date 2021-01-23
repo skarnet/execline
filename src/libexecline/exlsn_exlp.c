@@ -20,7 +20,6 @@ int exlsn_exlp (int argc, char const **argv, char const *const *envp, exlsn_t *i
     }
   }
   argc -= localopt.ind ; argv += localopt.ind ;
-  if (!argc) return -3 ;
   n = exlp(nmin, envp, info) ;
   if (n < 0) return n ;
   return localopt.ind ;
