@@ -50,7 +50,7 @@ int main (int argc, char const **argv, char const *const *envp)
 {
   size_t envlen = env_len(envp) ;
   iopause_fd x = { .events = IOPAUSE_READ } ;
-  sigset_t set ;
+  sigset_t full, set ;
   int xfersigs = 0 ;
   unsigned int argc1 ;
   unsigned int i = 0 ;
@@ -77,6 +77,9 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
   if (argc1 + 1 == argc) dieusage() ;
   argv[argc1] = 0 ;
+  sigfillset(&full) ;
+  sigdelset(&full, SIGKILL) ;
+  sigdelset(&full, SIGSTOP) ;
   while (i < argc1)
   {
     unsigned int argc2 ;
@@ -88,14 +91,13 @@ int main (int argc, char const **argv, char const *const *envp)
       strerr_dief3x(100, "unterminated", " internal block for directive ", argv[i-1]) ;
     if (argvs[sig])
       strerr_dief3x(100, "duplicate", " directive: ", argv[i-1]) ;
-    switch (sig)
+    if (!sig || (sig != SIGCHLD && sigismember(&full, sig) > 0))
+      argvs[sig] = argv + i ;
+    else
     {
-      case SIGCHLD : strerr_dief2x(100, "SIGCHLD", " cannot be trapped") ;
-      case SIGKILL : strerr_dief2x(100, "SIGKILL", " cannot be trapped") ;
-      case SIGSTOP : strerr_dief2x(100, "SIGSTOP", " cannot be trapped") ;
-      default :
-        argvs[sig] = argv + i ;
-        break ;
+      char fmt[UINT_FMT] ;
+      fmt[uint_fmt(fmt, (unsigned int)sig)] = 0 ;
+      strerr_dief5x(100, "SIG", sig_name(sig), " (", fmt, ") cannot be trapped") ;
     }
     argv[i + argc2] = 0 ;
     i += argc2 + 1 ;
@@ -103,15 +105,10 @@ int main (int argc, char const **argv, char const *const *envp)
 
   if (argvs[0])
     for (i = 1 ; i < SKALIBS_NSIG ; i++)
-      if (!argvs[i])
+      if (!argvs[i] && sigismember(&full, i) > 0)
         argvs[i] = argvs[0] ;
 
-  if (xfersigs)
-  {
-    sigfillset(&set) ;
-    sigdelset(&set, SIGKILL) ;
-    sigdelset(&set, SIGSTOP) ;
-  }
+  if (xfersigs) set = full ;
   else
   {
     sigemptyset(&set) ;
