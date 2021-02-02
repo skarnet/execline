@@ -11,12 +11,13 @@
 #include <execline/execline.h>
 
 #define USAGE "if [ -n ] [ -X ] [ -t | -x exitcode ] { command... }"
+#define dieusage() strerr_dieusage(100, USAGE) ;
 
 int main (int argc, char const **argv, char const *const *envp)
 {
   int argc1, wstat ;
   pid_t pid ;
-  int not = 0, flagnormalcrash = 0 ;
+  int not = 0, fixed = 0, flagnormalcrash = 0 ;
   unsigned short e = 1 ;
   PROG = "if" ;
   {
@@ -27,11 +28,11 @@ int main (int argc, char const **argv, char const *const *envp)
       if (opt == -1) break ;
       switch (opt)
       {
-        case 'n' : not = 1 ; break ;
+        case 'n' : not = 1 ; fixed = 1 ; break ;
         case 'X' : flagnormalcrash = 1 ; break ;
-        case 't' : e = 0 ; break ;
-        case 'x' : if (ushort_scan(l.arg, &e)) break ;
-        default : strerr_dieusage(100, USAGE) ;
+        case 't' : e = 0 ; fixed = 1 ; break ;
+        case 'x' : if (!ushort_scan(l.arg, &e)) dieusage() ; fixed = 1 ; break ;
+        default : dieusage() ;
       }
     }
     argc -= l.ind ; argv += l.ind ;
@@ -49,6 +50,6 @@ int main (int argc, char const **argv, char const *const *envp)
     fmt[uint_fmt(fmt, WTERMSIG(wstat))] = 0 ;
     strerr_dief2x(128 + WTERMSIG(wstat), "child crashed with signal ", fmt) ;
   }
-  if (not == !wait_estatus(wstat)) return e ;
+  if (not == !wait_estatus(wstat)) return fixed ? e : wait_estatus(wstat) ;
   xexec0_e(argv+argc1+1, envp) ;
 }

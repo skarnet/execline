@@ -38,19 +38,22 @@
 then waits for it to complete. </li>
  <li> If <em>prog1</em> crashes, <tt>if</tt> prints an error message
 then exits 128 plus the number of the signal that killed <em>prog1</em>. </li>
- <li> If <em>prog1</em> exits a non-zero status,
-<tt>if</tt> exits 1.</li>
+ <li> If <em>prog1</em> exits with a non-zero code, <tt>if</tt> exits with an
+<a href="exitcodes.html">approximation</a> of that code. </li>
  <li> Else <tt>if</tt> execs into <em>prog2</em>. </li>
 </ul>
 
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-X</tt>&nbsp;: treat a crash of <em>prog1</em> as a non-zero ("false") exit.
- <li> <tt>-n</tt>&nbsp;: negate the test (exit on true, exec into <em>prog2</em> on false) </li>
- <li> <tt>-x</tt>&nbsp;<em>exitcode</em>&nbsp;: exit <em>exitcode</em> instead of 1 if the test fails. </li>
- <li> <tt>-t</tt>&nbsp;: exit 0 instead of 1 if the test fails.
-This is equivalent to <tt>-x 0</tt>. </li>
+ <li> <tt>-X</tt>&nbsp;: treat a crash of <em>prog1</em> as a non-zero ("false") exit. This
+is mostly useful in combination with <tt>-n</tt>. </li>
+ <li> <tt>-n</tt>&nbsp;: negate the test. If <em>prog1</em> exits true, then <tt>if</tt> will
+exit 1; else it will exec into <em>prog2</em>. </li>
+ <li> <tt>-x</tt>&nbsp;<em>exitcode</em>&nbsp;: if <tt>if</tt> needs to exit, it will exit <em>exitcode</em>
+instead of whatever else it would have exited. </li>
+ <li> <tt>-t</tt>&nbsp;: if <tt>if</tt> needs to exit, it will exit 0. This is equivalent
+to <tt>-x 0</tt>. </li>
 </ul>
 
 <h2> Notes </h2>
