@@ -1,5 +1,12 @@
 Changelog for execline.
 
+In 2.8.0.0
+----------
+
+ - backtick now propagates failure by default; its options have
+slightly different semantics.
+
+
 In 2.7.0.1
 ----------
 

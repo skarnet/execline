@@ -30,7 +30,7 @@ environment variable, then executes another program.
 </p>
 
 <pre>
-     backtick [ -i | -I | -D <em>default</em> ] [ -N | -n ] [ -E | -e ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
+     backtick [ -i | -I | -d | -D <em>default</em> ] [ -N | -n ] [ -E | -e ] <em>variable</em> { <em>prog1...</em> } <em>prog2...</em>
 </pre>
 
 <ul>
@@ -63,15 +63,17 @@ nonzero:
 </p>
 
 <ul>
- <li> <tt>-i</tt>&nbsp;: backtick exits 1. </li>
- <li> <tt>-I</tt>&nbsp;: <em>variable</em> is <strong>removed</strong> from
+ <li> <tt>-i</tt>&nbsp;: backtick exits with an
+<a href="exitcodes.html">approximation</a> of <em>prog1</em>'s exit code,
+or 124 if <em>prog1</em> wrote a null character. This is the default. </li>
+ <li> <tt>-I</tt>: the value of <em>variable</em> is set to whatever
+the start of <em>prog1...</em>'s output is, up to the first null character,
+or to whatever <em>prog1...</em> wrote before crashing; chomping is applied
+if required; then execution proceeds. </li>
+ <li> <tt>-d</tt>&nbsp;: <em>variable</em> is <strong>removed</strong> from
 the environment, and execution proceeds. </li>
  <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: the value of <em>variable</em>
 is set to <em>default</em>, and execution proceeds. </li>
- <li> neither of those options: the value of <em>variable</em> is set to whatever
-the start of <em>prog1...</em>'s output is, up to the first null character,
-or to whatever <em>prog1...</em> wrote before crashing;
-then execution proceeds. </li>
 </ul>
 
 </body>

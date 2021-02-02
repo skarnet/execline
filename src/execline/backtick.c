@@ -22,20 +22,21 @@ int main (int argc, char const **argv, char const *const *envp)
   stralloc value = STRALLOC_ZERO ;
   char const *var ;
   char const *val ;
-  int insist = 0, chomp = 1, doimport = 0 ;
+  int insist = 2, chomp = 1, doimport = 0 ;
   char const *def = 0 ;
   PROG = "backtick" ;
   for (;;)
   {
-    int opt = subgetopt_r(argc, argv, "iINnD:Ee", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "iINndD:Ee", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
       case 'i' : insist = 2 ; break ;
-      case 'I' : insist = 1 ; break ;
+      case 'I' : insist = 0 ; break ;
       case 'N' : chomp = 0 ; break ;
       case 'n' : chomp = 1 ; break ;
-      case 'D' : def = localopt.arg ; break ;
+      case 'd' : insist = 1 ; def = 0 ; break ;
+      case 'D' : insist = 1 ; def = localopt.arg ; break ;
       case 'E' : doimport = 1 ; break ;
       case 'e' : doimport = 0 ; break ;
       default : dieusage() ;
@@ -64,23 +65,22 @@ int main (int argc, char const **argv, char const *const *envp)
   if (wait_status(fdwstat))
   {
     if (insist >= 2)
-      if (WIFSIGNALED(fdwstat)) strerr_dief1x(111, "child process crashed") ;
-      else strerr_dief1x(WEXITSTATUS(fdwstat), "child process exited non-zero") ;
-    else if (insist) val = 0 ;
-    else if (def) val = def ;
+      strerr_dief1x(wait_estatus(fdwstat), WIFSIGNALED(fdwstat) ? "child process crashed" : "child process exited non-zero") ;
+    else if (insist) val = def ;
   }
   else if (strlen(value.s) < value.len - 1)
   {
     if (insist >= 2)
-      strerr_dief1x(1, "child process output contained a null character") ;
-    else if (insist) val = 0 ;
-    else if (def)
+      strerr_dief1x(124, "child process output contained a null character") ;
+    else if (insist)
     {
       val = def ;
-      strerr_warnw2x("child process output contained a null character", " - using default instead") ;
+      strerr_warnw1x("child process output contained a null character") ;
     }
+    else value.len = strlen(value.s) + 1 ;
   }
-  else if (chomp && (value.s[value.len - 2] == '\n'))
+  else insist = 0 ;
+  if (!insist && chomp && (value.s[value.len - 2] == '\n'))
     value.s[--value.len - 1] = 0 ;
   el_modif_and_exec(argv + argc1 + 1, var, val, doimport) ;
 }
