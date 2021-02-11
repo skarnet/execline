@@ -12,7 +12,7 @@
 
 #include <execline/execline.h>
 
-#define USAGE "backtick [ -i | -I | -D default ] [ -N | -n ] [ -E | -e ] var { prog... } remainder..."
+#define USAGE "backtick [ -i | -I | -x | -D default ] [ -N | -n ] [ -E | -e ] var { prog... } remainder..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -27,7 +27,7 @@ int main (int argc, char const **argv, char const *const *envp)
   PROG = "backtick" ;
   for (;;)
   {
-    int opt = subgetopt_r(argc, argv, "iINndD:Ee", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "iINnxD:Ee", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
@@ -35,7 +35,7 @@ int main (int argc, char const **argv, char const *const *envp)
       case 'I' : insist = 0 ; break ;
       case 'N' : chomp = 0 ; break ;
       case 'n' : chomp = 1 ; break ;
-      case 'd' : insist = 1 ; def = 0 ; break ;
+      case 'x' : insist = 1 ; def = 0 ; break ;
       case 'D' : insist = 1 ; def = localopt.arg ; break ;
       case 'E' : doimport = 1 ; break ;
       case 'e' : doimport = 0 ; break ;
