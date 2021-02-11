@@ -1,5 +1,6 @@
 /* ISC license. */
 
+#include <errno.h>
 #include <sys/wait.h>
 
 #include <skalibs/sgetopt.h>
@@ -41,7 +42,12 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argc1 + argc2 + 2 >= argc) strerr_dief1x(100, "empty command-if") ;
 
   pid = el_spawn0(argv[argc1 + argc2 + 2], argv + argc1 + argc2 + 2, envp) ;
-  if (!pid) strerr_diefu2sys(111, "spawn ", argv[argc1 + argc2 + 2]) ;
+  if (!pid)
+  {
+    if (errno == ENOENT && argv[argc1 + argc2 + 2][0] == ' ')
+      strerr_diefu3x(111, "spawn ", argv[argc1 + argc2 + 2], ": name begins with a space, are you trying to spawn a block as your command-if?") ;
+    else strerr_diefu2sys(111, "spawn ", argv[argc1 + argc2 + 2]) ;
+  }
   if (wait_pid(pid, &wstat) == -1)
     strerr_diefu2sys(111, "wait for ", argv[argc1 + argc2 + 2]) ;
   if (!flagnormalcrash && WIFSIGNALED(wstat))

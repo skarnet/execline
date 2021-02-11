@@ -1,5 +1,7 @@
 /* ISC license. */
 
+#include <errno.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr2.h>
 #include <skalibs/types.h>
@@ -58,7 +60,12 @@ int main (int argc, char const *const *argv, char const *const *envp)
   while (cont)
   {
     pid_t pid = el_spawn0(argv[0], argv, envp) ;
-    if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
+    if (!pid)
+    {
+      if (errno == ENOENT && argv[0][0] == ' ')
+        strerr_diefu3x(111, "spawn ", argv[0], ": name begins with a space, are you trying to spawn a block as your loop body?") ;
+      else strerr_diefu2sys(111, "spawn ", argv[0]) ;
+    }
     if (wait_pid(pid, &wstat) < 0) strerr_diefu1sys(111, "wait_pid") ;
     cont = not != isok(okcodes, nbc, wait_estatus(wstat)) ;
   }
