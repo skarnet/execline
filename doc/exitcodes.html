@@ -24,7 +24,7 @@
 Either <em>C</em> dies normally with an exit code from 0 to 255, or it is
 killed by a signal.
  How can we make sure that <em>P</em> reports to <em>G</em> what happened
-to <em>C</em>, with as much precision as possible&nbsp;?
+to <em>C</em>, with as much precision as possible?
 </p>
 
 <p>
@@ -33,7 +33,7 @@ structure filled in by
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/waitpid.html">waitpid()</a>)
 than a process can report by
 simply exiting. <em>P</em> could exit with the same exit code as <em>C</em>,
-but then what should it do if C has been killed by a signal&nbsp;?
+but then what should it do if C has been killed by a signal?
 </p>
 
 <p>
@@ -42,7 +42,7 @@ but then what should it do if C has been killed by a signal&nbsp;?
 But that's actually not right, because <em>P</em> itself could be killed by a
 signal from another source, and G needs that information. "<em>P</em> has been
 killed by a signal" and "<em>C</em> has been killed by a signal" are two
-different informations, so they should not be reported in the same way.
+different pieces of information, so they should not be reported in the same way.
 </p>
 
 <p>

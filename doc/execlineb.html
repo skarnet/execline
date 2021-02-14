@@ -65,14 +65,14 @@ exits 0. </li>
 
 <ul>
  <li> <em>Pushing the current stack frame.</em> If none of the
-<tt>-p</tt>, <tt>-P</tt>, <tt>-S</tt> or <tt>-s</tt> options is set:
+<tt>-p</tt>, <tt>-P</tt>, <tt>-S</tt> or <tt>-s</tt> options are set:
 <tt>execlineb</tt> <a href="el_pushenv.html">pushes</a>
 the current positional parameters, i.e. environment variables that
 start with <tt>#</tt>, <tt>0</tt>, <tt>1</tt>, ..., <tt>9</tt>.
 To get the previous values back, use
 <a href="emptyenv.html"><tt>emptyenv&nbsp;-P</tt></a>. </li>
  <li> <em>Setting the new stack frame.</em> If none of the <tt>-P</tt>,
-<tt>-S</tt> or <tt>-s</tt> options is set:
+<tt>-S</tt> or <tt>-s</tt> options are set:
  <ul>
   <li> <tt>execlineb</tt> sets the <tt>#</tt> environment variable to
 the number <em>n</em> of <em>args</em> it is given. </li>
@@ -167,7 +167,7 @@ Quoted closing braces do not have that behaviour. </li>
 <em>blevel</em> goes below 0 during the parsing, or is not 0 at the end
 of the script), it exits 100 with an error message. </li>
  <li> <tt>execlineb</tt> automatically quotes
-<a href="el_semicolon.html">blocks</a>. Which means that everytime it
+<a href="el_semicolon.html">blocks</a>. Which means that every time it
 finds a word, it prepends it with <em>blevel</em> spaces. </li>
 </ul>
 
@@ -196,7 +196,7 @@ force it unset, set to 1, or set to 2 by giving respectively the
 
 <p>
  The <tt>EXECLINE_STRICT</tt> variable (as well as the <tt>-q</tt>,
-<tt>-w</tt> and <tt>-W</tt> options to <tt>execlineb</tt> will also modify
+<tt>-w</tt> and <tt>-W</tt> options to <tt>execlineb</tt>) will also modify
 the behaviour of the <tt>-S&nbsp;<em>nmin</em></tt> and <tt>-s&nbsp;<em>nmin</em></tt>
 options when <tt>execlineb</tt> is called with less than <em>nmin</em>
 positional parameters:

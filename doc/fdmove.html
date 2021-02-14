@@ -46,10 +46,15 @@ instead of moving it; do not close <em>fdfrom</em>. </li>
 <h2> Notes </h2>
 
 <ul>
- <li> <tt>fdmove -c <em>a</em> <em>b</em> prog...</tt> is roughly equivalent to
-<tt>sh -c 'exec prog... <em>a</em>&gt;&amp;<em>b</em>'</tt></li>
  <li> <tt>fdmove <em>a</em> <em>b</em> prog...</tt> is roughly equivalent to
-<tt>sh -c 'exec prog... <em>a</em>&gt;&amp;<em>b</em> <em>b</em>&lt;&amp;-'</tt></li>
+<tt>sh -c 'exec prog... <em>a</em>&gt;&amp;<em>b</em> <em>b</em>&lt;&amp;-'</tt>.
+It means: if you write to fd <em>a</em> now, it will have the same effect as writing
+to fd <em>b</em> beforehand, and you cannot write to fd <em>b</em> anymore. </li>
+ <li> <tt>fdmove -c <em>a</em> <em>b</em> prog...</tt> is roughly equivalent to
+<tt>sh -c 'exec prog... <em>a</em>&gt;&amp;<em>b</em>'</tt>. It means: you can
+now write to fd <em>a</em>, and also still write to fd <em>b</em>, and both will have
+the same effect as writing to fd <em>b</em> beforehand. </li>
+ <li> It also works with file descriptors that are open for reading! </li>
 </ul>
 
 </body>

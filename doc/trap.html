@@ -86,7 +86,7 @@ this option does nothing. </li>
 <code><a href="importas.html">importas</a> ! !</code> to retrieve the pid of
 <em>prog</em> in <tt>$!</tt>. If they need the signal number, which
 can be the case in <tt>default</tt> directives, they can for instance use
-<code><a href="multisubstitute.html">multisubstitute</a> { importas ! ! importas SIGNAL SIGNAL }<code>
+<code><a href="multisubstitute.html">multisubstitute</a> { importas ! ! importas SIGNAL SIGNAL }</code>
 to get both <tt>$!</tt> and <tt>$SIGNAL</tt> substitutions. </li>
  <li> The <tt>-x</tt> option is basically a shortcut for a <code>default {
 multisubstitute { importas ! ! importas SIGNAL SIGNAL } kill -$SIGNAL $! }</code> directive. </li>
