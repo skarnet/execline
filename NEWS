@@ -3,8 +3,9 @@ Changelog for execline.
 In 2.8.0.0
 ----------
 
+ - By default, if now propagates its child exit code when it exits.
  - backtick now propagates failure by default; its options have
-slightly different semantics.
+slightly different semantics (-i becomes default, new -x introduced).
 
 
 In 2.7.0.1
