@@ -79,11 +79,11 @@ mechanism and has its own semantics for those options.
  <li> <tt>-N</tt>&nbsp;: store the whole line in <em>variable</em>,
 including the terminating newline (or other delimiter). </li>
  <li> <tt>-n</tt>&nbsp;: chomp a terminating delimiter from the line from
-stdin before storing it into <em>variable</em>. This is the default. </li>
+stdin before storing it into <em>variable</em>. This is the default.
+Note that if chomping is active, and the last line of stdin is not
+terminated by a delimiter, then this last line will not be processed. </li>
  <li> <tt>-C</tt>&nbsp;: crunch. If there is an empty line (i.e. that
-only contains a delimiter), do not call <em>loop</em>. If this option is
-given, <em>and</em> chomping is active, <em>and</em> the last line of stdin
-is not terminated by a delimiter, then this last line will not be processed. </li>
+only contains a delimiter), do not call <em>loop</em>. </li>
  <li> <tt>-c</tt>&nbsp;: do not crunch, call <em>loop</em> even if
 the line is empty. This is the default. </li>
  <li> <tt>-0</tt>&nbsp;: accept null characters on its stdin,
