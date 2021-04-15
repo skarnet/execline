@@ -1,4 +1,4 @@
-#!/command/execlineb
+#!/command/execlineb -P
 
 # This execlineb script will sleep for 1 second, then print some
 # silly things on the standard output.
