@@ -92,7 +92,7 @@ int main (int argc, char const **argv)
 
   if (pids.s)
   {
-    if (sig_catch(SIGCHLD, &parallel_sigchld_handler) < 0)
+    if (!sig_catch(SIGCHLD, &parallel_sigchld_handler))
       strerr_diefu1sys(111, "install SIGCHLD handler") ;
   }
   for (;;)
