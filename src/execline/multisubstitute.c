@@ -17,7 +17,7 @@ static char const *const commands[] =
   0
 } ;
 
-static exlsnfunc_t_ref const functions[] =
+static exls_func_ref const functions[] =
 {
   &exlsn_define,
   &exlsn_importas,

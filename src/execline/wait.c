@@ -22,8 +22,8 @@
 #define USAGE "wait [ -I | -i ] [ -r | -t timeout ] { pids... }"
 #define dieusage() strerr_dieusage(100, USAGE)
 
-typedef int actfunc_t (pid_t *, unsigned int *, int *) ;
-typedef actfunc_t *actfunc_t_ref ;
+typedef int ac_func (pid_t *, unsigned int *, int *) ;
+typedef ac_func *ac_func_ref ;
 
 static inline int waitall (void)
 {
@@ -83,13 +83,13 @@ static inline void handle_signals (void)
   }
 }
 
-static inline int mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_t *tab, unsigned int *n)
+static inline int mainloop (tain *deadline, int insist, ac_func_ref f, pid_t *tab, unsigned int *n)
 {
   iopause_fd x = { .events = IOPAUSE_READ } ;
   int res = 0 ;
   x.fd = selfpipe_init() ;
   if (x.fd < 0) strerr_diefu1sys(111, "create selfpipe") ;
-  if (selfpipe_trap(SIGCHLD) < 0) strerr_diefu1sys(111, "trap SIGCHLD") ;
+  if (!selfpipe_trap(SIGCHLD)) strerr_diefu1sys(111, "trap SIGCHLD") ;
   tain_now_set_stopwatch_g() ;
   tain_add_g(deadline, deadline) ;
   while ((*f)(tab, n, &res))
@@ -110,7 +110,7 @@ static inline int mainloop (tain_t *deadline, int insist, actfunc_t_ref f, pid_t
 
 int main (int argc, char const **argv)
 {
-  tain_t tto ;
+  tain tto ;
   int argc1 ;
   int hastimeout = 0 ;
   int insist = 0 ;
@@ -121,7 +121,7 @@ int main (int argc, char const **argv)
   setlocale(LC_ALL, "") ;  /* but of course, dear POSIX */
 #endif
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     unsigned int t = 0 ;
     for (;;)
     {
@@ -150,7 +150,7 @@ int main (int argc, char const **argv)
   if (!argc1 && !hastimeout) r = waitall() ;
   else
   {
-    actfunc_t_ref f = argc1 ? &waitintab : &waitany ;
+    ac_func_ref f = argc1 ? &waitintab : &waitany ;
     unsigned int n = argc1 ? (unsigned int)argc1 : 1 ;
     pid_t tab[n] ;
     if (argc1)

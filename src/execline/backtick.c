@@ -17,7 +17,7 @@
 
 int main (int argc, char const **argv, char const *const *envp)
 {
-  subgetopt_t localopt = SUBGETOPT_ZERO ;
+  subgetopt localopt = SUBGETOPT_ZERO ;
   int argc1, fdwstat ;
   stralloc value = STRALLOC_ZERO ;
   char const *var ;

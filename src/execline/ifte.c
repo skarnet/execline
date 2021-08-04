@@ -20,7 +20,7 @@ int main (int argc, char const **argv, char const *const *envp)
   pid_t pid ;
   PROG = "ifte" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "Xn", &l) ;

@@ -10,7 +10,7 @@
 int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exlsn_t *info)
 {
   eltransforminfo_t si = ELTRANSFORMINFO_ZERO ;
-  subgetopt_t localopt = SUBGETOPT_ZERO ;
+  subgetopt localopt = SUBGETOPT_ZERO ;
   size_t varbase = info->vars.len ;
   size_t valbase = info->values.len ;
   size_t pos = valbase ;

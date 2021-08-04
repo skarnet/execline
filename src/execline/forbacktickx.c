@@ -22,7 +22,7 @@ int main (int argc, char const *const *argv)
   int crunch = 0, chomp = 1, not = 1, par = 0, doimport = 0 ;
   PROG = "forbacktickx" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:Ee", &l) ;

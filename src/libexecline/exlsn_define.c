@@ -10,7 +10,7 @@
 int exlsn_define (int argc, char const **argv, char const *const *envp, exlsn_t *info)
 {
   eltransforminfo_t si = ELTRANSFORMINFO_ZERO ;
-  subgetopt_t localopt = SUBGETOPT_ZERO ;
+  subgetopt localopt = SUBGETOPT_ZERO ;
   elsubst_t blah ;
   blah.var = info->vars.len ;
   blah.value = info->values.len ;

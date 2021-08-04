@@ -26,7 +26,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if (!uint0_scan(x, &n)) strerr_dieinvalid(100, "#") ;
   nbak = n++ ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     char const *args[n+1] ;
     unsigned int i = 0 ;
     for ( ; i < n ; i++)

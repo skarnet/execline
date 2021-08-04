@@ -19,7 +19,7 @@ int main (int argc, char const **argv, char const *const *envp)
   int df = 0, w = 0 ;
   PROG = "pipeline" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "drw", &l) ;

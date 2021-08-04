@@ -51,7 +51,7 @@ int main (int argc, char const **argv)
   unsigned int argc1 ;
   PROG = "forx" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "po:x:Ee", &l) ;

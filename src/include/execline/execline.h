@@ -17,10 +17,10 @@
 
 /* Parsing */
 
-typedef int el_chargen_func_t (unsigned char *, void *) ;
-typedef el_chargen_func_t *el_chargen_func_t_ref ;
+typedef int el_chargen_func (unsigned char *, void *) ;
+typedef el_chargen_func *el_chargen_func_ref ;
 
-extern int el_parse (stralloc *, el_chargen_func_t_ref, void *) ;
+extern int el_parse (stralloc *, el_chargen_func_ref, void *) ;
 extern int el_parse_from_string (stralloc *, char const *) ;
 extern int el_parse_from_buffer (stralloc *, buffer *) ;
 

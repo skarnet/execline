@@ -31,7 +31,7 @@ int main (int argc, char const **argv)
   setlocale(LC_ALL, "") ; /* yeah, as if */
 
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "LP", &l) ;

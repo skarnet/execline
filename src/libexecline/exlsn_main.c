@@ -6,7 +6,7 @@
 #include <execline/execline.h>
 #include "exlsn.h"
 
-void exlsn_main (int argc, char const **argv, char const *const *envp, exlsnfunc_t *func, char const *usage)
+void exlsn_main (int argc, char const **argv, char const *const *envp, exls_func *func, char const *usage)
 {
   exlsn_t info = EXLSN_ZERO ;
   int r = (*func)(argc, argv, envp, &info) ;

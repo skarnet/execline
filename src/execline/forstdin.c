@@ -53,7 +53,7 @@ int main (int argc, char const **argv)
   int crunch = 0, chomp = 1, not = 1, eofcode = 1, doimport = 0 ;
   PROG = "forstdin" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:Ee", &l) ;
@@ -142,11 +142,13 @@ int main (int argc, char const **argv)
   }
   if (pids.s)
   {
+    sigset_t empty ;
+    sigemptyset(&empty) ;
+    sig_block(SIGCHLD) ;
     for (;;)
     {
-      sig_block(SIGCHLD) ;
       if (!pids.len) break ;
-      sig_pause() ;
+      sigsuspend(&empty) ;
     }
   }
   return eofcode ;

@@ -27,7 +27,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   size_t nbc = 0 ;
   PROG = "loopwhilex" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "no:x:", &l) ;

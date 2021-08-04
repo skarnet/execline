@@ -20,18 +20,18 @@ struct exlsn_s
 
 extern void exlsn_free (exlsn_t *) ;
 
-typedef int exlsnfunc_t (int, char const **, char const *const *, exlsn_t *) ;
-typedef exlsnfunc_t *exlsnfunc_t_ref ;
+typedef int exls_func (int, char const **, char const *const *, exlsn_t *) ;
+typedef exls_func *exls_func_ref ;
 	
-extern exlsnfunc_t exlsn_define ;
-extern exlsnfunc_t exlsn_importas ;
-extern exlsnfunc_t exlsn_elglob ;
-extern exlsnfunc_t exlsn_exlp ;
-extern exlsnfunc_t exlsn_multidefine ;
+extern exls_func exlsn_define ;
+extern exls_func exlsn_importas ;
+extern exls_func exlsn_elglob ;
+extern exls_func exlsn_exlp ;
+extern exls_func exlsn_multidefine ;
 
 extern int exlp (unsigned int, char const *const *, exlsn_t *) ;
 extern void el_substandrun (int, char const *const *, char const *const *, exlsn_t const *) gccattr_noreturn ;
 extern void el_substandrun_str (stralloc *, size_t, char const *const *, exlsn_t const *) gccattr_noreturn ;
-extern void exlsn_main (int, char const **, char const *const *, exlsnfunc_t *, char const *) gccattr_noreturn ;
+extern void exlsn_main (int, char const **, char const *const *, exls_func *, char const *) gccattr_noreturn ;
 
 #endif

@@ -57,7 +57,7 @@ int main (int argc, char const **argv, char const *const *envp)
   PROG = "trap" ;
 
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "xt:", &l) ;
@@ -120,7 +120,7 @@ int main (int argc, char const **argv, char const *const *envp)
 
   x.fd = selfpipe_init() ;
   if (x.fd < 0) strerr_diefu1sys(111, "selfpipe_init") ;
-  if (selfpipe_trapset(&set) < 0) strerr_diefu1sys(111, "trap signals") ;
+  if (!selfpipe_trapset(&set)) strerr_diefu1sys(111, "trap signals") ;
 
   pids[SKALIBS_NSIG] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
   if (!pids[SKALIBS_NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;

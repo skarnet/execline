@@ -6,7 +6,7 @@
 
 int exlsn_exlp (int argc, char const **argv, char const *const *envp, exlsn_t *info)
 {
-  subgetopt_t localopt = SUBGETOPT_ZERO ;
+  subgetopt localopt = SUBGETOPT_ZERO ;
   unsigned int nmin = 0 ;
   int n ;
   for (;;)

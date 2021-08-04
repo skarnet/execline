@@ -14,7 +14,7 @@ int main (int argc, char const *const *argv)
   int block = 1 ;
   PROG = "fdblock" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "n", &l) ;

@@ -14,7 +14,7 @@
 
 int main (int argc, char const *const *argv)
 {
-  subgetopt_t localopt = SUBGETOPT_ZERO ;
+  subgetopt localopt = SUBGETOPT_ZERO ;
   stralloc value = STRALLOC_ZERO ;
   int insist = 0, chomp = 1, doimport = 0 ;
   char const *def = 0 ;

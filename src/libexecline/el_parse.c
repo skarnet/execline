@@ -8,7 +8,7 @@
 #include <skalibs/djbunix.h>
 #include <execline/execline.h>
 
-int el_parse (stralloc *sa, el_chargen_func_t_ref next, void *source)
+int el_parse (stralloc *sa, el_chargen_func_ref next, void *source)
 {
   static unsigned char const class[256] = "`aaaaaaaaadaaaaaaaaaaaaaaaaaaaaaafcbffffffffffffjhhhhhhhiifffffffmmmmmmfffffffffffffffffffffeffffggmmmgfffffffkfffkfkfkflffnfoffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" ;
   static uint16_t const table[16][16] =

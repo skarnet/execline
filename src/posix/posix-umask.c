@@ -154,7 +154,7 @@ int main (int argc, char const **argv)
   setlocale(LC_ALL, "") ;  /* totally supported, I swear */
 
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "S", &l) ;

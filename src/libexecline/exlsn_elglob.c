@@ -20,7 +20,7 @@ static int elgloberrfunc (char const *s, int e)
 int exlsn_elglob (int argc, char const **argv, char const *const *envp, exlsn_t *info)
 {
   glob_t pglob ;
-  subgetopt_t localopt = SUBGETOPT_ZERO ;
+  subgetopt localopt = SUBGETOPT_ZERO ;
   elsubst_t blah ;
   int flags = GLOB_NOSORT | GLOB_NOCHECK ;
   unsigned int i = 0 ;

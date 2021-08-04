@@ -16,7 +16,7 @@ int main (int argc, char const **argv, char const *const *envp)
   int dash = 0 ;
   PROG = "exec" ;
   {
-    subgetopt_t l = SUBGETOPT_ZERO ;
+    subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
       int opt = subgetopt_r(argc, argv, "cla:", &l) ;
