@@ -31,7 +31,7 @@ matches.
 </p>
 
 <pre>
-     case [ -E | -e | -i | -n ] <em>value</em>
+     case [ -E | -e ] [ -i ] [ -n | -N ] <em>value</em>
      {
        [ regex { <em>prog...</em> } ]
        [ regex { <em>prog...</em> } ]
@@ -50,7 +50,8 @@ in the order they are given. </li>
 executes into the <em>prog...</em> command line that immediately follows
 the matched regex. </li>
  <li> If <em>value</em> matches no <em>regex</em>, <tt>case</tt>
-eventually execs into <em>progdefault...</em>. </li>
+eventually execs into <em>progdefault...</em>, or exits 0 if <em>progdefault...</em>
+is empty. </li>
 </ul>
 
 <h2> Options </h2>
@@ -63,10 +64,11 @@ regular expressions</a>. </li>
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html#tag_09_04">extended
 regular expressions</a>. This is the default. </li>
  <li> <tt>-i</tt>&nbsp;: Perform case-insensitive matches. </li>
+ <li> <tt>-N</tt>&nbsp;: Make the matching expression and
+subexpressions available to <em>prog</em>'s environment. See the "Subexpression
+matching" section below. </li>
  <li> <tt>-n</tt>&nbsp;: Do not transmit the matching expression and
 subexpressions to <em>prog...</em> via the environment. This is the default. </li>
- <li> <tt>-N</tt>&nbsp;: Make the matching expression and
-subexpressions available to <em>prog</em>'s environment. </li>
 </ul>
 
 <h2> Subexpression matching </h2>
@@ -88,6 +90,40 @@ in <em>regex</em>. </li>
  To retrieve that information into your command line in an execline script, you can use the
 <a href="elgetpositionals.html">elgetpositionals</a> program.
 </p>
+
+<h3> An example </h3>
+
+<p>
+ Consider the following script; say it's named <tt>match</tt>.
+</p>
+
+<pre>#!/bin/execlineb -S1
+emptyenv
+case -N -- $1
+{
+  "\\([fo]+\\)bar\\(baz\\)" { /usr/bin/env }
+}
+</pre>
+
+<p>
+ Running <tt>match foooobarbaz</tt> will print the following lines, corresponding
+to the output of the <tt>/usr/bin/env</tt> command:
+</p>
+
+<pre>0=\([fo]+\)bar\(baz\)
+#=2
+1=foooo
+2=baz
+</pre>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <em>value</em> must match <em>regex</em> as a full word. If only a substring of <em>value</em>
+matches <em>regex</em>, it is not considered a match. </li>
+ <li> If <em>value</em> matches no <em>regex</em>, <em>progdefault...</em> is always executed with an
+unmodified environment, whether subexpression matching has been requested or not. </li>
+</ul>
 
 </body>
 </html>
