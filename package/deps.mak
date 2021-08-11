@@ -4,6 +4,7 @@
 
 src/execline/background.o src/execline/background.lo: src/execline/background.c src/include/execline/execline.h
 src/execline/backtick.o src/execline/backtick.lo: src/execline/backtick.c src/include/execline/execline.h
+src/execline/case.o src/execline/case.lo: src/execline/case.c src/include/execline/execline.h
 src/execline/define.o src/execline/define.lo: src/execline/define.c src/include-local/exlsn.h
 src/execline/dollarat.o src/execline/dollarat.lo: src/execline/dollarat.c
 src/execline/elgetopt.o src/execline/elgetopt.lo: src/execline/elgetopt.c src/include/execline/execline.h
@@ -80,6 +81,8 @@ background: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 background: src/execline/background.o ${LIBEXECLINE}
 backtick: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 backtick: src/execline/backtick.o ${LIBEXECLINE}
+case: EXTRA_LIBS := -lskarnet
+case: src/execline/case.o ${LIBEXECLINE}
 define: EXTRA_LIBS := -lskarnet
 define: src/execline/define.o ${LIBEXECLINE}
 dollarat: EXTRA_LIBS := -lskarnet

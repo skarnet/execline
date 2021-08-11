@@ -1,0 +1,93 @@
+<html>
+ <head>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta http-equiv="Content-Language" content="en" />
+ <title>execline: the case command</title>
+ <meta name="Description" content="execline: the case command" />
+ <meta name="Keywords" content="execline command case regex grep" />
+ <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+</head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>case</tt> program </h1>
+
+<p>
+<tt>case</tt> compares a value against a series of regular expressions,
+and executes into a program depending on the first expression the value
+matches.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an <a href="execlineb.html">execlineb</a> script:
+</p>
+
+<pre>
+     case [ -E | -e | -i | -n ] <em>value</em>
+     {
+       [ regex { <em>prog...</em> } ]
+       [ regex { <em>prog...</em> } ]
+       ...
+     }
+     <em>progdefault...</em>
+</pre>
+
+<ul>
+ <li> <tt>case</tt> reads an argument <em>value</em> and a sequence of
+directives in a <a href="el_semicolon.html">block</a>. </li>
+ <li> Each directive is a regular expression followed by a block. </li>
+ <li> <tt>case</tt> matches <em>value</em> against the regular expressions
+in the order they are given. </li>
+ <li> As soon as <em>value</em> matches a <em>regex</em>, <tt>case</tt>
+executes into the <em>prog...</em> command line that immediately follows
+the matched regex. </li>
+ <li> If <em>value</em> matches no <em>regex</em>, <tt>case</tt>
+eventually execs into <em>progdefault...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-e</tt>&nbsp;: Interpret the <em>regex</em> words as
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html#tag_09_03">basic
+regular expressions</a>. </li>
+ <li> <tt>-E</tt>&nbsp;: Interpret the <em>regex</em> words as
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html#tag_09_04">extended
+regular expressions</a>. This is the default. </li>
+ <li> <tt>-i</tt>&nbsp;: Perform case-insensitive matches. </li>
+ <li> <tt>-n</tt>&nbsp;: Do not transmit the matching expression and
+subexpressions to <em>prog...</em> via the environment. This is the default. </li>
+ <li> <tt>-N</tt>&nbsp;: Make the matching expression and
+subexpressions available to <em>prog</em>'s environment. </li>
+</ul>
+
+<h2> Subexpression matching </h2>
+
+<p>
+ If the <tt>-N</tt> option has been given, and <em>value</em> matches a <em>regex</em>,
+then <tt>case</tt> will run <em>prog</em> with a modified environment:
+</p>
+
+<ul>
+ <li> The <tt>0</tt> variable will contain the <em>regex</em> that <em>value</em> matched. </li>
+ <li> The <tt>#</tt> variable will contain the number of subexpressions in <em>regex</em>. </li>
+ <li> For every integer <em>i</em> between 1 and the number of subexpressions (included), the
+variable <em>i</em> contains the part of <em>value</em> that matched the <em>i</em>th subexpression
+in <em>regex</em>. </li>
+</ul>
+
+<p>
+ To retrieve that information into your command line in an execline script, you can use the
+<a href="elgetpositionals.html">elgetpositionals</a> program.
+</p>
+
+</body>
+</html>

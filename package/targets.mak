@@ -1,6 +1,7 @@
 BIN_TARGETS := \
 background \
 backtick \
+case \
 define \
 dollarat \
 elgetopt \
