@@ -6,6 +6,7 @@
 /src/include/execline/config.h
 /background
 /backtick
+/case
 /define
 /dollarat
 /elgetopt

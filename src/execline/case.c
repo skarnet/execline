@@ -14,41 +14,42 @@
 #define USAGE "case [ -e | -E ] [ -n | -N ] [ -i ] value { re1 { prog1... } re2 { prog2... } ... } progdefault... "
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static void execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t nsub, int flagnosub) gccattr_noreturn ;
-static void execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t nsub, int flagnosub)
+static void execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n) gccattr_noreturn ;
+static void execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n)
 {
-  if (flagnosub) xexec0(argv) ;
-  else
+  if (n)
   {
     size_t exprlen = strlen(expr) ;
     size_t fmtlen = exprlen + 6 ;
-    for (size_t i = 0 ; i < nsub ; i++)
-      fmtlen += uint_fmt(0, i+1) + 2 + pmatch[i].rm_eo - pmatch[i].rm_so ;
+    for (size_t i = 1 ; i < n ; i++)
+      fmtlen += uint_fmt(0, i) + 2 + pmatch[i].rm_eo - pmatch[i].rm_so ;
     {
       size_t m = 0 ;
       char fmt[fmtlen] ;
       fmt[m++] = '#' ; fmt[m++] = '=' ;
-      m += uint_fmt(fmt + m, nsub) ;
+      m += uint_fmt(fmt + m, n-1) ;
       fmt[m++] = 0 ;
       fmt[m++] = '0' ; fmt[m++] = '=' ;
       memcpy(fmt + m, expr, exprlen + 1) ; m += exprlen + 1 ;
-      for (size_t i = 0 ; i < nsub ; i++)
+      for (size_t i = 1 ; i < n ; i++)
       {
-        m += uint_fmt(fmt + m, i+1) ;
+        m += uint_fmt(fmt + m, i) ;
         fmt[m++] = '=' ;
         memcpy(fmt + m, s + pmatch[i].rm_so, pmatch[i].rm_eo - pmatch[i].rm_so) ;
+        m += pmatch[i].rm_eo - pmatch[i].rm_so ;
         fmt[m++] = 0 ;
       }
-      xmexec0_n(argv, fmt, fmtlen, 2 + nsub) ;
+      xmexec0_n(argv, fmt, fmtlen, n+1) ;
     }
   }
+  else xexec0(argv) ;
 }
 
 int main (int argc, char const **argv, char const *const *envp)
 {
   int flagextended = 1 ;
-  int flagicase = 0 ;
   int flagnosub = 1 ;
+  int flagicase = 0 ;
   int argc1 ;
   unsigned int i = 0 ;
   char const *s ;
@@ -102,12 +103,12 @@ int main (int argc, char const **argv, char const *const *envp)
       }
     }
     {
-      regmatch_t pmatch[re.re_nsub && !flagnosub ? re.re_nsub : 1] ;
-      int r = regexec(&re, s, re.re_nsub, pmatch, 0) ;
+      regmatch_t pmatch[re.re_nsub && !flagnosub ? re.re_nsub + 1 : 1] ;
+      int r = regexec(&re, s, re.re_nsub + 1, pmatch, 0) ;
       if (!r)
       {
         argv[i + argc2] = 0 ;
-        execit(argv + i, expr, s, pmatch, flagnosub ? 0 : re.re_nsub, flagnosub) ;
+        execit(argv + i, expr, s, pmatch, flagnosub ? 0 : 1 + re.re_nsub) ;
       }
       if (r != REG_NOMATCH)
       {
