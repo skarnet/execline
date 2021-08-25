@@ -65,7 +65,7 @@ int exlsn_multidefine (int argc, char const **argv, char const *const *envp, exl
     }
     if (i < max) pos += strlen(info->values.s + pos) + 1 ;
   }
-  if ((i < max) && likeread) genalloc_s(elsubst_t, &info->data)[i-1].n = max - i + 1 ;
+  if ((i < max) && likeread) genalloc_s(elsubst_t, &info->data)[genalloc_len(elsubst_t, &info->data) - 1].n = max - i + 1 ;
 
   (void)envp ;
   return localopt.ind + argc1 + 2 ;
