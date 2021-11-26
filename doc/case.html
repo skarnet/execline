@@ -31,7 +31,7 @@ matches.
 </p>
 
 <pre>
-     case [ -E | -e ] [ -i ] [ -n | -N ] <em>value</em>
+     case [ -S | -s ] [ -E | -e ] [ -i ] [ -n | -N ] <em>value</em>
      {
        [ regex { <em>prog...</em> } ]
        [ regex { <em>prog...</em> } ]
@@ -57,6 +57,13 @@ is empty. </li>
 <h2> Options </h2>
 
 <ul>
+ <li> <tt>-s</tt>&nbsp;: Shell matching. The <em>regex</em> words will not be
+interpreted as regular expressions, but as shell expressions to be interpreted
+via <a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html">fnmatch()</a>.
+The other options also change meanings, see the <em>Shell matching</em> section below. </li>
+ <li> <tt>-S</tt>&nbsp;: Regular expression matching. This is the default. This
+section, and all of the sections below except the <em>Shell matching</em> one,
+assumes that it is the case. </li>
  <li> <tt>-e</tt>&nbsp;: Interpret the <em>regex</em> words as
 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html#tag_09_03">basic
 regular expressions</a>. </li>
@@ -115,6 +122,41 @@ to the output of the <tt>/usr/bin/env</tt> command:
 1=foooo
 2=baz
 </pre>
+
+<h2> Shell matching </h2>
+
+<p>
+ If the <tt>-s</tt> option has been given to <tt>case</tt>, then the <em>regex</em>
+words are not interpreted as regular expressions, but as shell patterns, as is
+performed by the shell's
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_09_04_05">case</a>
+conditional construct. This has the following consequences:
+</p>
+
+<ul>
+ <li> Subexpression matching is always disabled. </li>
+ <li> <em>prog...</em> is always executed with an unmodified environment. </li>
+ <li> The options to the <tt>case</tt> command change meanings: instead of
+controlling how the <em>regex</em> regular expressions are interpreted by the
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/regcomp.html">regcomp()</a>
+primitive, they now control how <em>value</em> is matched against the <em>regex</em> patterns
+(which are not regular expressions!) via the
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html">fnmatch()</a>
+primitive. Namely:
+ <ul>
+  <li> <tt>-e</tt>&nbsp;: Treat a backslash as an ordinary character; do not allow
+character escaping in patterns. (This sets the <tt>FNM_NOESCAPE</tt> flag.) </li>
+  <li> <tt>-E</tt>&nbsp;: Allow backslash escaping in patterns. This is the default.
+(This clears the <tt>FNM_NOESCAPE</tt> flag.) </li>
+  <li> <tt>-i</tt>&nbsp;: Treat a period (<tt>.</tt>) as a special character for
+matching (set <tt>FNM_PERIOD</tt>). By default, the period is not a special character
+(<tt>FNM_PERIOD</tt> is cleared). </li>
+  <li> <tt>-N</tt>&nbsp;: Treat patterns as pathnames: make slashes character special.
+(This sets the <tt>FNM_PATHNAME</tt> flag.) </li>
+  <li> <tt>-n</tt>&nbsp;: Do not treat patterns as pathnames (clear the
+<tt>FNM_PATHNAME</tt> flag). This is the default. </li>
+ </ul> </li>
+</ul>
 
 <h2> Notes </h2>
 
