@@ -1,5 +1,13 @@
 Changelog for execline.
 
+In 2.8.2.0
+----------
+
+ - Bugfixes.
+ - New -s option to case, for fnmatch (shell) matching instead of
+regular expression matching.
+
+
 In 2.8.1.0
 ----------
 
