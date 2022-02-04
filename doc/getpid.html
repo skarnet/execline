@@ -26,7 +26,7 @@ then executes a program.
 <h2> Interface </h2>
 
 <pre>
-     getpid [ -E | -e ] <em>var</em> <em>prog...</em>
+     getpid [ -E | -e ] [ -P | -p ] <em>var</em> <em>prog...</em>
 </pre>
 
 <p>
@@ -42,6 +42,8 @@ execs into <em>prog</em> with its arguments.
 <em>prog...</em>, exec into <tt>importas -ui <em>var</em> <em>var</em>
 <em>prog...</em></tt>. This substitutes <em>var</em> into the command
 line instead of putting it into the environment. </li>
+ <li> <tt>-p</tt>&nbsp;: get the pid of the current process. This is the default. </li>
+ <li> <tt>-P</tt>&nbsp;: use <tt>getpid</tt>'s <em>parent</em> pid instead. </li>
 </ul>
 
 <h2> Notes </h2>
