@@ -1,5 +1,11 @@
 Changelog for execline.
 
+In 2.8.3.0
+----------
+
+ - New -P option to getpid, to get the parent pid instead.
+
+
 In 2.8.2.0
 ----------
 
