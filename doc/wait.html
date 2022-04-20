@@ -29,7 +29,7 @@
 </p>
 
 <pre>
-     wait [ -I | -i ] [ -r | -t <em>timeout</em> ] { [ <em>pids...</em> ] } <em>prog...</em>
+     wait [ -I | -i ] [ -a | -o ] [ -r | -t <em>timeout</em> ] { [ <em>pids...</em> ] } <em>prog...</em>
 </pre>
 
 <ul>
@@ -57,7 +57,18 @@ milliseconds, they will not be reaped. </li>
 waiting for children to die, it will still
 exec into <em>prog...</em>. This is the default. </li>
  <li> <tt>-i</tt>&nbsp;: strict. If <tt>wait</tt> times out, it
-will print an error message and exit 1. </li>
+will print an error message and exit 99. </li>
+ <li> <tt>-o</tt>&nbsp;: wait for <em>one</em> of the listed
+<em>pids</em> &mdash; exec into <em>prog</em> as soon as one of the
+listed children dies. (If no pid is listed, wait for one child to die.)
+The <tt>!</tt> environment variable will be set to the
+pid that died, and the <tt>?</tt> environment variable will contain an
+<a href="exitcodes.html">approximation</a> of its exit code. If no
+listed child has died before <tt>wait</tt> has to exec (either because
+it timed out or it has no suitable children left), the <tt>?</tt> and
+<tt>!</tt> environment variables are unset. </li>
+<li> <tt>-a</tt>&nbsp;: wait for <em>all</em> of the listed <em>pids</em>.
+Do not touch the <tt>!</tt> or <tt>?</tt> variables. This is the default. </li>
 </ul>
 
 <h2> Notes </h2>
@@ -65,8 +76,9 @@ will print an error message and exit 1. </li>
 <ul>
  <li> For <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/wait.html">POSIX
 compatibility</a>, <tt>wait</tt> also works when it cannot find a block.
-In that case, all its command line is interpreted as <em>pids...</em>
-arguments and it does not execute into a program. Instead, it exits
+In that case, all the options are still supported and have the same
+effect, but the rest of the command line is interpreted as <em>pids...</em>
+arguments and <tt>wait</tt> does not execute into a program; instead, it exits
 with a conforming exit code. </li>
 </ul>
 

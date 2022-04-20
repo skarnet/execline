@@ -19,60 +19,78 @@
 
 #include <execline/execline.h>
 
-#define USAGE "wait [ -I | -i ] [ -r | -t timeout ] { pids... }"
+#define USAGE "wait [ -I | -i ] [ -a | -o ] [ -r | -t timeout ] { pids... }"
 #define dieusage() strerr_dieusage(100, USAGE)
 
 typedef int ac_func (pid_t *, unsigned int *, int *) ;
 typedef ac_func *ac_func_ref ;
 
-static inline int waitall (void)
+static int wait_all (void)
 {
-  int wstat = 0 ;
-  pid_t r = 1 ;
-  while (r > 0) r = wait(&wstat) ;
-  if (r < 0)
-  {
-    if (errno != ECHILD) strerr_diefu1sys(111, "wait") ;
-    else return 127 ;
-  }
-  return wait_estatus(wstat) ;
-}
-
-static int waitany (pid_t *dummytab, unsigned int *dummyn, int *res)
-{
-  int wstat ;
-  pid_t r = 1 ;
-  while (r > 0) r = wait_nohang(&wstat) ;
-  if (!r) return (*res = wait_estatus(wstat), 1) ;
+  errno = 0 ;
+  while (wait_nointr(0) > 0) ;
   if (errno != ECHILD) strerr_diefu1sys(111, "wait") ;
-  *res = 127 ;
-  (void)dummytab ;
-  (void)dummyn ;
   return 0 ;
 }
 
-static int waitintab (pid_t *tab, unsigned int *n, int *res)
+static int wait_from_list (pid_t *pids, unsigned int n)
 {
-  unsigned int i = 0 ;
-  for (; i < *n ; i++)
-  {
-    int wstat ;
-    pid_t r = waitpid(tab[i], &wstat, WNOHANG) ;
-    if (r)
-    {
-      if (r < 0)
-      {
-        if (errno == ECHILD) *res = 127 ;
-        else strerr_diefu1sys(111, "waitpid") ;
-      }
-      else *res = wait_estatus(wstat) ;
-      tab[i--] = tab[--(*n)] ;
-    }
-  }
-  return !!*n ;
+  int wstat = -1 ;
+  if (!waitn_posix(pids, n, &wstat) && errno != ECHILD)
+    strerr_diefu1sys(111, "wait") ;
+  return wstat == -1 ? -1 : wait_estatus(wstat) ;
 }
 
-static inline void handle_signals (void)
+static int wait_one (pid_t *pid, int nohang)
+{
+  int wstat = 0 ;
+  pid_t r = waitpid_nointr(-1, &wstat, nohang ? WNOHANG : 0) ;
+  if (r < 0)
+  {
+    if (errno != ECHILD) strerr_diefu1sys(111, "wait") ;
+    else return -1 ;
+  }
+  *pid = r ;
+  return wait_estatus(wstat) ;
+}
+
+static int wait_one_from_list (pid_t *pids, unsigned int n, pid_t *pid, int nohang)
+{
+  for (;;)
+  {
+    int wstat ;
+    pid_t r = waitpid_nointr(-1, &wstat, nohang ? WNOHANG : 0) ;
+    unsigned int i = 0 ;
+    if (r < 0)
+    {
+      if (errno != ECHILD) strerr_diefu1sys(111, "wait") ;
+      else return -1 ;
+    }
+    for (; i < n ; i++) if (r == pids[i]) break ;
+    if (i < n)
+    {
+      *pid = r ;
+      pids[i] = pids[n-1] ;
+      return wait_estatus(wstat) ;
+    }
+  }
+}
+
+static int wait_one_nohang (pid_t *pids, unsigned int *n, pid_t *pid)
+{
+  (void)pids ;
+  (void)n ;
+  return wait_one(pid, 1) ;
+}
+
+static int wait_one_from_list_nohang (pid_t *pids, unsigned int *n, pid_t *pid)
+{
+  int r = wait_one_from_list(pids, *n, pid, 1) ;
+  if (r) (*n)-- ;
+  return r ;
+}
+
+static inline void empty_selfpipe (void)
 {
   for (;;) switch (selfpipe_read())
   {
@@ -83,29 +101,37 @@ static inline void handle_signals (void)
   }
 }
 
-static inline int mainloop (tain *deadline, int insist, ac_func_ref f, pid_t *tab, unsigned int *n)
+static int wait_with_timeout (pid_t *pids, unsigned int n, pid_t *pid, ac_func_ref f, tain *tto, int justone, int strict)
 {
-  iopause_fd x = { .events = IOPAUSE_READ } ;
-  int res = 0 ;
-  x.fd = selfpipe_init() ;
+  iopause_fd x = { .fd = selfpipe_init(), .events = IOPAUSE_READ } ;
+  pid_t special = pids[n-1] ;
+  int e = special ? -1 : 0 ;
   if (x.fd < 0) strerr_diefu1sys(111, "create selfpipe") ;
   if (!selfpipe_trap(SIGCHLD)) strerr_diefu1sys(111, "trap SIGCHLD") ;
   tain_now_set_stopwatch_g() ;
-  tain_add_g(deadline, deadline) ;
-  while ((*f)(tab, n, &res))
+  tain_add_g(tto, tto) ;
+  for (;;)
   {
-    int r = iopause_g(&x, 1, deadline) ;
+    int r ;
+    for (;;)
+    {
+      r = (*f)(pids, &n, pid) ;
+      if (!r) break ;
+      if (r < 0) { selfpipe_finish() ; return e ; }
+      if (justone) { selfpipe_finish() ; return r ; }
+      if (*pid == special) e = r ;
+    }
+
+    r = iopause_g(&x, 1, tto) ;
     if (r < 0) strerr_diefu1sys(111, "iopause") ;
     else if (!r)
     {
-      if (!insist) break ;
+      if (!strict) { selfpipe_finish() ; return -1 ; }
       errno = ETIMEDOUT ;
-      strerr_diefu1sys(1, "wait") ;
+      strerr_diefu1sys(99, "wait") ;
     }
-    else handle_signals() ;
+    else empty_selfpipe() ;
   }
-  selfpipe_finish() ;
-  return res ;
 }
 
 int main (int argc, char const **argv)
@@ -114,8 +140,10 @@ int main (int argc, char const **argv)
   int argc1 ;
   int hastimeout = 0 ;
   int insist = 0 ;
-  int r ;
+  int justone = 0 ;
   int hasblock ;
+  int e ;
+  pid_t pid ;
   PROG = "wait" ;
 #ifdef EXECLINE_PEDANTIC_POSIX
   setlocale(LC_ALL, "") ;  /* but of course, dear POSIX */
@@ -125,12 +153,14 @@ int main (int argc, char const **argv)
     unsigned int t = 0 ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "iIrt:", &l) ;
+      int opt = subgetopt_r(argc, argv, "iIaort:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
         case 'i' : insist = 1 ; break ;
         case 'I' : insist = 0 ; break ;
+        case 'a' : justone = 0 ; break ;
+        case 'o' : justone = 1 ; break ;
         case 'r' : t = 0 ; hastimeout = 1 ; break ;
         case 't' : if (!uint0_scan(l.arg, &t)) dieusage() ; hastimeout = 1 ; break ;    
         default : dieusage() ;
@@ -147,21 +177,38 @@ int main (int argc, char const **argv)
     argc1 = argc ;
   }
   else hasblock = 1 ;
-  if (!argc1 && !hastimeout) r = waitall() ;
-  else
+
   {
-    ac_func_ref f = argc1 ? &waitintab : &waitany ;
-    unsigned int n = argc1 ? (unsigned int)argc1 : 1 ;
-    pid_t tab[n] ;
-    if (argc1)
+    unsigned int n = argc1 ? argc1 : 1 ;
+    pid_t pids[n] ;
+    if (argc1)  
     {
       unsigned int i = 0 ;
       for (; i < n ; i++)
-        if (!pid0_scan(argv[i], tab+i)) strerr_dieusage(100, USAGE) ;
+        if (!pid0_scan(argv[i], pids + i)) strerr_dieusage(100, USAGE) ;
     }
-    r = mainloop(&tto, insist, f, tab, &n) ;
-  }
+    else pids[0] = 0 ;
 
-  if (!hasblock) return r ;
-  xexec0(argv + argc1 + 1) ;
+    e = hastimeout ?  /* wait -t30000 whatever */
+         wait_with_timeout(pids, n, &pid, argc1 ? &wait_one_from_list_nohang : &wait_one_nohang, &tto, justone, insist) :
+         justone ?
+           argc1 ?
+             wait_one_from_list(pids, n, &pid, 0) :  /* wait -o -- 2 3 4 / wait -o -- { 2 3 4 } */
+             wait_one(&pid, 0) :  /* wait -o / wait -o { } */
+           argc1 ?
+             wait_from_list(pids, n) :  /* wait 2 3 4 / wait { 2 3 4 }*/
+             wait_all() ; /* wait / wait { } */
+  }
+  if (!hasblock) return e >= 0 ? e : 127 ;
+  if (!justone) xexec0(argv + argc1 + 1) ;
+  if (e < 0) xmexec_n(argv + argc1 + 1, "?\0!", 4, 2) ;
+
+  {
+    char fmt[4 + UINT_FMT + PID_FMT] = "?=" ;
+    size_t m = 2 ;
+    m += uint_fmt(fmt + m, (unsigned int)e) ; fmt[m++] = 0 ;
+    fmt[m++] = '!' ; fmt[m++] = '=' ;
+    m += pid_fmt(fmt + m, pid) ; fmt[m++] = 0 ;
+    xmexec_n(argv + argc1 + 1, fmt, m, 2) ;
+  }
 }
