@@ -22,7 +22,7 @@ int main (int argc, char const *const *argv)
     subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "Ee", &l) ;
+      int opt = subgetopt_r(argc, argv, "EePp", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
