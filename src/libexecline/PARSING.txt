@@ -72,28 +72,28 @@ Q1: after a backslash in whitespace
 Q2: after a backslash in an unquoted word
 Q3: after a backslash in a quoted string
 Q: in a quoted string
-OCT: after \0 in a quoted string
-OCT1: after \0a in a quoted string
-OCT2: after \0ab in a quoted string
-DEC1: after \a in a quoted string
-DEC2: after \ab in a quoted string
-HEX: after \0x in a quoted string
-HEX1: after \0xa in a quoted string
-ENDNUM: after \0abc, \abc or \0xab in a quoted string
+OCT: after \0
+OCT1: after \0a
+OCT2: after \0ab
+DEC1: after \a
+DEC2: after \ab
+HEX: after \0x
+HEX1: after \0xa
+ENDNUM: after \0abc, \abc or \0xab
 END: success
 X: syntax error
 
 
 Actions
 
-8000	s	scan integer from mark to cur
+8000	s	scan integer from mark, push it
 4000	m	set mark
-2000	n	add blevel spaces
-1000	{	inc blevel + unpush blevel
-0800	}	dec blevel + unpush 2
-0400	p	add cur to word
-0200	c	add control char (depending on cur) to word
-0100	0	end word
+2000	n	new word: push blevel spaces
+1000	{	begin block (inc blevel, unpush)
+0800	}	end block (dec blevel, unpush)
+0400	p	push cur
+0200	c	push control char (depending on cur)
+0100	0	end word: push \0
 0080	b	switch base according to cur
 0040	unused
 0020	unused

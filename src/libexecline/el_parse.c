@@ -69,18 +69,18 @@ int el_parse (stralloc *sa, el_chargen_func_ref next, void *source)
       if (!blevel--) return -4 ;
       sa->len -= 2 ;
     }
-    if (c & 0x0400) if (!stralloc_catb(sa, (char *)&cur, 1)) return -1 ;
-    if (c & 0x0200)
+    if (c & 0x0400U) if (!stralloc_catb(sa, (char *)&cur, 1)) return -1 ;
+    if (c & 0x0200U)
     {
       char x = 7 + byte_chr("abtnvfr", 7, cur) ;
       if (!stralloc_catb(sa, &x, 1)) return -1 ;
     }
-    if (c & 0x0100)
+    if (c & 0x0100U)
     {
       if (n++ >= INT_MAX) return (errno = E2BIG, -1) ;
       if (!stralloc_0(sa)) return -1 ;
     }
-    if (c & 0x0080)
+    if (c & 0x0080U)
     {
       switch (cur)
       {
