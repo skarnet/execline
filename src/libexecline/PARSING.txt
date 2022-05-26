@@ -1,0 +1,99 @@
+el_parse.c:
+
+class	|	0	1	2	3	4	5	6	7	8	9	a	b	c	d	e	f
+st\ev	|	\0	space	#	"	newline	\	normal	abf	1-7	8-9	0	nrtv	x	A-Fcde	{	}
+
+START	|				n			n p	n p	n p	n p	n p	n p	n p	n p	n p	n p
+00	|	END	START	COMMENT Q	START	Q1	W	W	W	W	W	W	W	W	OPENB	CLOSEB
+
+COMMENT |
+01	|	END	COMMENT	COMMENT	COMMENT	START	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT	COMMENT
+
+OPENB	|		{	p		{		p	p	p	p	p	p	p	p	p	p
+02	|	X	START	W	Q	START	Q1	W	W	W	W	W	W	W	W	W	W
+
+CLOSEB	|	} 0	} 0	p		} 0		p	p	p	p	p	p	p	p	p	p
+03	|	END	START	W	Q	START	Q1	W	W	W	W	W	W	W	W	W	W
+
+W	|	0	0	p		0		p	p	p	p	p	p	p	p	p	p
+04	|	END	START	W	Q	START	Q2	W	W	W	W	W	W	W	W	W	W
+
+Q1	|		n p	n p	n p		n p	n p	n p	n p	n p	n p	n p	n p	n p	n p	n p
+05	|	END	W	W	W	START	W	W	W	W	W	W	W	W	W	W	W
+
+Q2	|		p	p	p	p	p	p	p	p	p	p	p	p	p	p	p
+06	|	X	W	W	W	W	W	W	W	W	W	W	W	W	W	W	W
+
+Q3	|		p	p	p		p	p	c	m p b	m p b	b	c	p	p	p	p
+07	|	X	Q	Q	Q	Q	Q	Q	Q	DEC1	DEC1	OCT	Q	Q	Q	Q	Q
+
+Q	|		p	p		p		p	p	p	p	p	p	p	p	p	p
+08	|	X	Q	Q	W	Q	Q3	Q	Q	Q	Q	Q	Q	Q	Q	Q	Q	
+
+OCT	|									m p		m p		b
+09	|	X	X	X	X	X	X	X	X	OCT1	X	OCT1	X	HEX	X	X	X
+
+OCT1	|	s 0	s p	s p	s	s p	s	s p	s p	p	s p	p	s p	s p	s p	s p	s p
+0a	|	END	Q	Q	W	Q	Q3	Q	Q	OCT2	Q	OCT2	Q	Q	Q	Q	Q
+
+OCT2	|	s 0	s p	s p	s	s p	s	s p	s p	p	s p	p	s p	s p	s p	s p	s p
+0b	|	END	Q	Q	W	Q	Q3	Q	Q	ENDNUM	Q	ENDNUM	Q	Q	Q	Q	Q
+
+DEC1	|	s 0	s p	s p	s	s p	s	s p	s p	p	p	p	s p	s p	s p	s p	s p
+0c	|	END	Q	Q	W	Q	Q3	Q	Q	DEC2	DEC2	DEC2	Q	Q	Q	Q	Q
+
+DEC2	|	s 0	s p	s p	s	s p	s	s p	s p	p	p	p	s p	s p	s p	s p	s p
+0d	|	END	Q	Q	W	Q	Q3	Q	Q	ENDNUM	ENDNUM	ENDNUM	Q	Q	Q	Q	Q
+
+HEX	|								m p	m p	m p	m p			m p
+0e	|	X	X	X	X	X	X	X	HEX1	HEX1	HEX1	HEX1	X	X	HEX1	X	X
+
+HEX1	|	s 0	s p	s p	s	s p	s	s p	p	p	p	p	s p	s p	p	s p	s p
+0f	|	END	Q	Q	W	Q	Q3	Q	ENDNUM	ENDNUM	ENDNUM	ENDNUM	Q	Q	ENDNUM	Q	Q
+
+ENDNUM	|	s 0	s p	s p	s	s p	s	s p	s p	s p	s p	s p	s p	s p	s p	s p	s p
+10	|	END	Q	Q	W	Q	Q3	Q	Q	Q	Q	Q	Q	Q	Q	Q	Q
+
+END
+11
+
+X
+12
+
+
+States
+
+START: in whitespace; initial state
+COMMENT: in a comment line
+OPENB: after a raw {
+CLOSEB: after a raw }
+W: in an unquoted word
+Q1: after a backslash in whitespace
+Q2: after a backslash in an unquoted word
+Q3: after a backslash in a quoted string
+Q: in a quoted string
+OCT: after \0 in a quoted string
+OCT1: after \0a in a quoted string
+OCT2: after \0ab in a quoted string
+DEC1: after \a in a quoted string
+DEC2: after \ab in a quoted string
+HEX: after \0x in a quoted string
+HEX1: after \0xa in a quoted string
+ENDNUM: after \0abc, \abc or \0xab in a quoted string
+END: success
+X: syntax error
+
+
+Actions
+
+8000	s	scan integer from mark to cur
+4000	m	set mark
+2000	n	add blevel spaces
+1000	{	inc blevel + unpush blevel
+0800	}	dec blevel + unpush 2
+0400	p	add cur to word
+0200	c	add control char (depending on cur) to word
+0100	0	end word
+0080	b	switch base according to cur
+0040	unused
+0020	unused

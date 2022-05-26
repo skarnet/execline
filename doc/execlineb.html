@@ -133,10 +133,11 @@ newlines disappear completely. </li>
  <li> <tt>\0x<em>ab</em></tt> sequences are recognized in quoted strings
 and evaluate to ASCII hexadecimal number <em>ab</em>. </li>
  <li> <tt>\0<em>abc</em></tt> sequences are recognized in quoted strings
-and evaluate to ASCII octal number <em>abc</em>. </li>
+and evaluate to ASCII octal number <em>abc</em>. <em>abc</em> must not
+be greater than <em>377</em>, or evaluate to 0. </li>
  <li> <tt>\<em>abc</em></tt> sequences are recognized in quoted strings
 and evaluate to ASCII decimal number <em>abc</em>. <em>a</em> must not
-be zero. </li>
+be zero. <em>abc</em> must not be greater than 255, or evaluate to 0. </li>
  <li> A comment starts with a <tt>#</tt> and ends with the line. Comments
 are not recognized inside quoted strings. </li>
  <li> Anything else is an unquoted string, that can evaluate to
@@ -144,6 +145,9 @@ zero or more words. </li>
  <li> Any character can be escaped in unquoted strings by prepending
 it with a backslash. It works the same way in quoted strings, except
 for the special sequences described above. </li>
+ <li> As a special case, an unquoted backslash at the end of a line, or at
+the end of the input, is ignored. This is to make it easier to copy
+execline fragments from a shell script. </li>
 </ul>
 
 <p>
