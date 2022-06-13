@@ -28,7 +28,7 @@ Q3	|		p	p	p		p	p	c	m p b	m p b	b	c	p	p	p	p
 07	|	X	Q	Q	Q	Q	Q	Q	Q	DEC1	DEC1	OCT	Q	Q	Q	Q	Q
 
 Q	|		p	p		p		p	p	p	p	p	p	p	p	p	p
-08	|	X	Q	Q	W	Q	Q3	Q	Q	Q	Q	Q	Q	Q	Q	Q	Q	
+08	|	X	Q	Q	W	Q	Q3	Q	Q	Q	Q	Q	Q	Q	Q	Q	Q
 
 OCT	|									m p		m p		b
 09	|	X	X	X	X	X	X	X	X	OCT1	X	OCT1	X	HEX	X	X	X
