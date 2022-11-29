@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <execline/execline.h>
 
 int main (int argc, char const **argv, char const *const *envp)

@@ -7,7 +7,7 @@
 #include <skalibs/bytestr.h>
 #include <skalibs/types.h>
 #include <skalibs/buffer.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/fmtscan.h>
 #include <skalibs/env.h>

@@ -3,7 +3,7 @@
 #include <sys/stat.h>
 
 #include <skalibs/types.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/exec.h>
 
 #define USAGE "umask value prog..."

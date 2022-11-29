@@ -9,7 +9,7 @@
 #include <skalibs/types.h>
 #include <skalibs/nsig.h>
 #include <skalibs/sig.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/iopause.h>
 #include <skalibs/selfpipe.h>
 #include <skalibs/env.h>

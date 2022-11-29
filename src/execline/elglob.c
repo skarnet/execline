@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include "exlsn.h"
 
 #define USAGE "elglob [ -v ] [ -w ] [ -s ] [ -m ] [ -e ] [ -0 ] key pattern prog..."

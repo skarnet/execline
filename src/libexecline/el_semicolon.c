@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <skalibs/env.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/types.h>
 #include <execline/execline.h>
 

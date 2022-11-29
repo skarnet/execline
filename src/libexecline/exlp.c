@@ -2,7 +2,7 @@
 
 #include <string.h>
 #include <skalibs/env.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
 #include <skalibs/types.h>

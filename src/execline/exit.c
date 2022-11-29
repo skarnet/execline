@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <unistd.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/types.h>
 
 #define USAGE "exit [ exitcode ]"

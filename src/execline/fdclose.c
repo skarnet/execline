@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <skalibs/types.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/exec.h>
 

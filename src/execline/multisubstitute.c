@@ -1,7 +1,7 @@
 /* ISC license. */
 
 #include <string.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <execline/execline.h>
 #include "exlsn.h"
 

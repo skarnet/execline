@@ -1,6 +1,6 @@
 /* ISC license. */
 
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include "exlsn.h"
 
 #define USAGE "multidefine [ -0 ] [ -r ] [ -N | -n ] [ -C | -c ] [ -d delim ] value { vars... } prog..."

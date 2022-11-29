@@ -3,7 +3,7 @@
 #include <pwd.h>
 #include <errno.h>
 #include <skalibs/buffer.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 
 #define USAGE "homeof user"
 

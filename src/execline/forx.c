@@ -4,7 +4,7 @@
 
 #include <skalibs/sgetopt.h>
 #include <skalibs/bytestr.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/env.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/skamisc.h>

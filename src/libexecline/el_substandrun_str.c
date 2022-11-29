@@ -4,7 +4,7 @@
 
 #include <skalibs/exec.h>
 #include <skalibs/env.h>
-#include <skalibs/strerr2.h>
+#include <skalibs/strerr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
 
