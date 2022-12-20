@@ -6,6 +6,7 @@ dollarat		0755
 elgetopt		0755
 elgetpositionals	0755
 elglob			0755
+eltest			0755
 execline-cd		0755
 execline-umask		0755
 emptyenv		0755

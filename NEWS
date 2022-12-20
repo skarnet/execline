@@ -1,9 +1,10 @@
 Changelog for execline.
 
-In 2.9.0.2
+In 2.9.1.0
 ----------
 
  - Adaptation to skalibs-2.9.0.2.
+ - New program: eltest.
 
 
 In 2.9.0.1
@@ -16,8 +17,8 @@ In 2.9.0.0
 ----------
 
  - Bugfixes.
- - New -a/-o options to wait (-o waits for one process only)
- - wait now exits 99 on timeout
+ - New -a/-o options to wait (-o waits for one process only).
+ - wait now exits 99 on timeout.
 
 
 In 2.8.3.0

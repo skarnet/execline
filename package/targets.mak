@@ -7,6 +7,7 @@ dollarat \
 elgetopt \
 elgetpositionals \
 elglob \
+eltest \
 emptyenv \
 envfile \
 exec \

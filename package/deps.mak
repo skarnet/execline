@@ -10,6 +10,7 @@ src/execline/dollarat.o src/execline/dollarat.lo: src/execline/dollarat.c
 src/execline/elgetopt.o src/execline/elgetopt.lo: src/execline/elgetopt.c src/include/execline/execline.h
 src/execline/elgetpositionals.o src/execline/elgetpositionals.lo: src/execline/elgetpositionals.c src/include-local/exlsn.h
 src/execline/elglob.o src/execline/elglob.lo: src/execline/elglob.c src/include-local/exlsn.h
+src/execline/eltest.o src/execline/eltest.lo: src/execline/eltest.c
 src/execline/emptyenv.o src/execline/emptyenv.lo: src/execline/emptyenv.c src/include/execline/execline.h
 src/execline/envfile.o src/execline/envfile.lo: src/execline/envfile.c
 src/execline/exec.o src/execline/exec.lo: src/execline/exec.c
@@ -93,6 +94,8 @@ elgetpositionals: EXTRA_LIBS := -lskarnet
 elgetpositionals: src/execline/elgetpositionals.o ${LIBEXECLINE}
 elglob: EXTRA_LIBS := -lskarnet
 elglob: src/execline/elglob.o ${LIBEXECLINE}
+eltest: EXTRA_LIBS := -lskarnet
+eltest: src/execline/eltest.o
 emptyenv: EXTRA_LIBS := -lskarnet
 emptyenv: src/execline/emptyenv.o ${LIBEXECLINE}
 envfile: EXTRA_LIBS := -lskarnet

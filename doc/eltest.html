@@ -1,0 +1,172 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the eltest program</title>
+    <meta name="Description" content="execline: the eltest program" />
+    <meta name="Keywords" content="execline command eltest test" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>eltest</tt> program </h1>
+
+<p>
+ eltest evaluates an expression and indicates the result via its
+exit status.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     eltest <em>expression...</em>
+</pre>
+
+<p>
+ <tt>eltest</tt> acts as the generic POSIX
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a> utility,
+but it diverges from the specification on how it parses ambiguous arguments, see below.
+</p>
+
+<p>
+ <tt>eltest</tt> supports all the standard
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>
+operands, plus all the extensions from
+<a href="https://man7.org/linux/man-pages/man1/test.1.html">GNU test</a>, plus a few
+extensions from the <tt>test</tt> builtin from
+<a href="https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Bash-Conditional-Expressions">bash</a>.
+The extensions to POSIX <tt>test</tt> are listed below.
+</p>
+
+<p>
+ <tt>eltest</tt> accepts an arbitrary number of arguments and, if the expression is
+valid, always returns the result of the expression no matter how complex it
+is.
+</p>
+
+<h2> Exit codes </h2>
+
+<ul>
+ <li> 0: the test is true </li>
+ <li> 1: the test is false </li>
+ <li> 100: wrong usage </li>
+ <li> 101: internal error (should never happen, warrants a bug-report) </li>
+ <li> 111: system call failure </li>
+</ul>
+
+<h2> Posixness </h2>
+
+<p>
+ <tt>eltest</tt> <strong>is not</strong> suitable as a Single Unix
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>
+program, due to the way it disambiguates between arguments and operators, see below.
+However, if you never use arguments that start with a backslash, or that have the
+same name as an existing operator, then
+<tt>eltest</tt> exhibits the same behaviour as <tt>test</tt>.
+</p>
+
+<h2> Extensions to POSIX </h2>
+
+<ul>
+ <li> <tt><em>expr1</em>&nbsp;-a&nbsp;<em>expr2</em></tt>&nbsp;:
+tests whether <em>expr1</em> <strong>and</strong> <em>expr2</em> are true.
+If <em>expr1</em> is false, then <em>expr2</em> is not evaluated. </li>
+ <li> <tt><em>expr1</em>&nbsp;-o&nbsp;<em>expr2</em></tt>&nbsp;:
+tests whether <em>expr1</em> <strong>or</strong> <em>expr2</em> is true.
+If <em>expr1</em> is true, then <em>expr2</em> is not evaluated. </li>
+ <li> <tt>-k&nbsp;<em>file</em></tt>&nbsp;: tests whether <em>file</em>
+has the sticky bit. </li>
+ <li> <tt>-O&nbsp;<em>file</em></tt>&nbsp;: tests whether <em>file</em>
+is owned by the effective uid of the current process. </li>
+ <li> <tt>-U&nbsp;<em>file</em></tt>&nbsp;: same. </li>
+ <li> <tt>-G&nbsp;<em>file</em></tt>&nbsp;: tests whether <em>file</em>'s gid
+is the effective gid of the current process. </li>
+ <li> <tt>-N&nbsp;<em>file</em></tt>&nbsp;: tests whether <em>file</em> exists
+and has been modified since it was last read. </li>
+ <li> <tt><em>file1</em>&nbsp;-nt&nbsp;<em>file2</em></tt>&nbsp;:
+tests whether <em>file1</em> has a (strictly) newer modification date than <em>file2</em>. </li>
+ <li> <tt><em>file1</em>&nbsp;-ot&nbsp;<em>file2</em></tt>&nbsp;:
+tests whether <em>file1</em> has a (strictly) older modification date than <em>file2</em>. </li>
+ <li> <tt><em>file1</em>&nbsp;-ef&nbsp;<em>file2</em></tt>&nbsp;:
+tests whether <em>file1</em> and <em>file2</em> are physically the same
+file (same device and inode numbers). </li>
+ <li> <tt>-v&nbsp;<em>var</em></tt>&nbsp;: tests whether the
+<em>var</em> variable is defined in the current environment. </li>
+ <li> <tt><em>string</em>&nbsp;=~&nbsp;<em>pattern</em></tt>&nbsp;:
+tries to match <em>string</em> against extended regular expression
+<em>pattern</em>. True if any part of <em>string</em> matches <em>pattern</em>;
+in order to match whole strings, you must anchor <em>pattern</em> with
+<tt>^</tt> and <tt>$</tt> markers. </li>
+</ul>
+
+<h2> Argument disambiguation </h2>
+
+<p>
+ Unlike <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>,
+which has different fixed syntax trees depending on the number of arguments it receives and
+has undefined behaviour when called with more than 5 arguments, <tt>eltest</tt> accepts any
+number of arguments and builds its syntax trees on the fly. This means that expressions such
+as <tt>-n = -n</tt> cannot be automatically disambiguated: <tt>eltest</tt> does not know that
+there are 3 arguments, so when it reads the first <tt>-n</tt> it assumes that it is an unary
+operator, then when it reads <tt>=</tt> it assumes it is the argument to <tt>-n</tt>, then
+when it reads the second <tt>-n</tt> it exits with a syntax error.
+</p>
+
+<p>
+ Doing otherwise would result in a combinatory explosion of possible syntax trees, making
+it easy for users to trigger unbounded RAM consumption, and turning a simple utility into
+a programming nightmare. This is why POSIX
+<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>
+is so restricted. But we don't want the same restrictions.
+</p>
+
+<p>
+ So, instead, <tt>eltest</tt> provides the user with a mechanism to make sure that
+operands are never mistaken for operators:
+</p>
+
+<ul>
+ <li> An word that looks like an operator will always be interpreted like an operator.
+So, expressions like <tt>-n = -n</tt> will result in a syntax error, because the
+first <tt>-n</tt> will never be understood as data for the <tt>=</tt> operator. </li>
+ <li> A word that starts with a <tt>\</tt> (backslash) will always be interpreted
+like data, never like an operator, and the backslash will be removed. This
+means: <tt>\-n = \-n</tt> is a valid expression testing the equality between
+the strings <tt>-n</tt> and </tt>-n</tt>.
+ <ul>
+  <li> Be aware that execline as well as the shell use one backlash for their own
+unquoting mechanism, so when using backslashes in an execline or shell script, they
+must be doubled. You would probably need to type something like <tt>\\-n = \\-n</tt>.
+ </ul> </li>
+ <li> So, if your script tests equality between <tt>$a</tt> and <tt>$b</tt>, and there's
+a possiblity that the contents of these variables look like <tt>eltest</tt> operators,
+the proper syntax would be: <tt>eltest \\${a} = \\${b}</tt>. </li>
+</ul>
+
+<p>
+ Note that these details are irrelevant to a huge majority of <tt>eltest</tt> use
+cases, because most of the time users only need a simple test
+such as <tt>eltest -r ${file}</tt> to check that <tt>$file</tt> is readable, and
+there's no possible ambiguity. So don't panic over this.
+</p>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <tt>eltest</tt> is a replacement for the ill-named, and now deprecated,
+<a href="https://skarnet.org/software/s6-portable-utils/s6-test.html">s6-test</a>
+program, part of the (just as ill-named)
+<a href="https://skarnet.org/software/s6-portable-utils/">s6-portable-utils</a>
+package. It is too valuable a utility to be part of a marginal package, and
+has nothing to do with <a href="https://skarnet.org/software/s6/">s6</a>. </li>
+</ul>
+
+</body>
+</html>
