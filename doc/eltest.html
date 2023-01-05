@@ -47,8 +47,7 @@ The extensions to POSIX <tt>test</tt> are listed below.
 
 <p>
  <tt>eltest</tt> accepts an arbitrary number of arguments and, if the expression is
-valid, always returns the result of the expression no matter how complex it
-is.
+valid, always returns the result of the expression no matter how complex it is.
 </p>
 
 <h2> Exit codes </h2>
@@ -114,7 +113,7 @@ which has different fixed syntax trees depending on the number of arguments it r
 has undefined behaviour when called with more than 5 arguments, <tt>eltest</tt> accepts any
 number of arguments and builds its syntax trees on the fly. This means that expressions such
 as <tt>-n = -n</tt> cannot be automatically disambiguated: <tt>eltest</tt> does not know that
-there are 3 arguments, so when it reads the first <tt>-n</tt> it assumes that it is an unary
+there are 3 arguments, so when it reads the first <tt>-n</tt> it assumes that it is a unary
 operator, then when it reads <tt>=</tt> it assumes it is the argument to <tt>-n</tt>, then
 when it reads the second <tt>-n</tt> it exits with a syntax error.
 </p>
@@ -133,7 +132,7 @@ operands are never mistaken for operators:
 </p>
 
 <ul>
- <li> An word that looks like an operator will always be interpreted like an operator.
+ <li> A word that looks like an operator will always be interpreted like an operator.
 So, expressions like <tt>-n = -n</tt> will result in a syntax error, because the
 first <tt>-n</tt> will never be understood as data for the <tt>=</tt> operator. </li>
  <li> A word that starts with a <tt>\</tt> (backslash) will always be interpreted
@@ -154,7 +153,7 @@ the proper syntax would be: <tt>eltest \\${a} = \\${b}</tt>. </li>
  Note that these details are irrelevant to a huge majority of <tt>eltest</tt> use
 cases, because most of the time users only need a simple test
 such as <tt>eltest -r ${file}</tt> to check that <tt>$file</tt> is readable, and
-there's no possible ambiguity. So don't panic over this.
+there's no possible ambiguity. So, don't panic over this.
 </p>
 
 <h2> Notes </h2>
