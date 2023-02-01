@@ -19,6 +19,8 @@ SHARED_LIBS :=
 INTERNAL_LIBS :=
 EXTRA_TARGETS :=
 LIB_DEFS :=
+EXTRA_BINS :=
+EXTRA_TEMP :=
 
 define library_definition
 LIB$(firstword $(subst =, ,$(1))) := lib$(lastword $(subst =, ,$(1))).$(if $(DO_ALLSTATIC),a,so).xyzzy
@@ -60,7 +62,7 @@ ALL_INCLUDES := $(wildcard src/include/$(package)/*.h)
 all: $(ALL_LIBS) $(ALL_BINS) $(ALL_INCLUDES)
 
 clean:
-	@exec rm -f $(ALL_LIBS) $(ALL_BINS) $(wildcard src/*/*.o src/*/*.lo)
+	@exec rm -f $(ALL_LIBS) $(ALL_BINS) $(EXTRA_BINS) $(EXTRA_TEMP) $(wildcard src/*/*.o src/*/*.lo)
 
 distclean: clean
 	@exec rm -f config.mak src/include/$(package)/config.h
@@ -134,7 +136,7 @@ $(DESTDIR)$(includedir)/$(package)/%.h: src/include/$(package)/%.h
 %.lo: %.c
 	exec $(CC) $(CPPFLAGS_ALL) $(CFLAGS_ALL) $(CFLAGS_SHARED) -c -o $@ $<
 
-$(ALL_BINS):
+$(ALL_BINS) $(EXTRA_BINS):
 	exec $(CC) -o $@ $(CFLAGS_ALL) $(LDFLAGS_ALL) $(LDFLAGS_NOSHARED) $^ $(EXTRA_LIBS) $(LDLIBS)
 
 lib%.a.xyzzy:

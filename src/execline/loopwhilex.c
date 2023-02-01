@@ -12,7 +12,7 @@
 #define USAGE "loopwhilex [ -n ] [ -o okcode,okcode,... | -x exitcode,exitcode,... ] prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int isok (unsigned short *tab, unsigned int n, int code)
+static int lw_isok (unsigned short *tab, unsigned int n, int code)
 {
   unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
@@ -67,7 +67,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
       else strerr_diefu2sys(111, "spawn ", argv[0]) ;
     }
     if (wait_pid(pid, &wstat) < 0) strerr_diefu1sys(111, "wait_pid") ;
-    cont = not != isok(okcodes, nbc, wait_estatus(wstat)) ;
+    cont = not != lw_isok(okcodes, nbc, wait_estatus(wstat)) ;
   }
   return wait_estatus(wstat) ;
 }

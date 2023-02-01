@@ -16,7 +16,7 @@
 #define USAGE "forx [ -E | -e ] [ -p ] [ -o okcode,okcode,... | -x breakcode,breakcode,... ] var { values... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static int isok (unsigned short const *tab, unsigned int n, int code)
+static int fx_isok (unsigned short const *tab, unsigned int n, int code)
 {
   unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
@@ -35,7 +35,7 @@ static int waitn_code (unsigned short const *tab, unsigned int nbc, pid_t *pids,
     for (; i < n ; i++) if (pid == pids[i]) break ;
     if (i < n)
     {
-      if (not == isok(tab, nbc, wait_estatus(wstat))) ok = 0 ;
+      if (not == fx_isok(tab, nbc, wait_estatus(wstat))) ok = 0 ;
       pids[i] = pids[--n] ;
     }
   }
@@ -94,7 +94,7 @@ int main (int argc, char const **argv)
         int wstat ;
         if (wait_pid(pid, &wstat) == -1)
           strerr_diefu2sys(111, "wait for ", argv[argc1+1]) ;
-        if (not == isok(okcodes, nbc, wait_estatus(wstat)))
+        if (not == fx_isok(okcodes, nbc, wait_estatus(wstat)))
           return wait_estatus(wstat) ;
       }
     }

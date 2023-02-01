@@ -67,3 +67,13 @@ $(DESTDIR)$(bindir)/cd: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-cd
 
 $(DESTDIR)$(bindir)/umask: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-umask
 	exec ./tools/install.sh -l $(PEDANTIC_PREFIX)-umask $(DESTDIR)$(bindir)/umask
+
+
+EXTRA_BINS := execline
+EXTRA_TEMP := src/multicall/execline.c
+
+multicall: execline
+.PHONY: multicall
+
+src/multicall/execline.c: tools/gen-multicall.sh src/execline/deps-exe src/include/execline/config.h src/include/execline/execline.h
+	./tools/gen-multicall.sh > src/multicall/execline.c

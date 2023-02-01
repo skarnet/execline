@@ -12,6 +12,7 @@
 /elgetopt
 /elgetpositionals
 /elglob
+/eltest
 /emptyenv
 /envfile
 /exec
@@ -55,3 +56,5 @@
 /unexport
 /wait
 /withstdinas
+/src/multicall/execline.c
+/execline

@@ -74,7 +74,7 @@ struct node
   char const *data ;
 } ;
 
-static unsigned int lex (struct node *tree, char const *const *argv)
+static unsigned int eltest_lex (struct node *tree, char const *const *argv)
 {
   static struct token const tokens[46] =
   {
@@ -149,7 +149,7 @@ static unsigned int lex (struct node *tree, char const *const *argv)
   return pos ;
 }
 
-static unsigned int parse (struct node *tree, unsigned int n)
+static unsigned int eltest_parse (struct node *tree, unsigned int n)
 {
   static char const table[9][13] =
   {
@@ -278,16 +278,16 @@ static unsigned int parse (struct node *tree, unsigned int n)
   return stack[1] ;
 }
 
-static int run (struct node const *tree, unsigned int root)
+static int eltest_run (struct node const *tree, unsigned int root)
 {
   switch (tree[root].op)
   {
     case T_NOT :
-      return !run(tree, tree[root].arg1) ;
+      return !eltest_run(tree, tree[root].arg1) ;
     case T_AND :
-      return run(tree, tree[root].arg1) && run(tree, tree[root].arg2) ;
+      return eltest_run(tree, tree[root].arg1) && eltest_run(tree, tree[root].arg2) ;
     case T_OR :
-      return run(tree, tree[root].arg1) || run(tree, tree[root].arg2) ;
+      return eltest_run(tree, tree[root].arg1) || eltest_run(tree, tree[root].arg2) ;
     case T_EXIST :
       return access(tree[tree[root].arg1].data, F_OK) == 0 ;
     case T_BLOCK :
@@ -501,5 +501,5 @@ int main (int argc, char const *const *argv)
   struct node tree[argc+2] ;
   if (argc <= 1) return 1 ;
   PROG = "eltest" ;
-  return !run(tree, parse(tree, lex(tree, argv+1))) ;
+  return !eltest_run(tree, eltest_parse(tree, eltest_lex(tree, argv+1))) ;
 }

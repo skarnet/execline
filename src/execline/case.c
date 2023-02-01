@@ -15,8 +15,8 @@
 #define USAGE "case [ -s | -S ] [ -e | -E ] [ -n | -N ] [ -i ] value { re1 { prog1... } re2 { prog2... } ... } progdefault... "
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static void execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n) gccattr_noreturn ;
-static void execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n)
+static void case_execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n) gccattr_noreturn ;
+static void case_execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n)
 {
   if (n)
   {
@@ -125,7 +125,7 @@ int main (int argc, char const **argv, char const *const *envp)
         if (!r)
         {
           argv[i + argc2] = 0 ;
-          execit(argv + i, expr, s, pmatch, flagnosub ? 0 : 1 + re.re_nsub) ;
+          case_execit(argv + i, expr, s, pmatch, flagnosub ? 0 : 1 + re.re_nsub) ;
         }
         if (r != REG_NOMATCH)
         {

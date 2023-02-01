@@ -19,9 +19,9 @@
 #define USAGE "forstdin [ -E | -e ] [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static genalloc pids = GENALLOC_ZERO ; /* pid_t */
+static genalloc forstdin_pids = GENALLOC_ZERO ; /* pid_t */
 
-static int isok (unsigned short *tab, unsigned int n, int code)
+static int fs_isok (unsigned short *tab, unsigned int n, int code)
 {
   unsigned int i = 0 ;
   for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
@@ -30,8 +30,8 @@ static int isok (unsigned short *tab, unsigned int n, int code)
 
 static void parallel_sigchld_handler (int sig)
 {
-  pid_t *tab = genalloc_s(pid_t, &pids) ;
-  size_t len = genalloc_len(pid_t, &pids) ;
+  pid_t *tab = genalloc_s(pid_t, &forstdin_pids) ;
+  size_t len = genalloc_len(pid_t, &forstdin_pids) ;
   int wstat ;
   for (;;)
   {
@@ -39,7 +39,7 @@ static void parallel_sigchld_handler (int sig)
     if (r <= 0) break ;
     tab[r-1] = tab[--len] ;
   }
-  genalloc_setlen(pid_t, &pids, len) ;
+  genalloc_setlen(pid_t, &forstdin_pids, len) ;
   (void)sig ;
 }
 
@@ -62,7 +62,7 @@ int main (int argc, char const **argv)
       {
         case 'p' :
         {
-          if (!genalloc_ready(pid_t, &pids, 1))
+          if (!genalloc_ready(pid_t, &forstdin_pids, 1))
             strerr_diefu1sys(111, "genalloc_ready") ;
           break ;
         }
@@ -90,7 +90,7 @@ int main (int argc, char const **argv)
   if (argc < 2) dieusage() ;
   if (!argv[0][0] || strchr(argv[0], '=')) strerr_dief1x(100, "invalid variable name") ;
 
-  if (pids.s)
+  if (forstdin_pids.s)
   {
     if (!sig_catch(SIGCHLD, &parallel_sigchld_handler))
       strerr_diefu1sys(111, "install SIGCHLD handler") ;
@@ -122,12 +122,12 @@ int main (int argc, char const **argv)
     }
     eofcode = 0 ;
     if (!stralloc_0(&value)) strerr_diefu1sys(111, "stralloc_0") ;
-    if (pids.s) sig_block(SIGCHLD) ;
+    if (forstdin_pids.s) sig_block(SIGCHLD) ;
     pid = el_modif_and_spawn(argv + 1, argv[0], value.s, doimport) ;
     if (!pid) strerr_diefu2sys(111, "spawn ", argv[1]) ;
-    if (pids.s)
+    if (forstdin_pids.s)
     {
-      if (!genalloc_append(pid_t, &pids, &pid))
+      if (!genalloc_append(pid_t, &forstdin_pids, &pid))
         strerr_diefu1sys(111, "genalloc_append") ;
       sig_unblock(SIGCHLD) ;
     }
@@ -136,18 +136,18 @@ int main (int argc, char const **argv)
       int wstat ;
       if (wait_pid(pid, &wstat) < 0)
         strerr_diefu2sys(111, "wait for ", argv[1]) ;
-      if (not == isok(okcodes, nbc, wait_estatus(wstat)))
+      if (not == fs_isok(okcodes, nbc, wait_estatus(wstat)))
         return wait_estatus(wstat) ;
     }
   }
-  if (pids.s)
+  if (forstdin_pids.s)
   {
     sigset_t empty ;
     sigemptyset(&empty) ;
     sig_block(SIGCHLD) ;
     for (;;)
     {
-      if (!pids.len) break ;
+      if (!forstdin_pids.len) break ;
       sigsuspend(&empty) ;
     }
   }

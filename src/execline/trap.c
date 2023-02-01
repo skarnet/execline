@@ -20,30 +20,30 @@
 #define USAGE "trap [ -x ] { signal { cmdline } ... } prog..."
 #define dieusage() strerr_dieusage(100, USAGE) ;
 
-static pid_t pids[SKALIBS_NSIG + 1] ;
-static char const *const *argvs[SKALIBS_NSIG] ; /* initted with 0s */
+static pid_t trap_pids[SKALIBS_NSIG + 1] ;
+static char const *const *trap_argvs[SKALIBS_NSIG] ; /* initted with 0s */
 
 static inline void action (unsigned int i, char const *const *envp, size_t envlen)
 {
-  if (argvs[i])
+  if (trap_argvs[i])
   {
-    if (!pids[i])
+    if (!trap_pids[i])
     {
       char const *newenvp[envlen + 3] ;
       char modif[9 + PID_FMT + UINT_FMT] = "!=" ;
       size_t m = 2 ;
-      m += pid_fmt(modif + m, pids[SKALIBS_NSIG]) ;
+      m += pid_fmt(modif + m, trap_pids[SKALIBS_NSIG]) ;
       modif[m++] = 0 ;
       memcpy(modif + m, "SIGNAL=", 7) ; m += 7 ;
       m += uint_fmt(modif + m, i) ;
       modif[m++] = 0 ;
       if (!env_mergen(newenvp, envlen + 3, envp, envlen, modif, m, 2))
         strerr_diefu1sys(111, "adjust environment for child") ;
-      pids[i] = child_spawn0(argvs[i][0], argvs[i], newenvp) ;
-      if (!pids[i]) strerr_diefu2sys(111, "spawn ", argvs[i][0]) ;
+      trap_pids[i] = child_spawn0(trap_argvs[i][0], trap_argvs[i], newenvp) ;
+      if (!trap_pids[i]) strerr_diefu2sys(111, "spawn ", trap_argvs[i][0]) ;
     }
   }
-  else kill(pids[SKALIBS_NSIG], i) ;
+  else kill(trap_pids[SKALIBS_NSIG], i) ;
 }
 
 int main (int argc, char const **argv, char const *const *envp)
@@ -89,10 +89,10 @@ int main (int argc, char const **argv, char const *const *envp)
     argc2 = el_semicolon(argv + ++i) ;
     if (i + argc2 >= argc1)
       strerr_dief3x(100, "unterminated", " internal block for directive ", argv[i-1]) ;
-    if (argvs[sig])
+    if (trap_argvs[sig])
       strerr_dief3x(100, "duplicate", " directive: ", argv[i-1]) ;
     if (!sig || (sig != SIGCHLD && sigismember(&full, sig) > 0))
-      argvs[sig] = argv + i ;
+      trap_argvs[sig] = argv + i ;
     else
     {
       char fmt[UINT_FMT] ;
@@ -103,10 +103,10 @@ int main (int argc, char const **argv, char const *const *envp)
     i += argc2 + 1 ;
   }
 
-  if (argvs[0])
+  if (trap_argvs[0])
     for (i = 1 ; i < SKALIBS_NSIG ; i++)
-      if (!argvs[i] && sigismember(&full, i) > 0)
-        argvs[i] = argvs[0] ;
+      if (!trap_argvs[i] && sigismember(&full, i) > 0)
+        trap_argvs[i] = trap_argvs[0] ;
 
   if (xfersigs) set = full ;
   else
@@ -114,7 +114,7 @@ int main (int argc, char const **argv, char const *const *envp)
     sigemptyset(&set) ;
     sigaddset(&set, SIGCHLD) ;
     for (i = 1 ; i < SKALIBS_NSIG ; i++)
-      if (argvs[i])
+      if (trap_argvs[i])
         sigaddset(&set, i) ;
   }
 
@@ -122,8 +122,8 @@ int main (int argc, char const **argv, char const *const *envp)
   if (x.fd < 0) strerr_diefu1sys(111, "selfpipe_init") ;
   if (!selfpipe_trapset(&set)) strerr_diefu1sys(111, "trap signals") ;
 
-  pids[SKALIBS_NSIG] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
-  if (!pids[SKALIBS_NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
+  trap_pids[SKALIBS_NSIG] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
+  if (!trap_pids[SKALIBS_NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
 
  loop:
   if (iopause_g(&x, 1, 0) < 0) strerr_diefu1sys(111, "iopause") ;
@@ -138,11 +138,11 @@ int main (int argc, char const **argv, char const *const *envp)
         for (;;)
         {
           int wstat ;
-          ssize_t id = wait_pids_nohang(pids, SKALIBS_NSIG + 1, &wstat) ;
+          ssize_t id = wait_pids_nohang(trap_pids, SKALIBS_NSIG + 1, &wstat) ;
           if (id < 0 && errno != ECHILD)
             strerr_diefu1sys(111, "wait") ;
           if (id <= 0) break ;
-          pids[id - 1] = 0 ;
+          trap_pids[id - 1] = 0 ;
           if (id == SKALIBS_NSIG + 1) return wait_estatus(wstat) ;
         }
         break ;
