@@ -19,7 +19,7 @@
 #define dieusage() strerr_dieusage(100, USAGE)
 #define dienomem() strerr_diefu1sys(111, "stralloc_catb")
 
-static void scanoct (stralloc *sa, size_t pos)
+static void envfile_scanoct (stralloc *sa, size_t pos)
 {
   unsigned int u ;
   if (!stralloc_0(sa)) dienomem() ;
@@ -28,7 +28,7 @@ static void scanoct (stralloc *sa, size_t pos)
   sa->len = pos+1 ;
 }
 
-static inline uint8_t cclass (char c)
+static inline uint8_t envfile_cclass (char c)
 {
   switch (c)
   {
@@ -75,7 +75,7 @@ static inline uint8_t cclass (char c)
   }
 }
 
-static inline char next (char const *file, buffer *b)
+static inline char envfile_next (char const *file, buffer *b)
 {
   char c ;
   ssize_t r = buffer_get(b, &c, 1) ;
@@ -84,7 +84,7 @@ static inline char next (char const *file, buffer *b)
   return c ;
 }
 
-static inline void parse_config (char const *file, buffer *b, stralloc *sa)
+static inline void envfile_parse_config (char const *file, buffer *b, stralloc *sa)
 {
   static uint16_t const table[14][14] =
   {
@@ -108,10 +108,10 @@ static inline void parse_config (char const *file, buffer *b, stralloc *sa)
   uint8_t state = 0 ;
   while (state < 14)
   {
-    char c = next(file, b) ;
-    uint16_t what = table[state][cclass(c)] ;
+    char c = envfile_next(file, b) ;
+    uint16_t what = table[state][envfile_cclass(c)] ;
     state = what & 0x0f ;
-    if (what & 0x0400) scanoct(sa, mark) ;
+    if (what & 0x0400) envfile_scanoct(sa, mark) ;
     if (what & 0x0100) mark = sa->len ;
     if (what & 0x1000) c = 7 + byte_chr("abtnvfr", 7, c) ;
     if (what & 0x0010) if (!stralloc_catb(sa, &c, 1)) dienomem() ;
@@ -123,7 +123,7 @@ static inline void parse_config (char const *file, buffer *b, stralloc *sa)
       sa->s[sa->len-2] = (fmtscan_num(sa->s[sa->len-2], 16) << 4) + fmtscan_num(sa->s[sa->len-1], 16) ;
       sa->len-- ;
     }
-    if (what & 0x0800) scanoct(sa, mark) ;
+    if (what & 0x0800) envfile_scanoct(sa, mark) ;
   }
   if (state > 14)
   {
@@ -177,7 +177,7 @@ int main (int argc, char const *const *argv)
     buffer b ;
     char buf[BUFFER_INSIZE] ;
     buffer_init(&b, &buffer_read, fd, buf, BUFFER_INSIZE) ;
-    parse_config(name, &b, &modif) ;
+    envfile_parse_config(name, &b, &modif) ;
     fd_close(fd) ;
   }
   xmexec_m(argv + 1, modif.s, modif.len) ;

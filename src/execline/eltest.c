@@ -11,7 +11,7 @@
 #include <skalibs/strerr.h>
 #include <skalibs/djbunix.h>
 
-enum opnum
+enum eltest_opnum_e
 {
   T_NOT,
   T_AND,
@@ -58,25 +58,25 @@ enum opnum
   T_MATCH
 } ;
 
-struct token
+struct eltest_token_s
 {
   char const *string ;
-  enum opnum op ;
+  enum eltest_opnum_e op ;
   unsigned int type ;
 } ;
 
-struct node
+struct eltest_node_s
 {
-  enum opnum op ;
+  enum eltest_opnum_e op ;
   unsigned int type ;
   unsigned int arg1 ;
   unsigned int arg2 ;
   char const *data ;
 } ;
 
-static unsigned int eltest_lex (struct node *tree, char const *const *argv)
+static unsigned int eltest_lex (struct eltest_node_s *tree, char const *const *argv)
 {
-  static struct token const tokens[46] =
+  static struct eltest_token_s const tokens[46] =
   {
     { "-n", T_NONZERO, 2 },
     { "-z", T_ZERO, 2 },
@@ -149,7 +149,7 @@ static unsigned int eltest_lex (struct node *tree, char const *const *argv)
   return pos ;
 }
 
-static unsigned int eltest_parse (struct node *tree, unsigned int n)
+static unsigned int eltest_parse (struct eltest_node_s *tree, unsigned int n)
 {
   static char const table[9][13] =
   {
@@ -278,7 +278,7 @@ static unsigned int eltest_parse (struct node *tree, unsigned int n)
   return stack[1] ;
 }
 
-static int eltest_run (struct node const *tree, unsigned int root)
+static int eltest_run (struct eltest_node_s const *tree, unsigned int root)
 {
   switch (tree[root].op)
   {
@@ -498,7 +498,7 @@ errorint:
 
 int main (int argc, char const *const *argv)
 {
-  struct node tree[argc+2] ;
+  struct eltest_node_s tree[argc+2] ;
   if (argc <= 1) return 1 ;
   PROG = "eltest" ;
   return !eltest_run(tree, eltest_parse(tree, eltest_lex(tree, argv+1))) ;

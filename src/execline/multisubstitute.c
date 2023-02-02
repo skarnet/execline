@@ -7,28 +7,26 @@
 
 #define USAGE "see http://skarnet.org/software/execline/multisubstitute.html"
 
-static char const *const commands[] =
-{
-  "define",
-  "importas",
-  "elglob",
-  "elgetpositionals",
-  "multidefine",
-  0
-} ;
-
-static exls_func_ref const functions[] =
-{
-  &exlsn_define,
-  &exlsn_importas,
-  &exlsn_elglob,
-  &exlsn_exlp,
-  &exlsn_multidefine,
-  0
-} ;
-
 int main (int argc, char const **argv, char const *const *envp)
 {
+  static char const *const commands[] =
+  {
+    "define",
+    "importas",
+    "elglob",
+    "elgetpositionals",
+    "multidefine",
+    0
+  } ;
+  static exls_func_ref const functions[] =
+  {
+    &exlsn_define,
+    &exlsn_importas,
+    &exlsn_elglob,
+    &exlsn_exlp,
+    &exlsn_multidefine,
+    0
+  } ;
   exlsn_t info = EXLSN_ZERO ;
   int argc1 ;
   PROG = "multisubstitute" ;

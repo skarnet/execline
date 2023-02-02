@@ -49,6 +49,7 @@ for i in `ls -1 src/execline/deps-exe` ; do
   echo
   echo '#undef USAGE'
   echo '#undef dieusage'
+  echo '#undef dienomem'
 done
 
 cat <<EOF

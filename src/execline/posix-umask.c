@@ -19,7 +19,7 @@
 
  /* well, unlike posix-cd, at least this one was fun to write */
 
-static inline int output (int sym)
+static inline int pu_output (int sym)
 {
   mode_t mode = umask(0) ;
   size_t m = 0 ;
@@ -43,13 +43,13 @@ static inline int output (int sym)
   return 0 ;
 }
 
-static void diesyntax (char const *) gccattr_noreturn ;
-static void diesyntax (char const *s)
+static void pu_diesyntax (char const *) gccattr_noreturn ;
+static void pu_diesyntax (char const *s)
 {
   strerr_dief3x(101, "internal parsing error: bad ", s, ". Please submit a bug-report.") ;
 }
 
-static inline uint8_t cclass (char c)
+static inline uint8_t pu_cclass (char c)
 {
  /* char tables may be more efficient, but this is way more readable */
   switch (c)
@@ -73,7 +73,7 @@ static inline uint8_t cclass (char c)
   }
 }
 
-static inline uint8_t who_value (char c)
+static inline uint8_t pu_who_value (char c)
 {
   switch (c)
   {
@@ -84,11 +84,11 @@ static inline uint8_t who_value (char c)
     case '+' : /* shortcut for when who is empty */
     case '-' :
     case '=' : return 7 ;
-    default : diesyntax("who") ;
+    default : pu_diesyntax("who") ;
   }
 }
 
-static inline uint8_t perm_value (char c)
+static inline uint8_t pu_perm_value (char c)
 {
   switch (c)
   {
@@ -98,11 +98,11 @@ static inline uint8_t perm_value (char c)
     case 'X' : return 1 ;
     case 's' :
     case 't' : return 0 ;
-    default : diesyntax("perm") ;
+    default : pu_diesyntax("perm") ;
   }
 }
 
-static inline unsigned int parsemode (char const *s)
+static inline unsigned int pu_parsemode (char const *s)
 {
   static uint16_t const table[5][7] =
   {
@@ -121,11 +121,11 @@ static inline unsigned int parsemode (char const *s)
   while (state < 5)
   {
     char c = *s++ ;
-    uint16_t what = table[state][cclass(c)] ;
+    uint16_t what = table[state][pu_cclass(c)] ;
     state = what & 7 ;
-    if (what & 0x020) who |= who_value(c) ;
+    if (what & 0x020) who |= pu_who_value(c) ;
     if (what & 0x080) perm = modes[byte_chr("ogu", 3, c)] ;
-    if (what & 0x100) perm |= perm_value(c) ;
+    if (what & 0x100) perm |= pu_perm_value(c) ;
     if (what & 0x800)
     {
       unsigned int i = 3 ;
@@ -135,7 +135,7 @@ static inline unsigned int parsemode (char const *s)
           case '-' : modes[i] &= ~perm ; break ;
           case '+' : modes[i] |= perm ; break ;
           case '=' : modes[i] = perm ; break ;
-          default : diesyntax("op") ;
+          default : pu_diesyntax("op") ;
         }
     }
     if (what & 0x040) op = c ;
@@ -167,8 +167,8 @@ int main (int argc, char const **argv)
     }
     argc -= l.ind ; argv += l.ind ;
   }
-  if (!argc) return output(sym) ;
-  if (!uint0_oscan(argv[0], &mode)) mode = ~parsemode(argv[0]) ;
+  if (!argc) return pu_output(sym) ;
+  if (!uint0_oscan(argv[0], &mode)) mode = ~pu_parsemode(argv[0]) ;
   umask(mode & 00777) ;
   xexec0(argv+1) ;
 }

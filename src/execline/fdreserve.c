@@ -12,7 +12,7 @@
 
 #define MAXFDS 1024
 
-unsigned int doit (char *modif, unsigned int i, int fd)
+unsigned int fdreserve_doit (char *modif, unsigned int i, int fd)
 {
   unsigned int pos = 2 ;
   modif[0] = 'F' ; modif[1] = 'D' ;
@@ -49,14 +49,14 @@ int main (int argc, char const *const *argv)
         if (lastfd < 0)
           strerr_diefu1sys(111, "reserve last fd") ;
         fd_close(lastfd) ;
-        j += doit(modif + j, n-1, lastfd) ;
+        j += fdreserve_doit(modif + j, n-1, lastfd) ;
       }
       for (i = 0 ; i < (n>>1) ; i++)
       {
         fd_close(fd[i][0]) ;
         fd_close(fd[i][1]) ;
-        j += doit(modif + j, i<<1, fd[i][0]) ;
-        j += doit(modif + j, (i<<1)|1, fd[i][1]) ;
+        j += fdreserve_doit(modif + j, i<<1, fd[i][0]) ;
+        j += fdreserve_doit(modif + j, (i<<1)|1, fd[i][1]) ;
       }
     }
     xmexec_n(argv+2, modif, j, n) ;
