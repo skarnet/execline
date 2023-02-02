@@ -31,15 +31,6 @@ static int execline_app_cmp (void const *a, void const *b)
   execline_app const *p = b ;
   return strcmp(name, p->name) ;
 }
-
-#ifdef EXECLINE_PEDANTIC_POSIX
-# define CD_FUNC posix_cd_main
-# define UMASK_FUNC posix_umask_main
-#else
-# define CD_FUNC execline_cd_main
-# define UMASK_FUNC execline_umask_main
-#endif
-
 EOF
 
 for i in `ls -1 src/execline/deps-exe` ; do
@@ -56,6 +47,14 @@ cat <<EOF
 
 static int execline_main (int, char **, char const *const *) ;
 
+#ifdef EXECLINE_PEDANTIC_POSIX
+# define CD_FUNC posix_cd_main
+# define UMASK_FUNC posix_umask_main
+#else
+# define CD_FUNC execline_cd_main
+# define UMASK_FUNC execline_umask_main
+#endif
+
 static execline_app const execline_apps[] =
 {
 EOF
@@ -67,7 +66,7 @@ for i in `{ echo cd ; echo execline ; echo umask ; ls -1 src/execline/deps-exe ;
   elif test $i = umask ; then
     echo '  { .name = "umask", .mainf = (main_func_ref)&UMASK_FUNC },'
   else
-    echo "  { .name=\"${i}\", .mainf = (main_func_ref)&${j}_main },"
+    echo "  { .name = \"${i}\", .mainf = (main_func_ref)&${j}_main },"
   fi
 done
 

@@ -6,7 +6,7 @@ Build Instructions
 
   - A POSIX-compliant C development environment
   - GNU make version 3.81 or later
-  - skalibs version 2.13.0.0 or later: https://skarnet.org/software/skalibs/
+  - skalibs version 2.13.1.0 or later: https://skarnet.org/software/skalibs/
   - Optional: nsss version 0.2.0.2 or later: https://skarnet.org/software/nsss/
 
  This software will run on any operating system that implements
@@ -175,3 +175,25 @@ without relying on a PATH search.
  skarnet.org packages do not support out-of-tree builds. They
 are small, so it does not cost much to duplicate the entire
 source tree if parallel builds are needed.
+
+
+* Multicall binary  - THIS IS EXPERIMENTAL.
+  ----------------
+
+ Starting with version 2.9.2.0, the execline package comes with an
+alternative build in the form of a multicall binary, simply called
+"execline", that includes the functionality of *all* the other
+binaries; it switches functionalities depending on the name it is
+called with, or the subcommand it is given: "execline cd / true"
+will chdir to / before exiting, same as "cd / true" if cd is a link
+to the execline program.
+
+ To use this, after invoking configure, type: make multicall
+ You can strip the binary with: make multicall-strip
+ You can install it with: make multicall-install
+ Be aware that it will overwrite a previous installation.
+
+ The multicall setup saves a lot of disk space, at the price of
+am unnoticeable amount of CPU usage. RAM usage is about equivalent
+and difficult to assess. The setup is meant for embedded devices
+or small distributions with a focus on saving disk space.
