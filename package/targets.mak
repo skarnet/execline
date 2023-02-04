@@ -79,8 +79,10 @@ multicall-strip: execline
 
 multicall-install: $(DESTDIR)$(bindir)/execline
 	for i in $(BIN_TARGETS) $(EXTRA_TARGETS) ; do ./tools/install.sh -l execline $(DESTDIR)$(bindir)/$$i ; done
-	
-.PHONY: multicall multicall-strip multicall-install
+
+multicall-global-links: $(DESTDIR)$(sproot)/command/execline
+
+.PHONY: multicall multicall-strip multicall-install multicall-global-links
 
 src/multicall/execline.c: tools/gen-multicall.sh src/execline/deps-exe src/include/execline/config.h src/include/execline/execline.h
 	./tools/gen-multicall.sh > src/multicall/execline.c
