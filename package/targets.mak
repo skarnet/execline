@@ -72,7 +72,7 @@ $(DESTDIR)$(bindir)/umask: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-umask
 EXTRA_BINS := execline
 EXTRA_TEMP := src/multicall/execline.c
 
-multicall: execline
+multicall multicall-all: execline
 
 multicall-strip: execline
 	exec $(STRIP) -R .note -R .comment execline
@@ -82,7 +82,7 @@ multicall-install: $(DESTDIR)$(bindir)/execline
 
 multicall-global-links: $(DESTDIR)$(sproot)/command/execline
 
-.PHONY: multicall multicall-strip multicall-install multicall-global-links
+.PHONY: multicall multicall-all multicall-strip multicall-install multicall-global-links
 
 src/multicall/execline.c: tools/gen-multicall.sh src/execline/deps-exe src/include/execline/config.h src/include/execline/execline.h
 	./tools/gen-multicall.sh > src/multicall/execline.c
