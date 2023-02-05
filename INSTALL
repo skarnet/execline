@@ -177,7 +177,7 @@ are small, so it does not cost much to duplicate the entire
 source tree if parallel builds are needed.
 
 
-* Multicall binary  - THIS IS EXPERIMENTAL.
+* Multicall binary
   ----------------
 
  Starting with version 2.9.2.0, the execline package comes with an
@@ -188,10 +188,9 @@ called with, or the subcommand it is given: "execline cd / true"
 will chdir to / before exiting, same as "cd / true" if cd is a link
 to the execline program.
 
- To use this, after invoking configure, type: make multicall
- You can strip the binary with: make multicall-strip
- You can install it with: make multicall-install
- Be aware that it will overwrite a previous installation.
+ To use this, use the --enable-multicall option to configure. Only
+the execline binary will be built, and other programs will be
+created as symbolic links to execline at installation time.
 
  The multicall setup saves a lot of disk space, at the price of
 am unnoticeable amount of CPU usage. RAM usage is about equivalent

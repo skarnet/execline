@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the execline program</title>
+    <meta name="Description" content="execline: the execline program" />
+    <meta name="Keywords" content="execline command multicall" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>execline</tt> program </h1>
+
+<p>
+The <tt>execline</tt> program is only available when the
+<tt>--enable-multicall</tt> option has been given to the <tt>configure</tt>
+program at build time. In this configuration, <tt>execline</tt> is
+a multicall binary implementing the functionality of <em>all</em>
+the programs in the execline package; and the other programs, instead
+of being executables of their own, are symbolic links to the
+execline binary.
+</p>
+
+<h2> Interface </h2>
+
+<pre>
+     execline <em>subcommand</em> <em>subcommand_arguments...</em>
+</pre>
+
+<p>
+ execline will run the <em>subcommand</em> will its arguments. For
+instance, <tt>execline cd / ls</tt> will run the equivalent of the
+<a href="cd.html">program</a>, so this command will list the contents
+of the <tt>/</tt> directory.
+</p>
+
+<p>
+ Alternatively, if execline is called with the name of an existing
+command, it will run the equivalent of that command. For instance,
+if the <tt>/usr/bin/cd</tt> file is a (hard or symbolic) link to
+the <tt>execline</tt> binary, <tt>/usr/bin/cd / ls</tt> will list
+the contents of the <tt>/</tt> directory.
+</p>
+
+<h2> Notes on the multicall configuration </h2>
+
+<p>
+ The <tt>--enable-multicall</tt> option is a user-requested feature
+to save disk space. Its goal is purely to save disk space;
+functionality-wise, the execline package should be the exact same
+whether it has been built with <tt>--enable-multicall</tt> or not.
+That means: any execline script should work the exact same way.
+</p>
+
+<p>
+ Multicall binaries have a number of issues, most of them hidden
+from regular users. One user-visible issue is that their behaviour
+changes depending on how they are called, which is not good
+practice (it breaks naming agnosticism) despite being common in
+traditional Unix. Other, more important issues are only visible
+to software authors and maintainers: for instance, they make it
+difficult to add functionality to a software package without
+inadvertently blowing up the amount of RAM used by the software,
+and they encourage bad engineering practices to work around
+specific problems created by this configuration.
+</p>
+
+<p>
+ I am not a fan of multicall binaries at all.
+</p>
+
+<p>
+ However, it just so happens that the execline package already was
+a good candidate for a multicall configuration, and several users
+had been asking for it (and complaining about the amount of disk
+space that the traditional execline package uses). So I did an
+experiment, and it turned out that a multicall execline binary
+does save a <strong>huge</strong> amount of space. Depending on
+your shared/static library configuration and your libc, the gain
+in disk space on Linux can range from 66% to 87%! The results were
+contrary to my expectations &mdash; and simply too good to pass up.
+</p>
+
+<p>
+ So now, the multicall configuration is supported for execline.
+Do not expect anything similar for the rest of the skarnet.org
+packages, because they're not as good candidates and it would
+require a tremendous amount of work for less benefit.
+</p>
+
+</body>
+</html>
