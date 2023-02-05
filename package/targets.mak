@@ -1,88 +1,34 @@
-BIN_TARGETS := \
-background \
-backtick \
-case \
-define \
-dollarat \
-elgetopt \
-elgetpositionals \
-elglob \
-eltest \
-emptyenv \
-envfile \
-exec \
-execlineb \
-execline-cd \
-execline-umask \
-exit \
-export \
-fdblock \
-fdclose \
-fdmove \
-fdswap \
-fdreserve \
-forbacktickx \
-foreground \
-forstdin \
-forx \
-getcwd \
-getpid \
-heredoc \
-homeof \
-if \
-ifelse \
-ifte \
-ifthenelse \
-importas \
-loopwhilex \
-multidefine \
-multisubstitute \
-pipeline \
-piperw \
-posix-cd \
-posix-umask \
-redirfd \
-runblock \
-shift \
-trap \
-tryexec \
-unexport \
-wait \
-withstdinas
-
 LIBEXEC_TARGETS :=
 
 LIB_DEFS := EXECLINE=execline
 
-ifeq ($(PEDANTIC_POSIX),1)
-PEDANTIC_PREFIX := posix
-else
-PEDANTIC_PREFIX := execline
-endif
+ifeq ($(MULTICALL),1)
 
-EXTRA_TARGETS := cd umask
-
-$(DESTDIR)$(bindir)/cd: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-cd
-	exec ./tools/install.sh -l $(PEDANTIC_PREFIX)-cd $(DESTDIR)$(bindir)/cd
-
-$(DESTDIR)$(bindir)/umask: $(DESTDIR)$(bindir)/$(PEDANTIC_PREFIX)-umask
-	exec ./tools/install.sh -l $(PEDANTIC_PREFIX)-umask $(DESTDIR)$(bindir)/umask
-
-
-EXTRA_BINS := execline
+BIN_TARGETS := execline
+BIN_SYMLINKS := cd umask $(notdir $(wildcard src/execline/deps-exe/*))
 EXTRA_TEMP := src/multicall/execline.c
 
-multicall multicall-all: execline
+define symlink_definition
+SYMLINK_TARGET_$(1) := execline
+endef
+$(foreach name,$(BIN_SYMLINKS),$(eval $(call symlink_definition,$(name))))
 
-multicall-strip: execline
-	exec $(STRIP) -R .note -R .comment execline
-
-multicall-install: $(DESTDIR)$(bindir)/execline
-	for i in $(BIN_TARGETS) $(EXTRA_TARGETS) ; do ./tools/install.sh -l execline $(DESTDIR)$(bindir)/$$i ; done
-
-multicall-global-links: $(DESTDIR)$(sproot)/command/execline
-
-.PHONY: multicall multicall-all multicall-strip multicall-install multicall-global-links
-
-src/multicall/execline.c: tools/gen-multicall.sh src/execline/deps-exe src/include/execline/config.h src/include/execline/execline.h
+src/multicall/execline.c: tools/gen-multicall.sh src/execline/deps-exe
 	./tools/gen-multicall.sh > src/multicall/execline.c
+
+src/multicall/execline.o: src/multicall/execline.c src/include/execline/config.h src/include/execline/execline.h
+
+else
+
+BIN_TARGETS := $(notdir $(wildcard src/execline/deps-exe/*))
+BIN_SYMLINKS := cd umask
+
+ifeq ($(PEDANTIC_POSIX),1)
+SYMLINK_TARGET_cd := posix-cd
+SYMLINK_TARGET_umask := posix-umask
+else
+SYMLINK_TARGET_cd := execline-cd
+SYMLINK_TARGET_umask := execline-umask
+endif
+
+endif

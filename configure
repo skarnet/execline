@@ -48,6 +48,7 @@ Optional features:
                                   hardcode absolute BINDIR/foobar paths instead [disabled]
   --enable-nsss                 use the nsss library for user information [disabled]
   --enable-pedantic-posix       use pedantically POSIX-compatible binaries [disabled]
+  --enable-multicall            build a multicall binary (EXPERIMENTAL) [disabled]
 
 EOF
 exit 0
@@ -154,6 +155,7 @@ slashpackage=false
 abspath=false
 usensss=false
 pposix=false
+multicall=false
 sproot=
 home=
 exthome=
@@ -200,6 +202,8 @@ for arg ; do
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-pedantic-posix|--enable-pedantic-posix=yes) pposix=true ;;
     --disable-pedantic-posix|--enable-pedantic-posix=no) pposix=false ;;
+    --enable-multicall|--enable-multicall=yes) multicall=true ;;
+    --disable-multicall|--enable-multicall=no) multicall=false ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
     --enable-*|--disable-*|--with-*|--without-*|--*dir=*) ;;
     --host=*|--target=*) target=${arg#*=} ;;
@@ -464,6 +468,11 @@ if $pposix ; then
   echo "PEDANTIC_POSIX := 1"
 else
   echo "PEDANTIC_POSIX :="
+fi
+if $multicall ; then
+  echo "MULTICALL := 1"
+else
+  echo "MULTICALL :="
 fi
 exec 1>&3 3>&-
 echo "  ... done."
