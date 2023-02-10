@@ -124,7 +124,12 @@ $(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%) $(BIN_TARGETS:%=$(DESTDIR)$(bindi
 	if [ x$$og != x ] ; then og="-O $${og}" ; fi && \
 	$(INSTALL) -D -m $$mode $$og $< $@ ; }
 
-$(BIN_SYMLINKS:%=$(DESTDIR)$(bindir)/%): $(BIN_SYMLINKS:%=$(DESTDIR)$(bindir)/$(SYMLINK_TARGET_%))
+define install_symlink_rule
+$(DESTDIR)$(bindir)/$(1): $(DESTDIR)$(bindir)/$$(SYMLINK_TARGET_$(1))
+endef
+
+$(foreach x,$(BIN_SYMLINKS),$(eval $(call install_symlink_rule,$(x))))
+$(BIN_SYMLINKS:%=$(DESTDIR)$(bindir)/%):
 	exec $(INSTALL) -l $(SYMLINK_TARGET_$(@F)) $@
 
 $(DESTDIR)$(libdir)/lib%.a: lib%.a.xyzzy
