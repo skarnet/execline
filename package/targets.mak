@@ -5,7 +5,8 @@ LIB_DEFS := EXECLINE=execline
 ifeq ($(MULTICALL),1)
 
 BIN_TARGETS := execline
-BIN_SYMLINKS := cd umask $(notdir $(wildcard src/execline/deps-exe/*))
+CONTENTS := $(notdir $(wildcard src/execline/deps-exe/*))
+BIN_SYMLINKS := cd umask $(CONTENTS)
 EXTRA_TEMP := src/multicall/execline.c
 
 define symlink_definition
@@ -13,7 +14,7 @@ SYMLINK_TARGET_$(1) := execline
 endef
 $(foreach name,$(BIN_SYMLINKS),$(eval $(call symlink_definition,$(name))))
 
-src/multicall/execline.c: tools/gen-multicall.sh src/execline/deps-exe
+src/multicall/execline.c: tools/gen-multicall.sh $(CONTENTS:%=src/$(package)/%.c)
 	./tools/gen-multicall.sh > src/multicall/execline.c
 
 src/multicall/execline.o: src/multicall/execline.c src/include/execline/config.h src/include/execline/execline.h
