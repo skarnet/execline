@@ -74,13 +74,13 @@ cat <<EOF
 } ;
 
 #define USAGE "execline subcommand [ arguments... ]"
-#define dieusage() strerr_dief1x(100, USAGE)
+#define dieusage() strerr_dieusage(100, USAGE)
 
 static int execline_main (int argc, char **argv, char const *const *envp)
 {
   execline_app const *p ;
   PROG = "execline" ;
-  if (!argc) dieusage() ;
+  if (argc < 2) dieusage() ;
   p = bsearch(argv[1], execline_apps, sizeof(execline_apps) / sizeof(execline_app), sizeof(execline_app), &execline_app_cmp) ;
   if (!p) strerr_dief2x(100, "unknown subcommand: ", argv[1]) ;
   return (*(p->mainf))(argc-1, argv+1, envp) ;
