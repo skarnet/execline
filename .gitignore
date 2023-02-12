@@ -4,6 +4,8 @@
 /*.so.xyzzy
 /config.mak
 /src/include/execline/config.h
+/src/multicall/execline.c
+/execline
 /background
 /backtick
 /case
@@ -56,5 +58,3 @@
 /unexport
 /wait
 /withstdinas
-/src/multicall/execline.c
-/execline
