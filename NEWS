@@ -3,7 +3,7 @@ Changelog for execline.
 In 2.9.2.0
 ----------
 
- - Experimental multicall feature.
+ - New multicall binary: execline.
 
 
 In 2.9.1.0
