@@ -16,7 +16,6 @@ CC = $(error Please use ./configure first)
 
 STATIC_LIBS :=
 SHARED_LIBS :=
-INTERNAL_LIBS :=
 LIB_DEFS :=
 BIN_SYMLINKS :=
 EXTRA_TEMP :=
