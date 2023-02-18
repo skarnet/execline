@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+LC_ALL=C ; export LC_ALL
+
 echo '/* ISC license. */'
 echo
 echo '#include <skalibs/nonposix.h>'
