@@ -26,7 +26,7 @@ arguments to an execline script.
 <h2> Interface </h2>
 
 <pre>
-     elgetopt <em>optstring</em> <em>prog...</em>
+     elgetopt [ -D <em>default</em> ] <em>optstring</em> <em>prog...</em>
 </pre>
 
 <ul>
@@ -44,11 +44,20 @@ string. </li>
  <li> If the <tt>-<em>c</em></tt> switch is recognized, <tt>elgetopt</tt>
 sets the <tt>ELGETOPT_<em>c</em></tt> environment variable. The value
 of that variable is the argument to the <tt>-<em>c</em></tt> switch if
-it has one, and 1 otherwise. </li>
+it has one, and <tt>1</tt> (or <em>default</em> if given) otherwise. </li>
  <li> After setting all recognized options, <tt>elgetopt</tt> makes
 new <tt>#</tt>, <tt>1</tt>, <tt>2</tt>... "positional parameters" with
 what remains. </li>
  <li> <tt>elgetopt</tt> then execs into <em>prog...</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: use <em>default</em> as the
+value for the <tt>ELGETOPT_<em>c</em></tt> environment variable if there is
+no argument to the <tt>-<em>c</em></tt> switch. Default is <tt>1</tt>. The
+value is the same for all the options defined by elgetopt. </li>
 </ul>
 
 <h2> Notes </h2>

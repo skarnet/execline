@@ -1,5 +1,11 @@
 Changelog for execline.
 
+In 2.9.3.0
+----------
+
+ - New -D option to elgetopt.
+
+
 In 2.9.2.1
 ----------
 
