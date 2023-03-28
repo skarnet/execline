@@ -3,6 +3,7 @@ Changelog for execline.
 In 2.9.3.0
 ----------
 
+ - Bugfixes.
  - New -D option to elgetopt.
 
 

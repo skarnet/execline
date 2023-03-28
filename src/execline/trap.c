@@ -45,7 +45,7 @@ static inline void trap_action (unsigned int i, char const *const *envp, size_t 
 
 int main (int argc, char const **argv, char const *const *envp)
 {
-  pid_t pids[SKALIBS_NSIG + 1] ;
+  pid_t pids[SKALIBS_NSIG + 1] = { 0 } ;
   char const *const *argvs[SKALIBS_NSIG] = { 0 } ;
   size_t envlen = env_len(envp) ;
   iopause_fd x = { .events = IOPAUSE_READ } ;
