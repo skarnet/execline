@@ -105,7 +105,18 @@ int main (int argc, char const *const *argv, char const *const *envp)
     }
     argc -= l.ind ; argv += l.ind ;
   }
-  if (stringarg) nc = el_parse_from_string(&sa, stringarg) ;
+  if (stringarg)
+  {
+    nc = el_parse_from_string(&sa, stringarg) ;
+    switch (nc)
+    {
+      case -4: strerr_dief2x(100, "unmatched ", "}") ;
+      case -3: strerr_dief2x(100, "unmatched ", "{") ;
+      case -2: strerr_dief1x(100, "syntax error") ;
+      case -1: strerr_diefu1sys(111, "parse script") ;
+      case 0 : return 0 ;
+    }
+  }
   else
   {
     char buf[BUFFER_INSIZE] ;
@@ -118,15 +129,14 @@ int main (int argc, char const *const *argv, char const *const *envp)
     buffer_init(&b, &fd_readv, fd, buf, BUFFER_INSIZE) ;
     nc = el_parse_from_buffer(&sa, &b) ;
     fd_close(fd) ;
-  }
-
-  switch (nc)
-  {
-    case -4: strerr_dief2x(100, "unmatched ", "}") ;
-    case -3: strerr_dief2x(100, "unmatched ", "{") ;
-    case -2: strerr_dief1x(100, "syntax error") ;
-    case -1: strerr_diefu1sys(111, "parse script") ;
-    case 0 : return 0 ;
+    switch (nc)
+    {
+      case -4: strerr_dief4x(100, "unmatched ", "}", " in file ", dollar0) ;
+      case -3: strerr_dief4x(100, "unmatched ", "{", " in file ", dollar0) ;
+      case -2: strerr_dief3x(100, "syntax error", " in file ", dollar0) ;
+      case -1: strerr_diefu3sys(111, "parse script", " in file ", dollar0) ;
+      case 0 : return 0 ;
+    }
   }
 
   if (flagstrict >= 0)
