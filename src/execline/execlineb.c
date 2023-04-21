@@ -18,7 +18,7 @@
 #include <execline/execline.h>
 #include "exlsn.h"
 
-#define USAGE "execlineb [ -p | -P | -S nmin | -s nmin ] [ -q | -w | -W ] [ -c commandline ] script args"
+#define USAGE "execlineb [ -p | -P | -S nmin | -s nmin ] [ -q | -w | -W ] [ -e ] [ -c commandline ] script args"
 
 static int myexlp (stralloc *sa, char const *const *argv, unsigned int argc, unsigned int nmin, char const *dollar0, int doshift)
 {
@@ -83,7 +83,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
     subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "pPqwWc:S:s:", &l) ;
+      int opt = subgetopt_r(argc, argv, "pPqwWec:S:s:", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
@@ -93,6 +93,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
         case 'w' : flagstrict = 1 ; break ;
         case 'W' : flagstrict = 2 ; break ;
         case 'c' : stringarg = l.arg ; break ;
+        case 'e' : break ;
         case 'S' :
         case 's' :
         {

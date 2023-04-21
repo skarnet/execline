@@ -27,7 +27,7 @@ then executes into that command line.
 <h2> Interface </h2>
 
 <pre>
-     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> | -s <em>nmin</em> ] -c <em>script</em> [ <em>args...</em> ]
+     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> | -s <em>nmin</em> ] [ -e ] -c <em>script</em> [ <em>args...</em> ]
 </pre>
 
 <p>
@@ -35,7 +35,7 @@ or
 </p>
 
 <pre>
-     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> | -s <em>nmin</em> ] <em>scriptfile</em> [ <em>args...</em> ]
+     execlineb [ -q | -w | -W ] [ -p | -P | -S <em>nmin</em> | -s <em>nmin</em> ] [ -e ] <em>scriptfile</em> [ <em>args...</em> ]
 </pre>
 
 <p>
@@ -100,6 +100,12 @@ not stay in memory like a traditional <em>interpreter</em> would. </li>
 <h2> Options </h2>
 
 <ul>
+ <li> <tt>-e</tt>&nbsp;: this option is ignored. This is meant to support
+the use of execlineb in conjuction with programs that invoke
+<tt>$SHELL -ec <em>script</em></tt>; the effect of <tt>/bin/sh -e</tt>
+can be natively replicated in execline scripts if you use the
+<a href="if.html">if</a> command instead of the
+<a href="foreground.html">foreground</a> command. </li>
  <li> <tt>-c&nbsp;<em>script</em></tt>&nbsp;: execute <em>script</em>, do not
 look for a file. </li>
 </ul>
