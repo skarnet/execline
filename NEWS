@@ -1,5 +1,12 @@
 Changelog for execline.
 
+In 2.9.4.0
+----------
+
+ - New dummy -e option in execlineb
+ - Slightly better error reporting in execlineb
+
+
 In 2.9.3.0
 ----------
 
