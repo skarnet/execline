@@ -78,8 +78,9 @@ then execute the <tt>echo</tt> command. So that script will print
 <tt>blah</tt> on stdout.
 </p>
 
-<a name="quoting" />
+<div id="quoting">
 <h2> Quoting </h2>
+</div>
 
 <p>
  execline allows you to write literal <tt>${<em>foo</em>}</tt> constructs
@@ -163,9 +164,9 @@ $B \$B \\$B \\\$B \\\\$B \\\\\$B
  Phew.
 </p>
 
-<a name="el_transform">
+<div id="el_transform">
 <h2> Value transformations </h2>
-</a>
+</div>
 
 <p>
  A value can go through
@@ -175,9 +176,9 @@ substituted. It can be <a href="el_transform.html#crunch">crunched</a>,
 <a href="el_transform.html#split">split</a>.
 </p>
 
-<a name="split">
+<div id="split">
 <h2> Substitution of split values </h2>
-</a>
+</div>
 
 <p>
  A <a href="el_transform.html">split</a> value for <tt>FOO</tt> means that
@@ -215,8 +216,9 @@ words beginning with the right amount of spaces, thus substituted
 values cannot prematurely terminate a block.)
 </p>
 
-<a name="recursive" />
+<div id="recursive">
 <h3> Recursive substitutions </h3>
+</div>
 
 <p>
  A direct consequence of that rule is that substitutions will be performed
@@ -280,8 +282,9 @@ ax1 bx1 cx1 dx1 ax2 bx2 cx2 dx2 ax3 bx3 cx3 dx3
  in that order.
 </p>
 
-<a name="brainfsck"></a>
+<div id="brainfsck">
 <h2> Not for the faint of heart </h2>
+</div>
 
 <p>
  If you think you have mastered the art of execline substitution, then

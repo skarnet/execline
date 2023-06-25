@@ -35,10 +35,8 @@ commands in the execline language via the
 <a href="runblock.html">runblock</a> command was impossible.
 </p>
 
-<a name="push" />
-
 <p>
- To solve that issue, execline now implements a kind of <em>environment
+<div id="push">To solve that issue</div>, execline now implements a kind of <em>environment
 stack</em>. When execlineb reads the arguments, it does
 not overwrite the positional parameters, but <em>pushes</em> them on a
 stack:
@@ -62,10 +60,8 @@ frame of positional parameters, without paying attention to the deeper
 levels.
 </p>
 
-<a name="pop" />
-
 <p>
- When you are done with the arguments, it is advisable to <em>drop</em>
+ <div id="pop">When you are done with the arguments</div>, it is advisable to <em>drop</em>
 the current frame, and <em>pop</em> the environment stack to get it back
 to its previous state:
 </p>
@@ -116,9 +112,9 @@ which will run <em>prog</em> with the same environment as the script's
 caller.
 </p>
 
-<a name="integrated" />
-
+<div id="integrated">
 <h2> Substituting positional parameters without touching the environment </h2>
+</div>
 
 <p>
  Most of the time, you just need to substitute the positional parameters
