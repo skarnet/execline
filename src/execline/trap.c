@@ -13,6 +13,7 @@
 #include <skalibs/iopause.h>
 #include <skalibs/selfpipe.h>
 #include <skalibs/env.h>
+#include <skalibs/cspawn.h>
 #include <skalibs/djbunix.h>
 
 #include <execline/execline.h>
@@ -36,7 +37,7 @@ static inline void trap_action (unsigned int i, char const *const *envp, size_t 
       modif[m++] = 0 ;
       if (!env_mergen(newenvp, envlen + 3, envp, envlen, modif, m, 2))
         strerr_diefu1sys(111, "adjust environment for child") ;
-      pids[i] = child_spawn0(argvs[i][0], argvs[i], newenvp) ;
+      pids[i] = cspawn(argvs[i][0], argvs[i], newenvp, CSPAWN_FLAGS_SELFPIPE_FINISH, 0, 0) ;
       if (!pids[i]) strerr_diefu2sys(111, "spawn ", argvs[i][0]) ;
     }
   }
@@ -118,10 +119,10 @@ int main (int argc, char const **argv, char const *const *envp)
   }
 
   x.fd = selfpipe_init() ;
-  if (x.fd < 0) strerr_diefu1sys(111, "selfpipe_init") ;
+  if (x.fd == -1) strerr_diefu1sys(111, "selfpipe_init") ;
   if (!selfpipe_trapset(&set)) strerr_diefu1sys(111, "trap signals") ;
 
-  pids[SKALIBS_NSIG] = child_spawn0(argv[argc1 + 1], argv + argc1 + 1, envp) ;
+  pids[SKALIBS_NSIG] = cspawn(argv[argc1 + 1], argv + argc1 + 1, envp, CSPAWN_FLAGS_SELFPIPE_FINISH, 0, 0) ;
   if (!pids[SKALIBS_NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
 
  loop:
