@@ -4,6 +4,7 @@
 #include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr.h>
+#include <skalibs/cspawn.h>
 #include <skalibs/exec.h>
 
 #include <execline/execline.h>
@@ -15,6 +16,9 @@ int main (int argc, char const **argv, char const *const *envp)
   pid_t pid ;
   int argc1 ;
   int df = 0 ;
+  size_t i = 2 ;
+  char fmt[PID_FMT + 2] = "!=" ;
+
   PROG = "background" ;
   {
     subgetopt l = SUBGETOPT_ZERO ;
@@ -36,27 +40,9 @@ int main (int argc, char const **argv, char const *const *envp)
   if (argc1 + 1 == argc) df = 0 ;
   argv[argc1] = 0 ;
 
-  if (df)
-  {
-    pid = doublefork() ;
-    switch (pid)
-    {
-      case -1: strerr_diefu1sys(111, "doublefork") ;
-      case 0:
-        PROG = "background (grandchild)" ;
-        xexec0_e(argv, envp) ;
-    }
-  }
-  else
-  {
-    pid = el_spawn0(argv[0], argv, envp) ;
-    if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
-  }
+  pid = df ? gcspawn(argv[0], argv, envp, 0, 0, 0) : cspawn(argv[0], argv, envp, 0, 0, 0) ;
+  if (!pid) strerr_diefu2sys(111, "spawn ", argv[0]) ;
   if (argc1 + 1 == argc) return 0 ;
-  {
-    char fmt[PID_FMT + 2] = "!=" ;
-    size_t i = 2 ;
-    i += pid_fmt(fmt+i, pid) ; fmt[i++] = 0 ;
-    xmexec_en(argv + argc1 + 1, envp, fmt, i, 1) ;
-  }
+  i += pid_fmt(fmt+i, pid) ; fmt[i++] = 0 ;
+  xmexec_en(argv + argc1 + 1, envp, fmt, i, 1) ;
 }

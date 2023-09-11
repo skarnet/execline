@@ -9,7 +9,7 @@ el_popenv.o
 el_pushenv.o
 el_semicolon.o
 el_spawn0.o
-el_spawn1.o
+el_gspawn0.o
 el_substandrun.o
 el_substandrun_str.o
 el_substitute.o
@@ -24,3 +24,4 @@ exlsn_main.o
 exlsn_free.o
 exlp.o
 -lskarnet
+${SPAWN_LIB}
