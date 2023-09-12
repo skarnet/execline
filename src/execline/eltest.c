@@ -1,6 +1,7 @@
 /* ISC license. */
 
-#include <sys/stat.h>
+#include <skalibs/nonposix.h>
+
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -362,7 +363,7 @@ static int eltest_run (struct eltest_node_s const *tree, unsigned int root)
     {
       struct stat st ;
       if (stat(tree[tree[root].arg1].data, &st) == -1) return 0 ;
-      return timespec_cmp(&st.ST_MTIM, &st.ST_ATIM) > 0 ;
+      return timespec_cmp(&st.st_mtim, &st.st_atim) > 0 ;
     }
     case T_EUID :
     {
@@ -387,14 +388,14 @@ static int eltest_run (struct eltest_node_s const *tree, unsigned int root)
       struct stat st1, st2 ;
       if (stat(tree[tree[root].arg1].data, &st1) == -1) return 0 ;
       if (stat(tree[tree[root].arg2].data, &st2) == -1) return 1 ;
-      return timespec_cmp(&st1.ST_MTIM, &st2.ST_MTIM) > 0 ;
+      return timespec_cmp(&st1.st_mtim, &st2.st_mtim) > 0 ;
     }
     case T_OLDER :
     {
       struct stat st1, st2 ;
       if (stat(tree[tree[root].arg1].data, &st1) == -1) return 1 ;
       if (stat(tree[tree[root].arg2].data, &st2) == -1) return 0 ;
-      return timespec_cmp(&st1.ST_MTIM, &st2.ST_MTIM) < 0 ;
+      return timespec_cmp(&st1.st_mtim, &st2.st_mtim) < 0 ;
     }
     case T_DEVINO :
     {
