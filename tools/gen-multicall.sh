@@ -17,6 +17,8 @@ cat <<EOF
 #include <execline/execline.h>
 #include "exlsn.h"
 
+#include <skalibs/posixishard.h>
+
 typedef int main_func (int, char **, char const *const *) ;
 typedef main_func *main_func_ref ;
 

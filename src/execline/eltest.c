@@ -7,8 +7,10 @@
 #include <regex.h>
 
 #include <skalibs/posixplz.h>
+#include <skalibs/stat.h>
 #include <skalibs/types.h>
 #include <skalibs/strerr.h>
+#include <skalibs/djbtime.h>
 #include <skalibs/djbunix.h>
 
 enum eltest_opnum_e
@@ -360,7 +362,7 @@ static int eltest_run (struct eltest_node_s const *tree, unsigned int root)
     {
       struct stat st ;
       if (stat(tree[tree[root].arg1].data, &st) == -1) return 0 ;
-      return (st.st_mtime > st.st_atime) ;
+      return timespec_cmp(&st.ST_MTIM, &st.ST_ATIM) > 0 ;
     }
     case T_EUID :
     {
@@ -385,14 +387,14 @@ static int eltest_run (struct eltest_node_s const *tree, unsigned int root)
       struct stat st1, st2 ;
       if (stat(tree[tree[root].arg1].data, &st1) == -1) return 0 ;
       if (stat(tree[tree[root].arg2].data, &st2) == -1) return 1 ;
-      return st1.st_mtime > st2.st_mtime ;
+      return timespec_cmp(&st1.ST_MTIM, &st2.ST_MTIM) > 0 ;
     }
     case T_OLDER :
     {
       struct stat st1, st2 ;
       if (stat(tree[tree[root].arg1].data, &st1) == -1) return 1 ;
       if (stat(tree[tree[root].arg2].data, &st2) == -1) return 0 ;
-      return st1.st_mtime < st2.st_mtime ;
+      return timespec_cmp(&st1.ST_MTIM, &st2.ST_MTIM) < 0 ;
     }
     case T_DEVINO :
     {
