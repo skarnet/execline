@@ -5,6 +5,7 @@ LC_ALL=C ; export LC_ALL
 echo '/* ISC license. */'
 echo
 echo '#include <skalibs/nonposix.h>'
+echo '#include <skalibs/bsdsnowflake.h>'
 echo
 { echo '#include <string.h>' ; echo '#include <stdlib.h>' ; cat src/execline/*.c | grep '^#include <' | grep -vF '<skalibs/' | grep -vF '<execline/' ; } | sort -u
 
