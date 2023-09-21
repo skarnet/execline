@@ -4,6 +4,7 @@
 # (Search for "HERE".)
 #
 define -sCd "\n" lns "
+
 ${p} ${bubble} is the end of the quine's data.
 ${p} They represent the following code, with various quotations:
 ${p} ${b} (backslash) is represented as ${d}${ob}b${cb}
@@ -28,7 +29,8 @@ foreground ${ob} printf %s${b}${b}n ${b}${q}${bubble}${b}${q}.) ${cb}
 foreground ${ob} printf %s${b}${b}n ${b}${p} ${cb}
 foreground ${ob} printf %s ${q}define -sCd ${b}${q}${b}${b}n${b}${q} lns ${b}${q}${q} ${cb}
 ${p} Next, print the data themselves, as data.
-for lin ${ob} ${d}${ob}lns${cb} ${cb} ${ob}
+foreground ${ob}
+forx -E lin ${ob} ${d}${ob}lns${cb} ${cb}
 multisubstitute ${ob}
 define b ${d}${ob}b${cb}
 define q ${d}${ob}q${cb}
@@ -41,7 +43,7 @@ define intron ${d}${ob}intron${cb}
 ${cb} printf ${b}${b}n%s ${d}${ob}lin${cb} ${cb}
 foreground ${ob} printf %s${b}${b}n ${b}${q} ${cb}
 ${p} Finally, use the data to print the code!
-for lin ${ob} ${d}${ob}lns${cb} ${cb} ${ob}
+forx -E lin ${ob} ${d}${ob}lns${cb} ${cb}
 multisubstitute ${ob}
 define b ${b}${b}
 define q ${b}${q}
@@ -51,11 +53,12 @@ define cb ${b}${cb}
 define d ${d}
 define bubble ${bubble}
 define intron ${q}${intron}${q}
-${cb} printf %s${b}${b}n ${d}${ob}lin${cb} ${cb}
+${cb} printf %s${b}${b}n ${d}${ob}lin${cb}
 ${p} That's all, folks! - Well, that wasn't so hard, was it?
 ${p} (This quine was written by <david.madore@ens.fr> - see
 ${p} <URL: http://www.eleves.ens.fr:8080/home/madore/computers/quine.html >
 ${p} for more information on quines and how to write them.)"
+
 # HERE is the end of the quine's data.
 # They represent the following code, with various quotations:
 # \ (backslash) is represented as ${b}
@@ -80,7 +83,8 @@ foreground { printf %s\\n \"HERE\".) }
 foreground { printf %s\\n \# }
 foreground { printf %s "define -sCd \"\\n\" lns \"" }
 # Next, print the data themselves, as data.
-for lin { ${lns} } {
+foreground {
+forx -E lin { ${lns} }
 multisubstitute {
 define b ${b}
 define q ${q}
@@ -93,7 +97,7 @@ define intron ${intron}
 } printf \\n%s ${lin} }
 foreground { printf %s\\n \" }
 # Finally, use the data to print the code!
-for lin { ${lns} } {
+forx -E lin { ${lns} }
 multisubstitute {
 define b \\
 define q \"
@@ -103,7 +107,7 @@ define cb \}
 define d $
 define bubble HERE
 define intron "NOTICE HOW THIS SENTENCE APPEARS ONLY ONCE IN THIS QUINE?"
-} printf %s\\n ${lin} }
+} printf %s\\n ${lin}
 # That's all, folks! - Well, that wasn't so hard, was it?
 # (This quine was written by <david.madore@ens.fr> - see
 # <URL: http://www.eleves.ens.fr:8080/home/madore/computers/quine.html >
