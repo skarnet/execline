@@ -16,9 +16,9 @@ CC = $(error Please use ./configure first)
 
 STATIC_LIBS :=
 SHARED_LIBS :=
+INTERNAL_LIBS :=
+EXTRA_TARGETS :=
 LIB_DEFS :=
-BIN_SYMLINKS :=
-EXTRA_TEMP :=
 
 define library_definition
 LIB$(firstword $(subst =, ,$(1))) := lib$(lastword $(subst =, ,$(1))).$(if $(DO_ALLSTATIC),a,so).xyzzy
@@ -53,14 +53,14 @@ RANLIB := $(CROSS_COMPILE)ranlib
 STRIP := $(CROSS_COMPILE)strip
 INSTALL := ./tools/install.sh
 
-ALL_BINS := $(BIN_TARGETS) $(LIBEXEC_TARGETS)
+ALL_BINS := $(LIBEXEC_TARGETS) $(BIN_TARGETS)
 ALL_LIBS := $(SHARED_LIBS) $(STATIC_LIBS) $(INTERNAL_LIBS)
 ALL_INCLUDES := $(wildcard src/include/$(package)/*.h)
 
-all: $(ALL_LIBS) $(ALL_BINS) $(ALL_INCLUDES)
+all: $(ALL_LIBS) $(ALL_BINS) $(ALL_INCLUDES) $(EXTRA_INCLUDES)
 
 clean:
-	@exec rm -f $(ALL_LIBS) $(ALL_BINS) $(EXTRA_TEMP) $(wildcard src/*/*.o src/*/*.lo)
+	@exec rm -f $(ALL_LIBS) $(ALL_BINS) $(wildcard src/*/*.o src/*/*.lo) $(EXTRA_TARGETS)
 
 distclean: clean
 	@exec rm -f config.mak src/include/$(package)/config.h
@@ -84,10 +84,9 @@ endif
 install: install-dynlib install-libexec install-bin install-lib install-include
 install-dynlib: $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(dynlibdir)/lib%.so)
 install-libexec: $(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%)
-install-bin: $(BIN_TARGETS:%=$(DESTDIR)$(bindir)/%) $(BIN_SYMLINKS:%=$(DESTDIR)$(bindir)/%)
+install-bin: $(BIN_TARGETS:%=$(DESTDIR)$(bindir)/%)
 install-lib: $(STATIC_LIBS:lib%.a.xyzzy=$(DESTDIR)$(libdir)/lib%.a)
-install-include: $(ALL_INCLUDES:src/include/$(package)/%.h=$(DESTDIR)$(includedir)/$(package)/%.h)
-install-data: $(ALL_DATA:src/etc/%=$(DESTDIR)$(datadir)/%)
+install-include: $(ALL_INCLUDES:src/include/$(package)/%.h=$(DESTDIR)$(includedir)/$(package)/%.h) $(EXTRA_INCLUDES:src/include/%.h=$(DESTDIR)$(includedir)/%.h)
 
 ifneq ($(exthome),)
 
@@ -96,7 +95,7 @@ $(DESTDIR)$(exthome): $(DESTDIR)$(home)
 
 update: $(DESTDIR)$(exthome)
 
-global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) $(BIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%) $(BIN_SYMLINKS:%=$(DESTDIR)$(sproot)/command/%)
+global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) $(BIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
 
 $(DESTDIR)$(sproot)/command/%: $(DESTDIR)$(home)/command/%
 	exec $(INSTALL) -D -l ..$(subst $(sproot),,$(exthome))/command/$(<F) $@
@@ -108,33 +107,24 @@ $(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M): $(DESTDIR)$(dynlibdir)/lib%
 
 endif
 
-$(DESTDIR)$(datadir)/%: src/etc/%
-	exec $(INSTALL) -D -m 644 $< $@
-
 $(DESTDIR)$(dynlibdir)/lib%.so $(DESTDIR)$(dynlibdir)/lib%.so.$(version_M): lib%.so.xyzzy
 	$(INSTALL) -D -m 755 $< $@.$(version) && \
 	$(INSTALL) -l $(@F).$(version) $@.$(version_M) && \
 	exec $(INSTALL) -l $(@F).$(version_M) $@
 
-$(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%): $(DESTDIR)$(libexecdir)/%: % package/modes
-$(BIN_TARGETS:%=$(DESTDIR)$(bindir)/%): $(DESTDIR)$(bindir)/%: % package/modes
-$(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%) $(BIN_TARGETS:%=$(DESTDIR)$(bindir)/%):
-	grep -- ^$(@F) < package/modes | { read name mode og && \
-	if [ x$$og != x ] ; then og="-O $${og}" ; fi && \
-	$(INSTALL) -D -m $$mode $$og $< $@ ; }
-
-define install_symlink_rule
-$(DESTDIR)$(bindir)/$(1): $(DESTDIR)$(bindir)/$$(SYMLINK_TARGET_$(1))
-endef
-
-$(foreach x,$(BIN_SYMLINKS),$(eval $(call install_symlink_rule,$(x))))
-$(BIN_SYMLINKS:%=$(DESTDIR)$(bindir)/%):
-	exec $(INSTALL) -l $(SYMLINK_TARGET_$(@F)) $@
+$(DESTDIR)$(libexecdir)/% $(DESTDIR)$(bindir)/%: % package/modes
+	exec $(INSTALL) -D -m 600 $< $@
+	grep -- ^$(@F) < package/modes | { read name mode owner && \
+	if [ x$$owner != x ] ; then chown -- $$owner $@ ; fi && \
+	chmod $$mode $@ ; }
 
 $(DESTDIR)$(libdir)/lib%.a: lib%.a.xyzzy
 	exec $(INSTALL) -D -m 644 $< $@
 
 $(DESTDIR)$(includedir)/$(package)/%.h: src/include/$(package)/%.h
+	exec $(INSTALL) -D -m 644 $< $@
+
+$(DESTDIR)$(includedir)/%.h: src/include/%.h
 	exec $(INSTALL) -D -m 644 $< $@
 
 %.o: %.c
@@ -153,6 +143,6 @@ lib%.a.xyzzy:
 lib%.so.xyzzy:
 	exec $(CC) -o $@ $(CFLAGS_ALL) $(CFLAGS_SHARED) $(LDFLAGS_ALL) $(LDFLAGS_SHARED) -Wl,-soname,$(patsubst lib%.so.xyzzy,lib%.so.$(version_M),$@) $^ $(EXTRA_LIBS) $(LDLIBS)
 
-.PHONY: it all clean distclean tgz strip install install-dynlib install-bin install-lib install-include install-data
+.PHONY: it all clean distclean tgz strip install install-dynlib install-bin install-lib install-include
 
 .DELETE_ON_ERROR:
