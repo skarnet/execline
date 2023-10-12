@@ -458,10 +458,10 @@ else
   echo "STATIC_LIBS_ARE_PIC :="
 fi
 if $usensss ; then
-  echo "LIBNSSS := -lnsss"
+  echo "NSSS_LIB := -lnsss"
   echo "MAYBEPTHREAD_LIB := -lpthread"
 else
-  echo "LIBNSSS :="
+  echo "NSSS_LIB :="
   echo "MAYBEPTHREAD_LIB :="
 fi
 if $pposix ; then

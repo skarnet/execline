@@ -14,9 +14,9 @@ src/execline/eltest.o src/execline/eltest.lo: src/execline/eltest.c
 src/execline/emptyenv.o src/execline/emptyenv.lo: src/execline/emptyenv.c src/include/execline/execline.h
 src/execline/envfile.o src/execline/envfile.lo: src/execline/envfile.c
 src/execline/exec.o src/execline/exec.lo: src/execline/exec.c
+src/execline/execlineb.o src/execline/execlineb.lo: src/execline/execlineb.c src/include/execline/execline.h src/include-local/exlsn.h
 src/execline/execline-cd.o src/execline/execline-cd.lo: src/execline/execline-cd.c
 src/execline/execline-umask.o src/execline/execline-umask.lo: src/execline/execline-umask.c
-src/execline/execlineb.o src/execline/execlineb.lo: src/execline/execlineb.c src/include/execline/execline.h src/include-local/exlsn.h
 src/execline/exit.o src/execline/exit.lo: src/execline/exit.c
 src/execline/export.o src/execline/export.lo: src/execline/export.c
 src/execline/fdblock.o src/execline/fdblock.lo: src/execline/fdblock.c
@@ -102,12 +102,12 @@ envfile: EXTRA_LIBS := -lskarnet
 envfile: src/execline/envfile.o
 exec: EXTRA_LIBS := -lskarnet
 exec: src/execline/exec.o
+execlineb: EXTRA_LIBS := -lskarnet
+execlineb: src/execline/execlineb.o ${LIBEXECLINE}
 execline-cd: EXTRA_LIBS := -lskarnet
 execline-cd: src/execline/execline-cd.o
 execline-umask: EXTRA_LIBS := -lskarnet
 execline-umask: src/execline/execline-umask.o
-execlineb: EXTRA_LIBS := -lskarnet
-execlineb: src/execline/execlineb.o ${LIBEXECLINE}
 exit: EXTRA_LIBS := -lskarnet
 exit: src/execline/exit.o
 export: EXTRA_LIBS := -lskarnet
@@ -136,8 +136,8 @@ getpid: EXTRA_LIBS := -lskarnet
 getpid: src/execline/getpid.o ${LIBEXECLINE}
 heredoc: EXTRA_LIBS := -lskarnet
 heredoc: src/execline/heredoc.o
-homeof: EXTRA_LIBS := -lskarnet ${MAYBEPTHREAD_LIB}
-homeof: src/execline/homeof.o ${LIBNSSS}
+homeof: EXTRA_LIBS := ${NSSS_LIB} -lskarnet ${MAYBEPTHREAD_LIB}
+homeof: src/execline/homeof.o
 if: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 if: src/execline/if.o ${LIBEXECLINE}
 ifelse: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
@@ -185,6 +185,6 @@ libexecline.a.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getst
 endif
 libexecline.so.xyzzy: EXTRA_LIBS := -lskarnet ${SPAWN_LIB}
 libexecline.so.xyzzy: src/libexecline/el_execsequence.lo src/libexecline/el_getstrict.lo src/libexecline/el_modif_and_exec.lo src/libexecline/el_modif_and_spawn.lo src/libexecline/el_parse.lo src/libexecline/el_parse_from_buffer.lo src/libexecline/el_parse_from_string.lo src/libexecline/el_popenv.lo src/libexecline/el_pushenv.lo src/libexecline/el_semicolon.lo src/libexecline/el_spawn0.lo src/libexecline/el_gspawn0.lo src/libexecline/el_substandrun.lo src/libexecline/el_substandrun_str.lo src/libexecline/el_substitute.lo src/libexecline/el_transform.lo src/libexecline/el_vardupl.lo src/libexecline/exlsn_define.lo src/libexecline/exlsn_elglob.lo src/libexecline/exlsn_importas.lo src/libexecline/exlsn_multidefine.lo src/libexecline/exlsn_exlp.lo src/libexecline/exlsn_main.lo src/libexecline/exlsn_free.lo src/libexecline/exlp.lo
-execline: EXTRA_LIBS := -lskarnet ${SPAWN_LIB} ${MAYBEPTHREAD_LIB}
-execline: src/multicall/execline.o ${LIBEXECLINE} ${LIBNSSS}
+execline: EXTRA_LIBS := ${NSSS_LIB} -lskarnet ${SPAWN_LIB} ${MAYBEPTHREAD_LIB}
+execline: src/multicall/execline.o ${LIBEXECLINE}
 INTERNAL_LIBS :=
