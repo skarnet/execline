@@ -114,7 +114,7 @@ $(DESTDIR)$(exthome): $(DESTDIR)$(home)
 
 update: $(DESTDIR)$(exthome)
 
-global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) $(BIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%)
+global-links: $(DESTDIR)$(exthome) $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(sproot)/library.so/lib%.so.$(version_M)) $(BIN_TARGETS:%=$(DESTDIR)$(sproot)/command/%) $(BIN_SYMLINKS:%=$(DESTDIR)$(sproot)/command/%)
 
 $(DESTDIR)$(sproot)/command/%: $(DESTDIR)$(home)/command/%
 	exec $(INSTALL) -D -l ..$(subst $(sproot),,$(exthome))/command/$(<F) $@
