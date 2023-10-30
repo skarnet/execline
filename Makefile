@@ -19,6 +19,7 @@ SHARED_LIBS :=
 INTERNAL_LIBS :=
 EXTRA_TARGETS :=
 LIB_DEFS :=
+BIN_SYMLINKS :=
 
 define library_definition
 LIB$(firstword $(subst =, ,$(1))) := lib$(lastword $(subst =, ,$(1))).$(if $(DO_ALLSTATIC),a,so).xyzzy
@@ -28,6 +29,19 @@ endif
 ifdef DO_STATIC
 STATIC_LIBS += lib$(lastword $(subst =, ,$(1))).a.xyzzy
 endif
+endef
+
+define binary_installation_rule
+$(DESTDIR)$(1)/$(2): $(2) package/modes
+	exec $(INSTALL) -D -m 600 $$< $$@
+	grep -- ^$$(@F) < package/modes | { read name mode owner && \
+	if [ x$$$$owner != x ] ; then chown -- $$$$owner $$@ ; fi && \
+	chmod $$$$mode $$@ ; }
+endef
+
+define symlink_installation_rule
+$(DESTDIR)$(1)/$(2): $(DESTDIR)$(1)/$(SYMLINK_TARGET_$(2))
+	exec $(INSTALL) -l $$(<F) $$@
 endef
 
 -include config.mak
@@ -52,6 +66,10 @@ AR := $(CROSS_COMPILE)ar
 RANLIB := $(CROSS_COMPILE)ranlib
 STRIP := $(CROSS_COMPILE)strip
 INSTALL := ./tools/install.sh
+
+$(foreach var,$(BIN_TARGETS),$(eval $(call binary_installation_rule,$(bindir),$(var))))
+$(foreach var,$(LIBEXEC_TARGETS),$(eval $(call binary_installation_rule,$(libexecdir),$(var))))
+$(foreach var,$(BIN_SYMLINKS),$(eval $(call symlink_installation_rule,$(bindir),$(var))))
 
 ALL_BINS := $(LIBEXEC_TARGETS) $(BIN_TARGETS)
 ALL_LIBS := $(SHARED_LIBS) $(STATIC_LIBS) $(INTERNAL_LIBS)
@@ -81,10 +99,11 @@ ifneq ($(strip $(ALL_BINS)$(SHARED_LIBS)),)
 	exec $(STRIP) -R .note -R .comment $(ALL_BINS) $(SHARED_LIBS)
 endif
 
-install: install-dynlib install-libexec install-bin install-lib install-include
+install: install-dynlib install-libexec install-bin install-symlinks install-lib install-include
 install-dynlib: $(SHARED_LIBS:lib%.so.xyzzy=$(DESTDIR)$(dynlibdir)/lib%.so)
 install-libexec: $(LIBEXEC_TARGETS:%=$(DESTDIR)$(libexecdir)/%)
 install-bin: $(BIN_TARGETS:%=$(DESTDIR)$(bindir)/%)
+install-symlinks: $(BIN_SYMLINKS:%=$(DESTDIR)$(bindir)/%)
 install-lib: $(STATIC_LIBS:lib%.a.xyzzy=$(DESTDIR)$(libdir)/lib%.a)
 install-include: $(ALL_INCLUDES:src/include/$(package)/%.h=$(DESTDIR)$(includedir)/$(package)/%.h) $(EXTRA_INCLUDES:src/include/%.h=$(DESTDIR)$(includedir)/%.h)
 
@@ -111,12 +130,6 @@ $(DESTDIR)$(dynlibdir)/lib%.so $(DESTDIR)$(dynlibdir)/lib%.so.$(version_M): lib%
 	$(INSTALL) -D -m 755 $< $@.$(version) && \
 	$(INSTALL) -l $(@F).$(version) $@.$(version_M) && \
 	exec $(INSTALL) -l $(@F).$(version_M) $@
-
-$(DESTDIR)$(libexecdir)/% $(DESTDIR)$(bindir)/%: % package/modes
-	exec $(INSTALL) -D -m 600 $< $@
-	grep -- ^$(@F) < package/modes | { read name mode owner && \
-	if [ x$$owner != x ] ; then chown -- $$owner $@ ; fi && \
-	chmod $$mode $@ ; }
 
 $(DESTDIR)$(libdir)/lib%.a: lib%.a.xyzzy
 	exec $(INSTALL) -D -m 644 $< $@
