@@ -7,7 +7,7 @@ ifeq ($(MULTICALL),1)
 BIN_TARGETS := execline
 CONTENTS := $(notdir $(wildcard src/execline/deps-exe/*))
 BIN_SYMLINKS := cd umask $(CONTENTS)
-EXTRA_TEMP := src/multicall/execline.c
+EXTRA_TARGETS += src/multicall/execline.c
 
 define symlink_definition
 SYMLINK_TARGET_$(1) := execline
