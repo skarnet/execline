@@ -67,7 +67,7 @@ RANLIB := $(CROSS_COMPILE)ranlib
 STRIP := $(CROSS_COMPILE)strip
 INSTALL := ./tools/install.sh
 
-$(foreach var,$(BIN_TARGETS),$(eval $(call binary_installation_rule,$(bindir),$(var))))
+$(foreach var,$(filter-out define,$(BIN_TARGETS)),$(eval $(call binary_installation_rule,$(bindir),$(var))))
 $(foreach var,$(LIBEXEC_TARGETS),$(eval $(call binary_installation_rule,$(libexecdir),$(var))))
 $(foreach var,$(BIN_SYMLINKS),$(eval $(call symlink_installation_rule,$(bindir),$(var))))
 

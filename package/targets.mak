@@ -32,4 +32,10 @@ SYMLINK_TARGET_cd := execline-cd
 SYMLINK_TARGET_umask := execline-umask
 endif
 
+$(DESTDIR)$(bindir)/define: ./define package/modes
+	exec $(INSTALL) -D -m 600 $< $@
+	grep -- ^$(@F) < package/modes | { read name mode owner && \
+	if [ x$$owner != x ] ; then chown -- $$owner $@ ; fi && \
+	chmod $$mode $@ ; }
+
 endif
