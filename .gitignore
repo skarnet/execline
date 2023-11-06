@@ -1,6 +1,6 @@
 *.o
-/*.a.xyzzy
 *.lo
+/*.a.xyzzy
 /*.so.xyzzy
 /config.mak
 /src/include/execline/config.h
