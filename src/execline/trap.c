@@ -35,8 +35,7 @@ static inline void trap_action (unsigned int i, char const *const *envp, size_t 
       memcpy(modif + m, "SIGNAL=", 7) ; m += 7 ;
       m += uint_fmt(modif + m, i) ;
       modif[m++] = 0 ;
-      if (!env_mergen(newenvp, envlen + 3, envp, envlen, modif, m, 2))
-        strerr_diefu1sys(111, "adjust environment for child") ;
+      env_mergen(newenvp, envlen + 3, envp, envlen, modif, m, 2) ;
       pids[i] = cspawn(argvs[i][0], argvs[i], newenvp, CSPAWN_FLAGS_SELFPIPE_FINISH, 0, 0) ;
       if (!pids[i]) strerr_diefu2sys(111, "spawn ", argvs[i][0]) ;
     }
