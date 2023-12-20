@@ -21,7 +21,7 @@ pid_t el_modif_and_spawn (char const *const *argv, char const *var, char const *
     modifs[varlen] = '=' ;
     memcpy(modifs + varlen + 1, value, modiflen - varlen - 1) ;
   }
-  if (!env_mergen(newenv, envlen + 2, (char const *const *)environ, envlen, value ? modifs : var, value ? modiflen : varlen + 1, 1)) return 0 ;
+  env_mergen(newenv, envlen + 2, (char const *const *)environ, envlen, value ? modifs : var, value ? modiflen : varlen + 1, 1) ;
   if (doimport)
   {
     size_t m = 0 ;
