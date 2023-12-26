@@ -21,7 +21,7 @@ static void case_execit (char const *const *argv, char const *expr, char const *
   if (n)
   {
     size_t exprlen = strlen(expr) ;
-    size_t fmtlen = exprlen + 6 ;
+    size_t fmtlen = exprlen + 6 + uint_fmt(0, n-1) ;
     for (size_t i = 1 ; i < n ; i++)
       fmtlen += uint_fmt(0, i) + 2 + pmatch[i].rm_eo - pmatch[i].rm_so ;
     {
