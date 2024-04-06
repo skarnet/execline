@@ -1,9 +1,10 @@
 Changelog for execline.
 
-In 2.9.4.1
+In 2.9.5.0
 ----------
 
  - Bugfixes.
+ - backtick now sets ? when it can be nonzero.
 
 
 In 2.9.4.0

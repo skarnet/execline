@@ -49,10 +49,15 @@ output as a value. </li>
  <li> <tt>-N</tt>&nbsp;: store <em>prog1...</em>'s output as is, including the last newline, if any. </li>
  <li> <tt>-n</tt>&nbsp;: chomp an ending newline off <em>prog1...</em>'s output. This is the default. </li>
  <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
- <li> <tt>-E</tt>&nbsp;: autoimport. Instead of exec'ing into
-<em>prog2...</em>, exec into <tt>importas -ui <em>variable</em> <em>variable</em>
-<em>prog2...</em></tt>. This substitutes <em>variable</em> into the command
-line instead of putting it into the environment. </li>
+ <li> <tt>-E</tt>&nbsp;: autoimport. Before exec'ing into
+<em>prog2...</em>, perform a
+<a href="https://skarnet.org/software/execline/el_substitute.html">substitution</a>
+so that <tt>$?</tt> is replaced with <em>prog1...</em>'s exitcode (if
+applicable, see below), and
+<tt>${<em>variable</em>}</tt> is replaced with <em>prog1...</em>'s output,
+instead of keeping the results in the environment. The variables will not
+appear in the environment; if they preexisted in <tt>backtick</tt>'s
+environment, they will be removed. </li>
 </ul>
 
 <p>
@@ -75,6 +80,14 @@ the environment, and execution proceeds. </li>
  <li> <tt>-D&nbsp;<em>default</em></tt>&nbsp;: the value of <em>variable</em>
 is set to <em>default</em>, and execution proceeds. </li>
 </ul>
+
+<p>
+ If the command line can keep running after <em>prog1</em> crashes or exits
+nonzero, i.e. if one of the <tt>-I</tt>, <tt>-x</tt> -or <tt>-D</tt> has been
+given, then <tt>backtick</tt> also adds the <tt>?</tt> variable to the
+environment; it then contains an <a href="exitcodes.html">approximation</a>
+of <em>prog1</em>'s exit code.
+</p>
 
 </body>
 </html>

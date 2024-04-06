@@ -82,5 +82,6 @@ extern int el_substitute (stralloc *, char const *, size_t, char const *, char c
 
 extern void el_modif_and_exec (char const *const *, char const *, char const *, int) gccattr_noreturn ;
 extern pid_t el_modif_and_spawn (char const *const *, char const *, char const *, int) ;
+extern void el_modifs_and_exec (char const *const *, char const *const *, char const *const *, size_t, int) gccattr_noreturn ;
 
 #endif
