@@ -85,6 +85,6 @@ int main (int argc, char const **argv, char const *const *envp)
   else allgood = 1 ;
   if ((!insist || allgood) && chomp && (value.s[value.len - 2] == '\n'))
     value.s[--value.len - 1] = 0 ;
-  val1[uint_fmt(val1, wait_estatus(fdwstat))] = 0 ; 
+  val1[uint_fmt(val1, wait_status(fdwstat))] = 0 ; 
   el_modifs_and_exec(argv + argc1 + 1, var, val, insist < 2 ? 2 : 1, doimport) ;
 }

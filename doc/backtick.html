@@ -85,8 +85,8 @@ is set to <em>default</em>, and execution proceeds. </li>
  If the command line can keep running after <em>prog1</em> crashes or exits
 nonzero, i.e. if one of the <tt>-I</tt>, <tt>-x</tt> -or <tt>-D</tt> has been
 given, then <tt>backtick</tt> also adds the <tt>?</tt> variable to the
-environment; it then contains an <a href="exitcodes.html">approximation</a>
-of <em>prog1</em>'s exit code.
+environment. If <em>prog1</em> exited normally, the variable contains its exit
+code; otherwise, 256 plus the number of the signal that killed it.
 </p>
 
 </body>
