@@ -21,7 +21,7 @@ void el_modifs_and_exec (char const *const *argv, char const *const *vars, char 
     if (values[i])
     {
       yesn++ ;
-      yeslen += len ;
+      yeslen += len + 1 ;
       modiflen += 1 + strlen(values[i]) ;
     }
   }

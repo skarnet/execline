@@ -53,6 +53,7 @@ int main (int argc, char const **argv, char const *const *envp)
   argc1 = el_semicolon(argv) ;
   if (!argc1) strerr_dief1x(100, "empty block") ;
   if (argc1 >= argc) strerr_dief1x(100, "unterminated block") ;
+  if (argc1 + 1 == argc) strerr_dief1x(100, "the command line after the block must not be empty") ;
   argv[argc1] = 0 ;
 
   {
