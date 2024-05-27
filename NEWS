@@ -1,5 +1,13 @@
 Changelog for execline.
 
+In 2.9.6.0
+----------
+
+ - elglob can now provide a single word, where the results of the
+globbing are separated by a given delimiter (or encoded into a
+netstring).
+
+
 In 2.9.5.1
 ----------
 

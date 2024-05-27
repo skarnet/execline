@@ -26,7 +26,7 @@ another program.
 <h2> Interface </h2>
 
 <pre>
-     elglob [ -v ] [ -w ] [ -s ] [ -m ] [ -e ] [ -0 ] <em>variable</em> <em>pattern</em> <em>prog...</em>
+     elglob [ -v ] [ -w ] [ -s ] [ -m ] [ -e ] [ -0 ] [ -n ] [ -d <em>delim</em> ] <em>variable</em> <em>pattern</em> <em>prog...</em>
 </pre>
 
 <ul>
@@ -63,6 +63,16 @@ it. </li>
 matches nothing, it will be substituted as is (verbatim in one word). With
 this option, if <em>pattern</em> matches nothing, it will be properly
 substituted as zero word. </li>
+ <li> <tt>-n</tt>&nbsp;: chomp. Don't add an ending delimiter at the end
+of the word. Only valid with the <tt>-d</tt> option, see below. </li>
+ <li> <tt>-d&nbsp;<em>delim</em></tt>&nbsp;: do not split the value.
+Instead, make it one word, where the result of the globbing are separated
+by the first character of <em>delim</em>. If the <tt>-n</tt> option is
+not given, the first character of <em>delim</em> also appears after the
+last result. If <em>delim</em> is the empty string, the values are
+encoded as a sequence of netstrings into a single word, (and you can
+later separate the words with e.g.
+<a href="define.html">define -s</a>). </li>
 </ul>
 
 </body>
