@@ -1,11 +1,13 @@
 /* ISC license. */
 
 #include <string.h>
+
 #include <skalibs/sgetopt.h>
 #include <skalibs/strerr.h>
 #include <skalibs/stralloc.h>
 #include <skalibs/genalloc.h>
 #include <skalibs/env.h>
+
 #include <execline/execline.h>
 #include "exlsn.h"
 
@@ -16,6 +18,7 @@ int exlsn_importas (int argc, char const **argv, char const *const *envp, exlsn_
   elsubst_t blah ;
   char const *defaultval = 0 ;
   char const *x ;
+  unsigned int ivar = 1 ;
   int insist = 0 ;
   int unexport = 0 ;
   blah.var = info->vars.len ;
@@ -23,10 +26,11 @@ int exlsn_importas (int argc, char const **argv, char const *const *envp, exlsn_
 
   for (;;)
   {
-    int opt = subgetopt_r(argc, argv, "iuD:NnsCcd:", &localopt) ;
+    int opt = subgetopt_r(argc, argv, "SiuD:NnsCcd:", &localopt) ;
     if (opt < 0) break ;
     switch (opt)
     {
+      case 'S' : ivar = 0 ; break ;
       case 'i' : insist = 1 ; break ;
       case 'u' : unexport = 1 ; break ;
       case 'D' : defaultval = localopt.arg ; break ;
@@ -41,18 +45,18 @@ int exlsn_importas (int argc, char const **argv, char const *const *envp, exlsn_
   }
   argc -= localopt.ind ; argv += localopt.ind ;
 
-  if ((unsigned int)argc < 2) return -3 ;
+  if (argc < 1 + ivar) return -3 ;
   if (!*argv[0] || el_vardupl(argv[0], info->vars.s, info->vars.len)) return -2 ;
   if (!stralloc_catb(&info->vars, argv[0], strlen(argv[0]) + 1)) return -1 ;
-  x = env_get2(envp, argv[1]) ;
+  x = env_get2(envp, argv[ivar]) ;
   if (!x)
   {
-    if (insist) strerr_dienotset(100, argv[1]) ;
+    if (insist) strerr_dienotset(100, argv[ivar]) ;
     x = defaultval ;
   }
   else if (unexport)
   {
-    if (!stralloc_catb(&info->modifs, argv[1], strlen(argv[1]) + 1)) goto err ;
+    if (!stralloc_catb(&info->modifs, argv[ivar], strlen(argv[ivar]) + 1)) goto err ;
   }
   if (!x) blah.n = 0 ;
   else
@@ -64,7 +68,7 @@ int exlsn_importas (int argc, char const **argv, char const *const *envp, exlsn_
     blah.n = r ;
   }
   if (!genalloc_append(elsubst_t, &info->data, &blah)) goto err ;
-  return localopt.ind + 2 ;
+  return localopt.ind + 1 + ivar ;
 
  err:
   info->vars.len = blah.var ;

@@ -6,6 +6,8 @@ In 2.9.6.0
  - elglob can now provide a single word, where the results of the
 globbing are separated by a given delimiter (or encoded into a
 netstring).
+ - New option: importas -S, with the same functionality as the old
+"import" command: import a variable with the same name.
 
 
 In 2.9.5.1

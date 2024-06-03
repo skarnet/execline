@@ -27,6 +27,7 @@ environment variable, then executes another program.
 
 <pre>
      importas [ -i | -D default ] [ -u ] [ -s ] [ -C | -c ] [ -N | -n ] [ -d <em>delim</em> ] <em>variable</em> <em>envvar</em> <em>prog...</em>
+     importas -S [ -i | -D default ] [ -u ] [ -s ] [ -C | -c ] [ -N | -n ] [ -d <em>delim</em> ] <em>envvar</em> <em>prog...</em>
 </pre>
 
 <ul>
@@ -54,6 +55,10 @@ error message. This has precedence over any <tt>-D</tt> option. </li>
 the environment after the substitution. <tt>importas -u <em>variable</em>
 <em>envvar</em></tt> is equivalent to <tt>importas <em>variable</em>
 <em>envvar</em> unexport <em>envvar</em></tt>. </li>
+ <li> <tt>-S</tt>&nbsp;: import with same name. This option allows
+<em>variable</em> to be omitted; it will be the same as <em>envvar</em>.
+In other words, <code>importas -S <em>var</em></code> is the same as
+<code>importas <em>var</em> <em>var</em></code>. </li>
  <li> Other options are used to <a href="el_transform.html">control
 the substitution mechanism</a>. </li>
 </ul>
