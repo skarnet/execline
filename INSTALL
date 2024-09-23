@@ -21,13 +21,7 @@ POSIX.1-2008, available at:
 
  will work for most users.
  It will install the binaries in /bin and the static libraries in
-/usr/lib/execline.
-
- Please note that static libraries in /usr/lib/execline *will not*
-be found by a default linker invocation: you need -L/usr/lib/execline.
-Other skarnet.org software automatically handles that case if the
-default configuration is used, but if you change the configuration,
-remember to use the appropriate --with-lib configure option.
+/usr/lib.
 
  You can strip the binaries and libraries of their extra symbols via
 "make strip" before the "make install" phase. It will shave a few bytes
