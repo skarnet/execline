@@ -12,24 +12,26 @@
 #include <execline/config.h>
 #include <execline/execline.h>
 
-#define USAGE "forbacktickx [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -E | -e ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
+#define USAGE "forbacktickx [ -p | -P maxpar | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -E | -e ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var { backtickcmd... } command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const *const *argv)
 {
   char const *delim = "\n" ;
   char const *codes = 0 ;
-  int crunch = 0, chomp = 1, not = 1, par = 0, doimport = 0 ;
+  unsigned int maxpar = 1 ;
+  int crunch = 0, chomp = 1, not = 1, doimport = 0 ;
   PROG = "forbacktickx" ;
   {
     subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:Ee", &l) ;
+      int opt = subgetopt_r(argc, argv, "pP:NnCc0d:o:x:Ee", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
-        case 'p' : par = 1 ; break ;
+        case 'p' : maxpar = 0 ; break ;
+        case 'P' : if (!uint0_scan(l.arg, &maxpar)) dieusage() ; break ;
         case 'N' : chomp = 0 ; break ;
         case 'n' : chomp = 1 ; break ;
         case 'C' : crunch = 1 ; break ;
@@ -67,8 +69,9 @@ int main (int argc, char const *const *argv)
   {
     unsigned int m = 0, i = 1 ;
     int fd = dup(0) ;
-    char const *newargv[argc + 19] ;
+    char const *newargv[argc + 20] ;
     char fmt[UINT_FMT] ;
+    char fmtmaxpar[UINT_FMT] ;
     if (fd < 0)
     {
       if (errno != EBADF) strerr_diefu1sys(111, "dup stdin") ;
@@ -84,7 +87,13 @@ int main (int argc, char const *const *argv)
     newargv[m++] = "!" ;
     newargv[m++] = EXECLINE_BINPREFIX "forstdin" ;
     newargv[m++] = doimport ? "-E" : "-e" ;
-    if (par) newargv[m++] = "-p" ;
+    if (!maxpar) newargv[m++] = "-p" ;
+    else if (maxpar > 1)
+    {
+      newargv[m++] = "-P" ;
+      newargv[m++] = fmtmaxpar ;
+      fmtmaxpar[uint_fmt(fmtmaxpar, maxpar)] = 0 ;
+    }
     newargv[m++] = chomp ? "-n" : "-N" ;
     if (crunch) newargv[m++] = "-C" ;
     if (!delim) newargv[m++] = "-0" ;
