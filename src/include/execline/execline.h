@@ -80,8 +80,25 @@ extern int el_substitute (stralloc *, char const *, size_t, char const *, char c
 
 /* Execution with or without substitution */
 
+extern char const *const *el_trueargv ;
 extern void el_modif_and_exec (char const *const *, char const *, char const *, int) gccattr_noreturn ;
 extern pid_t el_modif_and_spawn (char const *const *, char const *, char const *, int) ;
 extern void el_modifs_and_exec (char const *const *, char const *const *, char const *const *, size_t, int) gccattr_noreturn ;
+
+
+ /* Spawning and waiting for several children at once */
+
+typedef struct el_forx_pidinfo_s el_forx_pidinfo_t, *el_forx_pidinfo_t_ref ;
+struct el_forx_pidinfo_s
+{
+  pid_t *tab ;
+  unsigned int len ;
+  int wstat ;
+} ;
+#define EL_FORX_PIDINFO_ZERO { .tab = 0, .len = 0, .wstat = 0 }
+
+extern el_forx_pidinfo_t *el_forx_pidinfo ;
+extern void el_forx_sigchld_handler (int) ;
+extern int el_forx_isok (unsigned short const *, unsigned int, unsigned short) ;
 
 #endif

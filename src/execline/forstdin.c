@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
 
 #include <skalibs/types.h>
 #include <skalibs/sgetopt.h>
@@ -19,56 +20,31 @@
 #define USAGE "forstdin [ -E | -e ] [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
-static genalloc *forstdin_pids_p = 0 ;  /* minimize bss/data */
-
-static int fs_isok (unsigned short *tab, unsigned int n, int code)
-{
-  unsigned int i = 0 ;
-  for (; i < n ; i++) if ((unsigned short)code == tab[i]) break ;
-  return i < n ;
-}
-
-static void parallel_sigchld_handler (int sig)
-{
-  pid_t *tab = genalloc_s(pid_t, forstdin_pids_p) ;
-  size_t len = genalloc_len(pid_t, forstdin_pids_p) ;
-  int wstat ;
-  for (;;)
-  {
-    ssize_t r = wait_pids_nohang(tab, len, &wstat) ;
-    if (r <= 0) break ;
-    tab[r-1] = tab[--len] ;
-  }
-  genalloc_setlen(pid_t, forstdin_pids_p, len) ;
-  (void)sig ;
-}
-
 int main (int argc, char const **argv)
 {
-  genalloc pids = GENALLOC_ZERO ;
+  el_forx_pidinfo_t pidinfo = EL_FORX_PIDINFO_ZERO ;
   stralloc value = STRALLOC_ZERO ;
+  sigset_t emptyset ;
   char const *delim = "\n" ;
   size_t delimlen = 1 ;
   size_t nbc = 0 ;
+  unsigned int maxpar = 1 ;
   unsigned short okcodes[256] ;
   int crunch = 0, chomp = 1, not = 1, eofcode = 1, doimport = 0 ;
   PROG = "forstdin" ;
-  forstdin_pids_p = &pids ;
+  el_forx_pidinfo = &pidinfo ;
+  sigemptyset(&emptyset) ;
 
   {
     subgetopt l = SUBGETOPT_ZERO ;
     for (;;)
     {
-      int opt = subgetopt_r(argc, argv, "pNnCc0d:o:x:Ee", &l) ;
+      int opt = subgetopt_r(argc, argv, "pP:NnCc0d:o:x:Ee", &l) ;
       if (opt == -1) break ;
       switch (opt)
       {
-        case 'p' :
-        {
-          if (!genalloc_ready(pid_t, &pids, 1))
-            strerr_diefu1sys(111, "genalloc_ready") ;
-          break ;
-        }
+        case 'p' : maxpar = 10000 ; break ;
+        case 'P' : if (!uint0_scan(l.arg, &maxpar)) dieusage() ; break ;
         case 'N' : chomp = 0 ; break ;
         case 'n' : chomp = 1 ; break ;
         case 'C' : crunch = 1 ; break ;
@@ -92,15 +68,16 @@ int main (int argc, char const **argv)
   }
   if (argc < 2) dieusage() ;
   if (!argv[0][0] || strchr(argv[0], '=')) strerr_dief1x(100, "invalid variable name") ;
+  if (maxpar < 1) maxpar = 1 ;
+  if (maxpar >= 10000) maxpar = 10000 ;
+  if (!sig_catch(SIGCHLD, &el_forx_sigchld_handler))
+    strerr_diefu1sys(111, "install SIGCHLD handler") ;
 
-  if (pids.s)
-  {
-    if (!sig_catch(SIGCHLD, &parallel_sigchld_handler))
-      strerr_diefu1sys(111, "install SIGCHLD handler") ;
-  }
+  pid_t pidtab[maxpar] ;
+  pidinfo.tab = pidtab ;
+  sig_block(SIGCHLD) ;
   for (;;)
   {
-    pid_t pid ;
     value.len = 0 ;
     if (delimlen)
     {
@@ -125,34 +102,16 @@ int main (int argc, char const **argv)
     }
     eofcode = 0 ;
     if (!stralloc_0(&value)) strerr_diefu1sys(111, "stralloc_0") ;
-    if (pids.s) sig_block(SIGCHLD) ;
-    pid = el_modif_and_spawn(argv + 1, argv[0], value.s, doimport) ;
-    if (!pid) strerr_diefu2sys(111, "spawn ", argv[1]) ;
-    if (pids.s)
+    pidtab[pidinfo.len] = el_modif_and_spawn(argv + 1, argv[0], value.s, doimport) ;
+    if (!pidtab[pidinfo.len]) strerr_diefu2sys(111, "spawn ", argv[1]) ;
+    pidinfo.len++ ;
+    while (pidinfo.len >= maxpar)
     {
-      if (!genalloc_append(pid_t, &pids, &pid))
-        strerr_diefu1sys(111, "genalloc_append") ;
-      sig_unblock(SIGCHLD) ;
-    }
-    else
-    {
-      int wstat ;
-      if (wait_pid(pid, &wstat) < 0)
-        strerr_diefu2sys(111, "wait for ", argv[1]) ;
-      if (not == fs_isok(okcodes, nbc, wait_estatus(wstat)))
-        return wait_estatus(wstat) ;
+      sigsuspend(&emptyset) ;
+      if (maxpar == 1 && not == el_forx_isok(okcodes, nbc, wait_estatus(pidinfo.wstat)))
+        return wait_estatus(pidinfo.wstat) ;
     }
   }
-  if (pids.s)
-  {
-    sigset_t empty ;
-    sigemptyset(&empty) ;
-    sig_block(SIGCHLD) ;
-    for (;;)
-    {
-      if (!pids.len) break ;
-      sigsuspend(&empty) ;
-    }
-  }
+  while (pidinfo.len) sigsuspend(&emptyset) ;
   return eofcode ;
 }

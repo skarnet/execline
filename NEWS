@@ -1,5 +1,10 @@
 Changelog for execline.
 
+In 2.9.7.0
+
+ - New "-P maxpar" option to forx and forstdin, for bounded parallelism.
+
+
 In 2.9.6.1
 ----------
 

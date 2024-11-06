@@ -47,7 +47,7 @@ void el_modifs_and_exec (char const *const *argv, char const *const *vars, char 
   {
     size_t m = 0 ;
     size_t ypos = 0 ;
-    char const *newargv[env_len(argv) + 3 + 5 * yesn] ;
+    char const *newargv[env_len(argv) + 3 + 4 * yesn] ;
     char yesvars[yeslen ? yeslen : 1] ;
     newargv[m++] = EXECLINE_BINPREFIX "multisubstitute" ;
     for (size_t i = 0 ; i < n ; i++) if (values[i])
@@ -55,9 +55,8 @@ void el_modifs_and_exec (char const *const *argv, char const *const *vars, char 
       size_t len = strlen(vars[i]) + 1 ;
       char *p = yesvars + ypos ;
       newargv[m++] = " importas" ;
-      newargv[m++] = " -ui" ;
+      newargv[m++] = " -uSi" ;
       newargv[m++] = " --" ;
-      newargv[m++] = p ;
       newargv[m++] = p ;
       yesvars[ypos++] = ' ' ;
       memcpy(yesvars + ypos, vars[i], len) ;

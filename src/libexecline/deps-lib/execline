@@ -1,4 +1,5 @@
 el_execsequence.o
+el_forx_pidinfo.o
 el_getstrict.o
 el_modif_and_exec.o
 el_modif_and_spawn.o
@@ -15,6 +16,7 @@ el_substandrun.o
 el_substandrun_str.o
 el_substitute.o
 el_transform.o
+el_trueargv.o
 el_vardupl.o
 exlsn_define.o
 exlsn_elglob.o

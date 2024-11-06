@@ -50,6 +50,11 @@ and 1 if it hasn't read anything. </li>
 instance to finish before spawning the next one. forstdin will
 still wait for all instances of <em>loop</em> to terminate before
 exiting, though. </li>
+ <li> <tt>-P</tt>&nbsp;<em>maxpar</em>&nbsp;: like <tt>-p</tt>, but only
+run up to <em>maxpar</em> instances at a time. Minimum is 1; maximum is
+10000. <tt>-p</tt> is equivalent to <tt>-P 10000</tt>, i.e. it can
+spawn a very large number of loop instances in parallel, but it's
+technically not infinite. </li>
  <li> <tt>-o</tt>&nbsp;<em>okcodes</em>&nbsp;: <em>okcodes</em> must
 be a comma-separated list of exit codes. If the <tt>-p</tt> flag
 hasn't been given and <em>loop</em> exits with one of the codes in
@@ -63,7 +68,7 @@ that will make forstdin break the loop and exit, and the unlisted exit
 codes will make it keep looping. </li>
  <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
  <li> <tt>-E</tt>&nbsp;: autoimport. Instead of spawning
-<em>loop...</em>, spawn <tt>importas -ui <em>variable</em> <em>variable</em>
+<em>loop...</em>, spawn <tt>importas -uSi <em>variable</em>
 <em>loop...</em></tt>. This substitutes <em>variable</em> into the command
 line instead of putting it into the environment. </li>
 </ul>
@@ -94,12 +99,5 @@ used simultaneously, the rightmost one wins. </li>
 the input is only split on newlines. </li>
 </ul>
 
-<h2> Notes </h2>
-
-<ul>
- <li> You can start <em>loop...</em> with <tt>importas -u <em>variable</em> <em>variable</em></tt>
-to perform variable substitution. </li>
-</ul>
- 
 </body>
 </html>

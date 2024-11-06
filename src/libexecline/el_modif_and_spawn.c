@@ -4,6 +4,7 @@
 
 #include <skalibs/posixplz.h>
 #include <skalibs/env.h>
+#include <skalibs/cspawn.h>
 
 #include <execline/config.h>
 #include <execline/execline.h>
@@ -22,18 +23,18 @@ pid_t el_modif_and_spawn (char const *const *argv, char const *var, char const *
     memcpy(modifs + varlen + 1, value, modiflen - varlen - 1) ;
   }
   env_mergen(newenv, envlen + 2, (char const *const *)environ, envlen, value ? modifs : var, value ? modiflen : varlen + 1, 1) ;
-  if (doimport)
+  if (doimport && argv[0])
   {
     size_t m = 0 ;
-    char const *newargv[env_len(argv) + 6] ;
+    char const *newargv[env_len(argv) + 5] ;
     newargv[m++] = EXECLINE_BINPREFIX "importas" ;
-    newargv[m++] = "-ui" ;
+    newargv[m++] = "-uSi" ;
     newargv[m++] = "--" ;
-    newargv[m++] = var ;
     newargv[m++] = var ;
     while (*argv) newargv[m++] = *argv++ ;
     newargv[m++] = 0 ;
-    return el_spawn0(newargv[0], newargv, newenv) ;
+    return cspawn(newargv[0], newargv, newenv, CSPAWN_FLAGS_SIGBLOCKNONE, 0, 0) ;
   }
-  else return el_spawn0(argv[0], argv, newenv) ;
+  if (!argv[0]) argv = el_trueargv ;
+  return cspawn(argv[0], argv, newenv, CSPAWN_FLAGS_SIGBLOCKNONE, 0, 0) ;
 }

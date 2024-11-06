@@ -22,11 +22,10 @@ void el_modif_and_exec (char const *const *argv, char const *var, char const *va
   if (doimport)
   {
     size_t m = 0 ;
-    char const *newargv[env_len(argv) + 6] ;
+    char const *newargv[env_len(argv) + 5] ;
     newargv[m++] = EXECLINE_BINPREFIX "importas" ;
-    newargv[m++] = "-ui" ;
+    newargv[m++] = "-uSi" ;
     newargv[m++] = "--" ;
-    newargv[m++] = var ;
     newargv[m++] = var ;
     while (*argv) newargv[m++] = *argv++ ;
     newargv[m++] = 0 ;
