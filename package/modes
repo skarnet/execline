@@ -15,6 +15,7 @@ exec			0755
 exit			0755
 execlineb		0755
 export			0755
+export-array		0755
 fdblock			0755
 fdclose			0755
 fdreserve		0755

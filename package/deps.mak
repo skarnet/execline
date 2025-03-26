@@ -18,6 +18,7 @@ src/execline/execline-cd.o src/execline/execline-cd.lo: src/execline/execline-cd
 src/execline/execline-umask.o src/execline/execline-umask.lo: src/execline/execline-umask.c
 src/execline/execlineb.o src/execline/execlineb.lo: src/execline/execlineb.c src/include/execline/execline.h src/include-local/exlsn.h
 src/execline/exit.o src/execline/exit.lo: src/execline/exit.c
+src/execline/export-array.o src/execline/export-array.lo: src/execline/export-array.c src/include/execline/execline.h
 src/execline/export.o src/execline/export.lo: src/execline/export.c
 src/execline/fdblock.o src/execline/fdblock.lo: src/execline/fdblock.c
 src/execline/fdclose.o src/execline/fdclose.lo: src/execline/fdclose.c
@@ -115,6 +116,8 @@ exit: EXTRA_LIBS := -lskarnet
 exit: src/execline/exit.o
 export: EXTRA_LIBS := -lskarnet
 export: src/execline/export.o
+export-array: EXTRA_LIBS := -lskarnet
+export-array: src/execline/export-array.o ${LIBEXECLINE}
 fdblock: EXTRA_LIBS := -lskarnet
 fdblock: src/execline/fdblock.o
 fdclose: EXTRA_LIBS := -lskarnet

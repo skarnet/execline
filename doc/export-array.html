@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>execline: the export program</title>
+    <meta name="Description" content="execline: the export program" />
+    <meta name="Keywords" content="execline command export environment variable" />
+    <!-- <link rel="stylesheet" type="text/css" href="//skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">execline</a><br />
+<a href="//skarnet.org/software/">Software</a><br />
+<a href="//skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> The <tt>export-array</tt> program </h1>
+
+<p>
+<tt>export-array</tt> encodes a set of values into an environment variable,
+then executes a program.
+</p>
+
+<h2> Interface </h2>
+
+<p>
+ In an execline script:
+</p>
+
+<pre>
+     export-array [ -d <em>delim</em> ] <em>var</em> { <em>value1</em> <em>value2</em> ... } <em>prog...</em>
+</pre>
+
+<ul>
+ <li> <tt>export-array</tt> reads a (possibly empty) <a href="el_semicolon.html">block</a>
+of values, and encodes them into the <em>var</em> environment variable.
+ <li> It then execs into <em>prog</em>. </li>
+</ul>
+
+<h2> Options </h2>
+
+<ul>
+ <li> <tt>-d</tt>&nbsp;<em>delim</em>&nbsp;: encode the list of values using the
+first character of <em>delim</em> as a terminator. Only use this when you know
+the character does not appear in any of the values! By default, no terminator
+character is specified, and the values are encoded as netstrings. </li>
+</ul>
+
+<h2> Notes </h2>
+
+<ul>
+ <li> <em>var</em> must be given without a dollar! </li>
+ <li> <em>var</em> must not contain the character <tt>=</tt> . </li>
+ <li> A list of values encoded via <code>export-array <em>VAR</em> { <em>value1</em> <em>value2</em> ... }</code>
+can be retrieved via <code><a href="importas.html">importas</a> -Ssd "" <em>VAR</em></code>.
+Then <tt>${VAR}</tt> will be split into as many words as there are values. </li>
+ <li> A list encoded via <code>export-array -d <em>delim</em> <em>VAR</em> { <em>value1</em> <em>value2</em> ... }</code>
+can similarly be retrieved via <code>importas -Ssd <em>delim</em> <em>VAR</em></code>. </li>
+</ul>
+
+</body>
+</html>

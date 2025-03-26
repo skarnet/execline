@@ -60,7 +60,6 @@ exit 0
 # generally not a good idea to use echo.
 # See http://www.etalabs.net/sh_tricks.html
 echo () {
-  IFS=" "
   printf %s\\n "$*"
 }
 
@@ -433,6 +432,7 @@ if $allstatic ; then
   echo "DO_ALLSTATIC := 1"
 else
   echo ".LIBPATTERNS := lib%.so"
+  echo "DO_ALLSTATIC :="
 fi
 if $static ; then
   echo "DO_STATIC := 1"

@@ -20,8 +20,10 @@ INTERNAL_LIBS :=
 EXTRA_TARGETS :=
 LIB_DEFS :=
 BIN_SYMLINKS :=
+PC_DEFS :=
 
 define library_definition
+name := $(lastword $(subst =, ,$(1)))
 LIB$(firstword $(subst =, ,$(1))) := lib$(lastword $(subst =, ,$(1))).$(if $(DO_ALLSTATIC),a,so).xyzzy
 ifdef DO_SHARED
 SHARED_LIBS += lib$(lastword $(subst =, ,$(1))).so.xyzzy
@@ -29,6 +31,11 @@ endif
 ifdef DO_STATIC
 STATIC_LIBS += lib$(lastword $(subst =, ,$(1))).a.xyzzy
 endif
+PC_DEFS += $(lastword $(subst =, ,$(1)))
+
+$(lastword $(subst =, ,$(1))).pc: $(if $(DO_SHARED),lib$(lastword $(subst =, ,$(1))).so.xyzzy,) $(if $(DO_STATIC),lib$(lastword $(subst =, ,$(1))).a.xyzzy,)
+	./tools/gen-dotpc.sh $(lastword $(subst =, ,$(1))) $(if $(DO_SHARED),true,false) $(if $(DO_STATIC),true,false) "$$($(lastword $(subst =, ,$(1)))_description)" "$(includedir)" "$(dynlibdir)" "$(libdir)" "$$($(lastword $(subst =, ,$(1)))_dependencies)"
+
 endef
 
 define binary_installation_rule
@@ -146,8 +153,13 @@ $(DESTDIR)$(includedir)/%.h: src/include/%.h
 %.lo: %.c
 	exec $(CC) $(CPPFLAGS_ALL) $(CFLAGS_ALL) $(CFLAGS_SHARED) -c -o $@ $<
 
+ifdef DO_ALLSTATIC
+$(ALL_BINS): -lskarnet
+	exec $(CC) -o $@ $(CFLAGS_ALL) $(LDFLAGS_ALL) $(LDFLAGS_NOSHARED) $^ $(EXTRA_LIBS) $(LDLIBS)
+else
 $(ALL_BINS):
 	exec $(CC) -o $@ $(CFLAGS_ALL) $(LDFLAGS_ALL) $(LDFLAGS_NOSHARED) $^ $(EXTRA_LIBS) $(LDLIBS)
+endif
 
 lib%.a.xyzzy:
 	exec $(AR) rc $@ $^
