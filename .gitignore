@@ -2,6 +2,7 @@
 *.lo
 /*.a.xyzzy
 /*.so.xyzzy
+/*.pc
 /config.mak
 /src/include/execline/config.h
 /src/multicall/execline.c

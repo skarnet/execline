@@ -81,7 +81,6 @@ src/libexecline/exlsn_free.o src/libexecline/exlsn_free.lo: src/libexecline/exls
 src/libexecline/exlsn_importas.o src/libexecline/exlsn_importas.lo: src/libexecline/exlsn_importas.c src/include/execline/execline.h src/include-local/exlsn.h
 src/libexecline/exlsn_main.o src/libexecline/exlsn_main.lo: src/libexecline/exlsn_main.c src/include/execline/execline.h src/include-local/exlsn.h
 src/libexecline/exlsn_multidefine.o src/libexecline/exlsn_multidefine.lo: src/libexecline/exlsn_multidefine.c src/include/execline/execline.h src/include-local/exlsn.h
-src/multicall/execline.o src/multicall/execline.lo: src/multicall/execline.c src/include/execline/config.h src/include/execline/execline.h src/include-local/exlsn.h
 
 background: EXTRA_LIBS := ${SPAWN_LIB}
 background: src/execline/background.o ${LIBEXECLINE} -lskarnet

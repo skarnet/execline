@@ -1,7 +1,6 @@
 LIBEXEC_TARGETS :=
 
 LIB_DEFS := EXECLINE=execline
-EXECLINE_REQUIRES := libskarnet
 
 ifeq ($(MULTICALL),1)
 

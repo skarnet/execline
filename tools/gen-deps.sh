@@ -62,9 +62,9 @@ for dir in $(ls -1 src | grep -v ^include) ; do
     both=
     libs=
     while read dep ; do
-      if echo $dep | grep -q '^\${.*_LIB}' ; then
+      if echo $dep | grep -qx '\${.*_LIB}' ; then
         libs="$libs $dep"
-      elif echo $dep | grep -q '^-l' ; then
+      elif echo $dep | grep -q -e '^-l' -e '^\${LIB' ; then
         both="$both $dep"
       else
         deps="$deps src/$dir/$dep"
@@ -91,7 +91,7 @@ for dir in $(ls -1 src | grep -v ^include) ; do
       if echo $dep | grep -q \\.o$ ; then
         dep="src/$dir/$dep"
       fi
-      if echo $dep | grep -q '^\${.*_LIB}' ; then
+      if echo $dep | grep -qx '\${.*_LIB}' ; then
         libs="$libs $dep"
       else
         deps="$deps $dep"

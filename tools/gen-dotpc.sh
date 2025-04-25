@@ -36,15 +36,22 @@ filterout () {
   printf %s\\n "$res"
 }
 
-splitlibs () {
-  req=
-  while test "$1" != -lskarnet ; do
-    if test -z "$1" ; then
-      echo "gen-dotpc.sh: fatal: can't happen: was called on a library that doesn't depend on libskarnet" 1>&2
-      exit 102
-    fi
-  
-  done
+print_requires () {
+  line=
+  oldifs="$IFS"
+  while IFS=" 	" read condvar usedinlibs pkg ver libs ; do
+    IFS="$oldifs"
+    for h ; do
+      i=lib${h##-l}
+      for j in $libs ; do
+        if test "$i" = "$j" ; then
+          line="${line}${line:+, }${i} >= ${ver}"
+        fi
+      done
+    done
+  done < package/deps-build
+  IFS="$oldifs"
+  echo "Requires: $line"
 }
 
 . package/info
@@ -56,24 +63,20 @@ slist=
 if test "${includedir}" != /usr/include ; then
   ilist="-I${includedir}"
 fi
-if test -n "${buildtime_includedirs}" ; then
-  ilist="${ilist}${ilist:+ }${buildtime_includedirs}"
+if test -n "${extra_includedirs}" ; then
+  ilist="${ilist}${ilist:+ }${extra_includedirs}"
 fi
 ilist=`uniqit ${ilist}`
 
 if test "${dynlibdir}" != /usr/lib && test "${dynlibdir}" != /lib ; then
   dlist="-L${dynlibdir}"
 fi
-if test -n "${buildtime_dynlibdirs}" ; then
-  dlist="${dlist}${dlist:+ }${buildtime_dynlibdirs}"
-fi
-dlist=`uniqit ${dlist}`
 
 if test "${libdir}" != /usr/lib && test "${libdir}" != /lib ; then
  slist="-L${libdir}"
 fi
-if test -n "${buildtime_libdirs}" ; then
-  slist="${slist}${slist:+ }${buildtime_libdirs}"
+if test -n "${extra_libdirs}" ; then
+  slist="${slist}${slist:+ }${extra_libdirs}"
 fi
 slist="$(filterout "${dlist}" $(uniqit ${slist}))"
 
@@ -86,11 +89,8 @@ echo "Name: ${library}"
 echo "Version: ${version}"
 echo "Description: ${description:-The ${library} library.}"
 echo "URL: ${url:-https://skarnet.org/software/${package}/}"
-if test -n "${requires}" ; then
-  echo "Requires: ${requires}"
-fi
-if test -n "${requires_private}" ; then
-  echo "Requires.private: ${requires_private}"
+if test -n "${extra_libs}" ; then
+  print_requires ${extra_libs}
 fi
 if test -n "$ilist" ; then
   echo "Cflags: ${ilist}"

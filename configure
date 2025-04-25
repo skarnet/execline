@@ -166,12 +166,12 @@ allstatic=true
 evenmorestatic=false
 pkgconf=
 addincpath=''
-depincpath=''
 addlibspath=''
 addlibdpath=''
+depincpath=''
+deplibpath=''
 vpaths=''
 vpathd=''
-requires=''
 build=
 
 for arg ; do
@@ -253,9 +253,9 @@ done
 # Process deps-build
 if test -n "$pkgconf" || $pcw || $slashpackage ; then
   oldifs="$IFS"
-  while IFS="	" read condvar pkg ver isdepinc libs ; do
+  while IFS="	" read cond usedinlibs pkg ver libs ; do
     IFS="$oldifs"
-    eval "cond=$condvar"
+    eval "cond=$cond; usedinlibs=$usedinlibs"
     if $cond ; then
       if test -n "$pkgconf" ; then
         for lib in $libs ; do
@@ -263,37 +263,34 @@ if test -n "$pkgconf" || $pcw || $slashpackage ; then
             echo "./configure: fatal: $pkgconf --atleast-version=${ver} --print-errors -- $lib failed" 1>&2
             exit 1
           fi
-          thisinc=`$pkgconf --cflags-only-I -- $lib`
-          addincpath="${addincpath}${thisinc:+ }$thisinc"
-          if $isdepinc ; then
-            depincpath="${depincpath}${thisinc:+ }$thisinc"
-          fi
+          thisinc="`$pkgconf --cflags-only-I -- $lib`"
           sldflags="`$pkgconf --libs-only-L --static -- $lib`"
           dldflags="`$pkgconf --libs-only-L -- $lib`"
-          addlibspath="$addlibspath $sldflags"
-          addlibdpath="$addlibdpath $dldflags"
+          addincpath="${addincpath}${thisinc:+ }$thisinc"
+          addlibspath="${addlibspath}${sldflags:+ }$sldflags"
+          addlibdpath="${addlibdpath}${dldflags:+ }$dldflags"
           for i in $sldflags ; do
             vpaths="$vpaths ${i##-L}"
           done
           for i in $dldflags ; do
             vpathd="$vpathd ${i##-L}"
           done
-        done
-      fi
-      if $pcw ; then
-        for lib in $libs ; do
-          req="${req}${req:+, }$lib >= $ver"
+          if $usedinlibs ; then
+            depincpath="${depincpath}${thisinc:+ }$thisinc"
+            deplibpath="${deplibpath}${sldflags:+ }$sldflags"
+          fi
         done
       fi
       if $slashpackage ; then
         addincpath="$addincpath -I${DESTDIR}${sproot}${pkg}/include"
-        if $isdepinc ; then
-          depincpath="$depincpath -I${DESTDIR}${sproot}${pkg}/include"
-        fi
         vpaths="$vpaths ${DESTDIR}${sproot}${pkg}/library"
         addlibspath="$addlibspath -L${DESTDIR}${sproot}${pkg}/library"
         vpathd="$vpathd ${DESTDIR}${sproot}${pkg}/library.so"
         addlibdpath="$addlibdpath -L${DESTDIR}${sproot}${pkg}/library.so"
+        if $usedinlibs ; then
+          depincpath="$depincpath -I${DESTDIR}${sproot}${pkg}/include"
+          deplibpath="$deplibpath -L${DESTDIR}${sproot}${pkg}/library"
+        fi
       fi
     fi
   done < package/deps-build
@@ -461,9 +458,8 @@ sproot := $sproot
 version := $version
 home := $home
 exthome := $exthome
-buildtime_includedirs :=$depincpath
-buildtime_libdirs :=$addlibspath
-buildtime_dynlibdirs :=$addlibdpath
+extra_includedirs :=$depincpath
+extra_libdirs :=$deplibpath
 SPAWN_LIB := ${spawn_lib}
 SOCKET_LIB := ${socket_lib}
 SYSCLOCK_LIB := ${sysclock_lib}

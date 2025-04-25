@@ -42,13 +42,11 @@ lib$(2).pc:
 	  includedir="$(includedir)" \
 	  dynlibdir="$(dynlibdir)" \
 	  libdir="$(libdir)" \
-	  buildtime_includedirs="$(buildtime_includedirs)" \
-	  buildtime_dynlibdirs="$(buildtime_dynlibdirs)" \
-	  buildtime_libdirs="$(buildtime_libdirs)" \
+	  extra_includedirs="$(extra_includedirs)" \
+	  extra_libdirs="$(extra_libdirs)" \
 	  extra_libs="$$(strip $$(EXTRA_LIBS))" \
-	  requires="$$($(1)_REQUIRES)" \
-	  requires_private="$$($(1)_REQUIRES_PRIVATE)" \
 	  description="$$($(1)_DESCRIPTION)" \
+	  url="$$($(1)_URL)" \
 	  ldlibs="$(LDLIBS)" \
 	  ./tools/gen-dotpc.sh > $$@.tmp
 	exec mv -f $$@.tmp $$@
