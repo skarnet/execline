@@ -59,22 +59,26 @@ echo
 for dir in $(ls -1 src | grep -v ^include) ; do
   for file in $(ls -1 src/$dir/deps-lib) ; do
     deps=
+    both=
     libs=
     while read dep ; do
-      if echo $dep | grep -q -e ^-l -e '^\${.*_LIB}' ; then
+      if echo $dep | grep -q '^\${.*_LIB}' ; then
         libs="$libs $dep"
+      elif echo $dep | grep -q '^-l' ; then
+        both="$both $dep"
       else
         deps="$deps src/$dir/$dep"
       fi
     done < src/$dir/deps-lib/$file
     echo 'ifeq ($(strip $(STATIC_LIBS_ARE_PIC)),)'
-    echo "lib${file}.a.xyzzy:$deps"
+    echo "lib${file}.a.xyzzy:${deps}${both}"
     echo else
-    echo "lib${file}.a.xyzzy:$(echo "$deps" | sed 's/\.o/.lo/g')"
+    echo "lib${file}.a.xyzzy:$(echo "${deps}" | sed 's/\.o/.lo/g')${both}"
     echo endif
     if grep -E "^LIB_DEFS [+:]=" package/targets.mak | grep -qF "$file" ; then
+      echo "lib${file}.pc: EXTRA_LIBS :=${both}${libs}"
       echo "lib${file}.so.xyzzy: EXTRA_LIBS :=$libs"
-      echo "lib${file}.so.xyzzy:$(echo "$deps" | sed 's/\.o/.lo/g')"
+      echo "lib${file}.so.xyzzy:$(echo "${deps}${both}" | sed 's/\.o/.lo/g')"
     else
       internal_libs="$internal_libs lib${file}.a.xyzzy"
     fi
@@ -84,10 +88,10 @@ for dir in $(ls -1 src | grep -v ^include) ; do
     deps=
     libs=
     while read dep ; do
-      if echo $dep | grep -q -- \\.o$ ; then
+      if echo $dep | grep -q \\.o$ ; then
         dep="src/$dir/$dep"
       fi
-      if echo $dep | grep -q -e ^-l -e '^\${.*_LIB}' ; then
+      if echo $dep | grep -q '^\${.*_LIB}' ; then
         libs="$libs $dep"
       else
         deps="$deps $dep"

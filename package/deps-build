@@ -1,2 +1,2 @@
-/package/prog/skalibs
-/package/admin/nsss $usensss
+true		/package/prog/skalibs	2.14.4.0	true	libskarnet
+$usensss	/package/admin/nsss	0.2.0.6		false	libnsss
