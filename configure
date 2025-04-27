@@ -45,9 +45,9 @@ Optional features:
   --disable-allstatic           do not prefer linking against static libraries [enabled]
   --enable-static-libc          make entirely static binaries [disabled]
   --disable-all-pic             do not build executables or static libs as PIC [enabled]
+  --enable-pkgconfig            Build and install .pc files for pkg-config [disabled]
   --enable-slashpackage[=ROOT]  assume /package installation at ROOT [disabled]
   --enable-absolute-paths       hardcode absolute BINDIR/foobar paths in binaries [disabled]
-  --enable-pkgconfig            Build and install .pc files for pkg-config [disabled]
   --enable-nsss                 use the nsss library for user information [disabled]
   --enable-pedantic-posix       use pedantically POSIX-compatible binaries [disabled]
   --enable-multicall            build a multicall binary [disabled]
@@ -203,13 +203,13 @@ for arg ; do
     --disable-static-libc|--enable-static-libc=no) evenmorestatic=false ;;
     --enable-all-pic|--enable-all-pic=yes) allpic=true ;;
     --disable-all-pic|--enable-all-pic=no) allpic=false ;;
+    --enable-pkgconfig|--enable-pkgconfig=yes) pcw=true ;;
+    --disable-pkgconfig|--enable-pkgconfig=no) pcw=false ;;
     --enable-slashpackage=*) sproot=${arg#*=} ; slashpackage=true ; ;;
     --enable-slashpackage) sproot= ; slashpackage=true ;;
     --disable-slashpackage) sproot= ; slashpackage=false ;;
     --enable-absolute-paths|--enable-absolute-paths=yes) abspath=true ;;
     --disable-absolute-paths|--enable-absolute-paths=no) abspath=false ;;
-    --enable-pkgconfig|--enable-pkgconfig=yes) pcw=true ;;
-    --disable-pkgconfig|--enable-pkgconfig=no) pcw=false ;;
     --enable-nsss|--enable-nsss=yes) usensss=true ;;
     --disable-nsss|--enable-nsss=no) usensss=false ;;
     --enable-pedantic-posix|--enable-pedantic-posix=yes) pposix=true ;;
@@ -231,11 +231,11 @@ if test -z "$prefix" ; then
   if test "$libdir" = '$prefix/lib' ; then
     libdir=/usr/lib
   fi
-  if test "$pkgconfdir" = '$prefix/lib/pkgconfig' ; then
-    pkgconfdir=/usr/lib/pkgconfig
-  fi
   if test "$includedir" = '$prefix/include' ; then
     includedir=/usr/include
+  fi
+  if test "$pkgconfdir" = '$prefix/lib/pkgconfig' ; then
+    pkgconfdir=/usr/lib/pkgconfig
   fi
   if test "$sysdeps" = '$prefix/lib/skalibs/sysdeps' ; then
     sysdeps=/usr/lib/skalibs/sysdeps
@@ -498,15 +498,15 @@ if $shared ; then
 else
   echo "DO_SHARED :="
 fi
-if $allpic ; then
-  echo "STATIC_LIBS_ARE_PIC := 1"
-else
-  echo "STATIC_LIBS_ARE_PIC :="
-fi
 if $pcw ; then
   echo "DO_PKGCONFIG := 1"
 else
   echo "DO_PKGCONFIG :="
+fi
+if $allpic ; then
+  echo "STATIC_LIBS_ARE_PIC := 1"
+else
+  echo "STATIC_LIBS_ARE_PIC :="
 fi
 if $usensss ; then
   echo "LIBNSSS := -lnsss"

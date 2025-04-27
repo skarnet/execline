@@ -23,6 +23,7 @@ EXTRA_TARGETS :=
 PC_TARGETS :=
 LIB_DEFS :=
 BIN_SYMLINKS :=
+TEST_BINS :=
 
 define library_definition
 LIB$(1) := lib$(2).$(if $(DO_ALLSTATIC),a,so).xyzzy
@@ -130,6 +131,11 @@ install-lib: $(STATIC_LIBS:lib%.a.xyzzy=$(DESTDIR)$(libdir)/lib%.a)
 install-include: $(ALL_INCLUDES:src/include/$(package)/%.h=$(DESTDIR)$(includedir)/$(package)/%.h) $(EXTRA_INCLUDES:src/include/%.h=$(DESTDIR)$(includedir)/%.h)
 install-pkgconfig: $(PC_TARGETS:%=$(DESTDIR)$(pkgconfdir)/%)
 
+tests: $(TEST_BINS)
+
+check: tests
+	@for i in $(TEST_BINS) ; do ./tools/run-test.sh $$i || exit 1 ; done
+
 ifneq ($(exthome),)
 
 $(DESTDIR)$(exthome): $(DESTDIR)$(home)
@@ -182,6 +188,6 @@ lib%.a.xyzzy:
 lib%.so.xyzzy:
 	exec $(CC) -o $@ $(CFLAGS_ALL) $(CFLAGS_SHARED) $(LDFLAGS_ALL) $(LDFLAGS_SHARED) -Wl,-soname,$(patsubst lib%.so.xyzzy,lib%.so.$(version_M),$@) -Wl,-rpath=$(dynlibdir) $^ $(EXTRA_LIBS) $(LDLIBS)
 
-.PHONY: it all clean distclean tgz strip install install-dynlib install-bin install-lib install-include install-pkgconfig
+.PHONY: it all clean distclean tests check tgz strip install install-dynlib install-bin install-lib install-include install-pkgconfig
 
 .DELETE_ON_ERROR:

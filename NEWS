@@ -4,6 +4,7 @@ In 2.9.7.0
 ----------
 
  - Bugfixes.
+ - pkg-config support.
  - New "-P maxpar" option to forx and forstdin, for bounded parallelism.
 
 
