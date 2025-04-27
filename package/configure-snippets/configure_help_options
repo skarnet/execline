@@ -1,0 +1,4 @@
+  --enable-nsss                 use the nsss library for user information [disabled]
+  --enable-pedantic-posix       use pedantically POSIX-compatible binaries [disabled]
+  --enable-multicall            build a multicall binary [disabled]
+

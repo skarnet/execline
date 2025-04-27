@@ -1,0 +1,17 @@
+if $usensss ; then
+  echo "LIBNSSS := -lnsss"
+  echo "MAYBEPTHREAD_LIB := -lpthread"
+else
+  echo "LIBNSSS :="
+  echo "MAYBEPTHREAD_LIB :="
+fi
+if $pposix ; then
+  echo "PEDANTIC_POSIX := 1"
+else
+  echo "PEDANTIC_POSIX :="
+fi
+if $multicall ; then
+  echo "MULTICALL := 1"
+else
+  echo "MULTICALL :="
+fi

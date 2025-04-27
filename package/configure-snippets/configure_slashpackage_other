@@ -1,0 +1,3 @@
+  if $shebangisdefault ; then
+    shebangdir=${extbinprefix}
+  fi

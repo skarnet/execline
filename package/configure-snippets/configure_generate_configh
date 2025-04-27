@@ -1,0 +1,6 @@
+echo "#define ${package_macro_name}_SHEBANGPREFIX \"$shebangdir/\""
+echo
+echo "#undef ${package_macro_name}_PEDANTIC_POSIX"
+if $pposix ; then
+echo "#define ${package_macro_name}_PEDANTIC_POSIX"
+fi

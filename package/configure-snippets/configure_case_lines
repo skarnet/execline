@@ -1,0 +1,7 @@
+    --shebangdir=*) shebangisdefault=false ; shebangdir=${arg#*=} ;;
+    --enable-nsss|--enable-nsss=yes) usensss=true ;;
+    --disable-nsss|--enable-nsss=no) usensss=false ;;
+    --enable-pedantic-posix|--enable-pedantic-posix=yes) pposix=true ;;
+    --disable-pedantic-posix|--enable-pedantic-posix=no) pposix=false ;;
+    --enable-multicall|--enable-multicall=yes) multicall=true ;;
+    --disable-multicall|--enable-multicall=no) multicall=false ;;
