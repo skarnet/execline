@@ -178,7 +178,7 @@ $(DESTDIR)$(pkgconfdir)/lib%.pc: lib%.pc
 %.lo: %.c
 	exec $(CC) $(CPPFLAGS_ALL) $(CFLAGS_ALL) $(CFLAGS_SHARED) -c -o $@ $<
 
-$(ALL_BINS):
+$(ALL_BINS) $(TEST_BINS):
 	exec $(CC) -o $@ $(CFLAGS_ALL) $(LDFLAGS_ALL) $(LDFLAGS_NOSHARED) $^ $(EXTRA_LIBS) $(LDLIBS)
 
 lib%.a.xyzzy:
