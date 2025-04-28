@@ -59,16 +59,16 @@ is empty. </li>
 <ul>
  <li> <tt>-s</tt>&nbsp;: Shell matching. The <em>regex</em> words will not be
 interpreted as regular expressions, but as shell expressions to be interpreted
-via <a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html">fnmatch()</a>.
+via <a href="https://pubs.opengroup.org/onlinepubs/9799919799/functions/fnmatch.html">fnmatch()</a>.
 The other options also change meanings, see the <em>Shell matching</em> section below. </li>
  <li> <tt>-S</tt>&nbsp;: Regular expression matching. This is the default. This
 section, and all of the sections below except the <em>Shell matching</em> one,
 assumes that it is the case. </li>
  <li> <tt>-e</tt>&nbsp;: Interpret the <em>regex</em> words as
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html#tag_09_03">basic
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap09.html#tag_09_03">basic
 regular expressions</a>. </li>
  <li> <tt>-E</tt>&nbsp;: Interpret the <em>regex</em> words as
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html#tag_09_04">extended
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap09.html#tag_09_04">extended
 regular expressions</a>. This is the default. </li>
  <li> <tt>-i</tt>&nbsp;: Perform case-insensitive matches. </li>
  <li> <tt>-N</tt>&nbsp;: Make the matching expression and
@@ -129,7 +129,7 @@ to the output of the <tt>/usr/bin/env</tt> command:
  If the <tt>-s</tt> option has been given to <tt>case</tt>, then the <em>regex</em>
 words are not interpreted as regular expressions, but as shell patterns, as is
 performed by the shell's
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_09_04_05">case</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_18_09_04_05">case</a>
 conditional construct. This has the following consequences:
 </p>
 
@@ -138,10 +138,10 @@ conditional construct. This has the following consequences:
  <li> <em>prog...</em> is always executed with an unmodified environment. </li>
  <li> The options to the <tt>case</tt> command change meanings: instead of
 controlling how the <em>regex</em> regular expressions are interpreted by the
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/regcomp.html">regcomp()</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/functions/regcomp.html">regcomp()</a>
 primitive, they now control how <em>value</em> is matched against the <em>regex</em> patterns
 (which are not regular expressions!) via the
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html">fnmatch()</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/functions/fnmatch.html">fnmatch()</a>
 primitive. Namely:
  <ul>
   <li> <tt>-e</tt>&nbsp;: Treat a backslash as an ordinary character; do not allow

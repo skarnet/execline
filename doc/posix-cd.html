@@ -32,7 +32,7 @@ given directory, then executes a program.
 <p>
 <tt>posix-cd</tt> changes the current working directory to <em>dir</em>
 according to the
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/cd.html">POSIX
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/cd.html">POSIX
 specification for a <tt>cd</tt> external utility</a>. Then, if <em>prog...</em> is
 not empty, it execs into it.
 </p>
@@ -47,7 +47,7 @@ will use <tt>posix-cd</tt>. When this configuration option has not
 been given, <tt>cd</tt> is a symbolic link to
 <a href="execline-cd.html">execline-cd</a>. </li>
  <li> <tt>posix-cd</tt> fully conforms to the
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/cd.html">POSIX
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/cd.html">POSIX
 specification</a>. When <em>prog...</em> is not empty, the behaviour of a
 <tt>cd</tt> utility is not specified by POSIX, so <tt>posix-cd</tt> extends
 the spec to be actually useful and usable in an execline program with the same

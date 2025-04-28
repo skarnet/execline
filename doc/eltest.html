@@ -31,13 +31,13 @@ exit status.
 
 <p>
  <tt>eltest</tt> acts as the generic POSIX
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a> utility,
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/test.html">test</a> utility,
 but it diverges from the specification on how it parses ambiguous arguments: see below.
 </p>
 
 <p>
  <tt>eltest</tt> supports all the standard
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/test.html">test</a>
 operands, plus all the extensions from
 <a href="https://man7.org/linux/man-pages/man1/test.1.html">GNU test</a>, plus a few
 extensions from the <tt>test</tt> builtin from
@@ -64,7 +64,7 @@ valid, always returns the result of the expression no matter how complex it is.
 
 <p>
  <tt>eltest</tt> <strong>is not</strong> suitable as a Single Unix
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/test.html">test</a>
 program, due to the way it disambiguates between arguments and operators, see below.
 However, if you never use arguments that start with a backslash, or that have the
 same name as an existing operator, then
@@ -108,7 +108,7 @@ in order to match whole strings, you must anchor <em>pattern</em> with
 <h2> Argument disambiguation </h2>
 
 <p>
- Unlike <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>,
+ Unlike <a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/test.html">test</a>,
 which has different fixed syntax trees depending on the number of arguments it receives and
 has undefined behaviour when called with more than 5 arguments, <tt>eltest</tt> accepts any
 number of arguments and builds its syntax trees on the fly. This means that expressions such
@@ -122,7 +122,7 @@ when it reads the second <tt>-n</tt> it exits with a syntax error.
  Doing otherwise would result in a combinatory explosion of possible syntax trees, making
 it easy for users to trigger unbounded RAM consumption, and turning a simple utility into
 a programming nightmare. This is why POSIX
-<a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/test.html">test</a>
+<a href="https://pubs.opengroup.org/onlinepubs/9799919799/utilities/test.html">test</a>
 is so restricted. But we don't want the same restrictions.
 </p>
 
