@@ -25,6 +25,9 @@ LIB_DEFS :=
 BIN_SYMLINKS :=
 TEST_BINS :=
 
+-include config.mak
+include package/targets.mak
+
 define library_definition
 LIB$(1) := lib$(2).$(if $(DO_ALLSTATIC),a,$(SHLIB_EXT)).xyzzy
 ifdef DO_SHARED
@@ -66,9 +69,6 @@ define symlink_installation_rule
 $(DESTDIR)$(1)/$(2): $(DESTDIR)$(1)/$(SYMLINK_TARGET_$(2))
 	exec $(INSTALL) -l $$(<F) $$@
 endef
-
--include config.mak
-include package/targets.mak
 
 $(foreach var,$(LIB_DEFS),$(eval $(call library_definition,$(firstword $(subst =, ,$(var))),$(lastword $(subst =, ,$(var))))))
 
