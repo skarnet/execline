@@ -193,9 +193,9 @@ for arg ; do
     --disable-shared|--enable-shared=no) shared=false ;;
     --enable-static|--enable-static=yes) static=true ;;
     --disable-static|--enable-static=no) static=false ;;
-    --enable-allstatic|--enable-allstatic=yes) allstatic=true ;;
-    --disable-allstatic|--enable-allstatic=no) allstatic=false ; evenmorestatic=false ;;
-    --enable-static-libc|--enable-static-libc=yes) allstatic=true ; evenmorestatic=true ;;
+    --enable-allstatic|--enable-allstatic=yes) static=true ; allstatic=true ;;
+    --disable-allstatic|--enable-allstatic=no) allstatic=false ; evenmorestatic=false ; shared=true ;;
+    --enable-static-libc|--enable-static-libc=yes) static=true ; allstatic=true ; evenmorestatic=true ;;
     --disable-static-libc|--enable-static-libc=no) evenmorestatic=false ;;
     --enable-all-pic|--enable-all-pic=yes) allpic=true ;;
     --disable-all-pic|--enable-all-pic=no) allpic=false ;;
