@@ -20,14 +20,14 @@ cat <<EOF
 
 #include <skalibs/posixishard.h>
 
-typedef int main_func (int, char **, char const *const *) ;
-typedef main_func *main_func_ref ;
+typedef int emain_func (int, char **, char const *const *) ;
+typedef emain_func *emain_func_ref ;
 
 typedef struct execline_app_s execline_app, *execline_app_ref ;
 struct execline_app_s
 {
   char const *name ;
-  main_func_ref mainf ;
+  emain_func_ref mainf ;
 } ;
 
 static int execline_app_cmp (void const *a, void const *b)
@@ -67,11 +67,11 @@ EOF
 for i in `{ echo cd ; echo execline ; echo umask ; ls -1 src/execline/deps-exe ; } | sort` ; do
   j=`echo $i | tr - _`
   if test $i = cd ; then
-    echo '  { .name = "cd", .mainf = (main_func_ref)&CD_FUNC },'
+    echo '  { .name = "cd", .mainf = (emain_func_ref)&CD_FUNC },'
   elif test $i = umask ; then
-    echo '  { .name = "umask", .mainf = (main_func_ref)&UMASK_FUNC },'
+    echo '  { .name = "umask", .mainf = (emain_func_ref)&UMASK_FUNC },'
   else
-    echo "  { .name = \"${i}\", .mainf = (main_func_ref)&${j}_main },"
+    echo "  { .name = \"${i}\", .mainf = (emain_func_ref)&${j}_main },"
   fi
 done
 
