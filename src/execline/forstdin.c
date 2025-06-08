@@ -17,7 +17,7 @@
 
 #include <execline/execline.h>
 
-#define USAGE "forstdin [ -E | -e ] [ -p | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
+#define USAGE "forstdin [ -E | -e ] [ -p | -P maxpar | -o okcode,okcode,... | -x breakcode,breakcode,... ] [ -N | -n ] [ -C | -c ] [ -0 | -d delim ] var command..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 int main (int argc, char const **argv)
