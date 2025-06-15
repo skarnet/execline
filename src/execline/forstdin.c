@@ -107,8 +107,9 @@ int main (int argc, char const **argv)
     pidinfo.len++ ;
     while (pidinfo.len >= maxpar)
     {
+      unsigned int oldlen = pidinfo.len ;
       sigsuspend(&emptyset) ;
-      if (maxpar == 1 && not == el_forx_isok(okcodes, nbc, wait_estatus(pidinfo.wstat)))
+      if (pidinfo.len < oldlen && maxpar == 1 && not == el_forx_isok(okcodes, nbc, wait_estatus(pidinfo.wstat)))
         return wait_estatus(pidinfo.wstat) ;
     }
   }
