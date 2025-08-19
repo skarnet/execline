@@ -1,5 +1,12 @@
 Changelog for execline.
 
+In 2.9.7.1
+----------
+
+ - Bugfixes.
+ - Support for shared libraries on MacOS.
+
+
 In 2.9.7.0
 ----------
 
