@@ -26,7 +26,7 @@ executes a program.
 <h2> Interface </h2>
 
 <pre>
-     emptyenv [ -p ] <em>prog...</em>
+     emptyenv [ -p ] [ -l ] <em>prog...</em>
      emptyenv -c <em>prog...</em>
      emptyenv [ -o ] [ -P ] <em>prog...</em>
 </pre>
@@ -41,6 +41,7 @@ environment variables are unset.
 
 <ul>
  <li> <tt>-p</tt>&nbsp;: keep the <tt>PATH</tt> environment variable. </li>
+ <li> <tt>-l</tt>&nbsp;: keep the <tt>LD_LIBRARY_PATH</tt> environment variable. </li>
  <li> <tt>-c</tt>&nbsp;: clean up. Do not empty the environment. Instead,
 remove every variable used internally by the execline programs, to avoid
 any interference with or information leakage to external programs. </li>

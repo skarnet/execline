@@ -1,10 +1,11 @@
 Changelog for execline.
 
-In 2.9.7.1
+In 2.9.8.0
 ----------
 
  - Bugfixes.
  - Support for shared libraries on MacOS.
+ - New -l option to emptyenv: keep LD_LIBRARY_PATH
 
 
 In 2.9.7.0
