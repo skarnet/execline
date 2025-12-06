@@ -111,7 +111,7 @@ int main (int argc, char const **argv, char const *const *envp)
         memcpy(tmp + 1, expr, len) ;
         tmp[1+len] = '$' ;
         tmp[2+len] = 0 ;
-        r = regcomp(&re, tmp, (flagextended ? REG_EXTENDED : 0) | (flagicase ? REG_ICASE : 0) | (flagnosub ? REG_NOSUB : 0) | REG_NEWLINE) ;
+        r = regcomp(&re, tmp, (flagextended ? REG_EXTENDED : 0) | (flagicase ? REG_ICASE : 0) | (flagnosub ? REG_NOSUB : 0)) ;
         if (r)
         {
           char buf[256] ;
