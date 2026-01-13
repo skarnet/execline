@@ -53,7 +53,7 @@ int main (int argc, char const *const *argv)
       strerr_warnw2x("stdin contained a null character", " - using default instead") ;
     }
   }
-  else if (chomp && (value.len > 1) && (value.s[value.len - 2] == '\n'))
+  else if (chomp && value.len > 1 && value.s[value.len - 2] == '\n')
     value.s[--value.len - 1] = 0 ;
   el_modif_and_exec(argv + 1, argv[0], val, doimport) ;
 }
