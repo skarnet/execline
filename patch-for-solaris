@@ -14,6 +14,9 @@ mv -f configure.tmp configure
 patchit ./configure
 patchit ./tools/install.sh
 patchit ./tools/gen-deps.sh
+patchit ./tools/gen-dotpc.sh
+patchit ./tools/run-test.sh
+patchit ./tools/gen-multicall.sh
 
 echo 'SHELL := /usr/xpg4/bin/sh' > Makefile.tmp
 echo >> Makefile.tmp
