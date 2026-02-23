@@ -24,6 +24,7 @@
 /execline-umask
 /exit
 /export
+/export-array
 /fdblock
 /fdclose
 /fdmove
