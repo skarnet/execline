@@ -10,6 +10,7 @@ el_parse_from_string.o
 el_popenv.o
 el_pushenv.o
 el_semicolon.o
+el_semicolon_nostrict.o
 el_spawn0.o
 el_gspawn0.o
 el_substandrun.o

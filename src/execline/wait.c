@@ -9,13 +9,11 @@
 #endif
 
 #include <skalibs/types.h>
-#include <skalibs/sgetopt.h>
-#include <skalibs/strerr.h>
+#include <skalibs/envexec.h>
 #include <skalibs/tai.h>
 #include <skalibs/djbunix.h>
 #include <skalibs/selfpipe.h>
 #include <skalibs/iopause.h>
-#include <skalibs/exec.h>
 
 #include <execline/execline.h>
 
@@ -155,49 +153,62 @@ static int wait_with_timeout (pid_t *pids, unsigned int n, pid_t *returned, ac_f
   return e ;
 }
 
+enum wait_golb_e
+{
+  GOLB_INSIST = 0x01,
+  GOLB_JUSTONE = 0x02,
+  GOLB_REAP = 0x04,
+} ;
+
+enum wait_gola_e
+{
+  GOLA_TIMEOUT,
+  GOLA_N
+} ;
+
 int main (int argc, char const **argv)
 {
-  tain tto ;
+  static gol_bool const rgolb[] =
+  {
+    { .so = 'I', .lo = "no-insist", .clear = GOLB_INSIST, .set = 0 },
+    { .so = 'i', .lo = "insist", .clear = 0, .set = GOLB_INSIST },
+    { .so = 'a', .lo = "all", .clear = GOLB_JUSTONE, .set = 0 },
+    { .so = 'o', .lo = "one", .clear = 0, .set = GOLB_JUSTONE },
+    { .so = 'r', .lo = "reap", .clear = 0, .set = GOLB_REAP },
+  } ;
+  static gol_arg const rgola[] =
+  {
+    { .so = 't', .lo = "timeout", .i = GOLA_TIMEOUT },
+  } ;
+  tain tto = TAIN_INFINITE_RELATIVE ;
   int argc1 ;
-  int hastimeout = 0 ;
-  int insist = 0 ;
-  int justone = 0 ;
-  int hasblock ;
+  int hasblock = 1 ;
   int e ;
+  uint64_t wgolb = 0 ;
+  char const *wgola[GOLA_N] = { 0 } ;
+  unsigned int golc ;
   pid_t pid = -1 ;
   PROG = "wait" ;
 #ifdef EXECLINE_PEDANTIC_POSIX
   setlocale(LC_ALL, "") ;  /* but of course, dear POSIX */
 #endif
+  golc = GOL_main(argc, argv, rgolb, rgola, &wgolb, wgola) ;
+  argc -= golc ; argv += golc ;
+
+  if (wgolb & GOLB_REAP) wgola[GOLA_TIMEOUT] = "0" ;
+  if (wgola[GOLA_TIMEOUT])
   {
-    subgetopt l = SUBGETOPT_ZERO ;
     unsigned int t = 0 ;
-    for (;;)
-    {
-      int opt = subgetopt_r(argc, argv, "iIaort:", &l) ;
-      if (opt == -1) break ;
-      switch (opt)
-      {
-        case 'i' : insist = 1 ; break ;
-        case 'I' : insist = 0 ; break ;
-        case 'a' : justone = 0 ; break ;
-        case 'o' : justone = 1 ; break ;
-        case 'r' : t = 0 ; hastimeout = 1 ; break ;
-        case 't' : if (!uint0_scan(l.arg, &t)) dieusage() ; hastimeout = 1 ; break ;    
-        default : dieusage() ;
-      }
-    }
-    argc -= l.ind ; argv += l.ind ;
-    if (hastimeout) tain_from_millisecs(&tto, t) ;
-    else tto = tain_infinite_relative ;
+    if (!uint0_scan(wgola[GOLA_TIMEOUT], &t)) dieusage() ;
+    tain_from_millisecs(&tto, t) ;
   }
-  argc1 = el_semicolon(argv) ;
-  if (argc1 >= argc)
+
+  argc1 = el_semicolon_nostrict(argv) ;
+  if (argc1 > argc)
   {
     hasblock = 0 ;
     argc1 = argc ;
   }
-  else hasblock = 1 ;
 
   {
     unsigned int n = argc1 ? argc1 : 1 ;
@@ -210,9 +221,9 @@ int main (int argc, char const **argv)
     }
     else pids[0] = 0 ;
 
-    e = hastimeout ?  /* wait -t30000 whatever */
-         wait_with_timeout(pids, n, &pid, argc1 ? &wait_one_from_list_nohang : &wait_one_nohang, &tto, justone, insist) :
-         justone ?
+    e = wgola[GOLA_TIMEOUT] ?  /* wait -t30000 whatever */
+         wait_with_timeout(pids, n, &pid, argc1 ? &wait_one_from_list_nohang : &wait_one_nohang, &tto, !!(wgolb & GOLB_JUSTONE), !!(wgolb & GOLB_INSIST)) :
+         wgolb & GOLB_JUSTONE ?
            argc1 ?
              wait_one_from_list(pids, n, &pid) :  /* wait -o -- 2 3 4 / wait -o -- { 2 3 4 } */
              wait_one(&pid) :  /* wait -o / wait -o { } */
@@ -221,7 +232,7 @@ int main (int argc, char const **argv)
              wait_all() ; /* wait / wait { } */
   }
   if (!hasblock) return e >= 0 ? e : 127 ;
-  if (!justone) xexec0(argv + argc1 + 1) ;
+  if (!(wgolb & GOLB_JUSTONE)) xexec0(argv + argc1 + 1) ;
   if (e < 0) xmexec0_n(argv + argc1 + 1, "?\0!", 4, 2) ;
 
   {

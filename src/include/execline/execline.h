@@ -47,6 +47,7 @@ extern void el_execsequence (char const *const *, char const *const *, char cons
 /* Block unquoting */
 
 extern int el_semicolon (char const **) ;
+extern unsigned int el_semicolon_nostrict (char const **) ;
 
 
 /* Value transformation */
