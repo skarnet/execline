@@ -1,5 +1,13 @@
 Changelog for execline.
 
+In 2.9.8.2
+----------
+
+ - Bugfixes.
+ - redirfd rewrite.
+ - Adaptation to skalibs-2.15.0.0.
+
+
 In 2.9.8.1
 ----------
 
