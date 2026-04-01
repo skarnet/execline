@@ -1,11 +1,13 @@
 Changelog for execline.
 
-In 2.9.8.2
+In 2.9.9.0
 ----------
 
  - Bugfixes.
  - redirfd rewrite.
  - Adaptation to skalibs-2.15.0.0.
+ - New option to redirfd: -v. (Also -E | -e)
+   This makes redirfd work like open().
 
 
 In 2.9.8.1
