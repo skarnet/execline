@@ -26,12 +26,20 @@ executes a program.
 <h2> Interface </h2>
 
 <pre>
-     redirfd [ -r | -w | -u | -a | -x ] [ -n ] [ -b ] <em>fd</em> <em>file</em> <em>prog...</em>
+     redirfd [ -r | -w | -u | -a | -x ] [ -n ] [ -b ] <em>fd</em> <em>file</em> <em>prog...</em><br>
+     redirfd [ -r | -w | -u | -a | -x ] [ -n ] [ -b ] [ -v ] [ -e | -E ] <em>var</em> <em>file</em> <em>prog...</em><br>
 </pre>
 
 <p>
 <tt>redirfd</tt> redirects the file descriptor number <em>fd</em>
 to <em>file</em>, then execs into <em>prog...</em>.
+</p>
+
+<p>
+When run with the <tt>-v</tt> option, the first argument is instead
+interpreted as an environment variable. <tt>redirfd</tt> opens <em>file</em>,
+stores the obtained file descriptor into environment variable <em>var</em>,
+then execs into <em>prog...</em>.
 </p>
 
 <h2> Options </h2>
@@ -51,6 +59,14 @@ the -n and -b options may be added in any case.
  <li> <tt>-b</tt>&nbsp;: change mode of <em>file</em> after opening it:
 to non-blocking mode if the <tt>-n</tt> option was not given,
 to blocking mode if it was. </li>
+ <li> <tt>-v</tt>&nbsp;: interpret the first argument as an environment variable,
+and stores the new file descriptor into that variable before execing. </li>
+ <li> <tt>-e</tt>&nbsp;: no autoimport. This is the default. </li>
+ <li> <tt>-E</tt>&nbsp;: autoimport. This is only useful with the <tt>-v</tt> option.
+Instead of executing
+<em>prog...</em>, execute <tt>importas -uSi <em>var</em> <em>prog...</em></tt>.
+This substitutes <em>var</em> into the command line instead of putting it into
+the environment. </li>
 </ul>
 
 <h2> Notes </h2>

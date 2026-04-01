@@ -45,7 +45,7 @@ src/execline/pipeline.o src/execline/pipeline.lo: src/execline/pipeline.c src/in
 src/execline/piperw.o src/execline/piperw.lo: src/execline/piperw.c
 src/execline/posix-cd.o src/execline/posix-cd.lo: src/execline/posix-cd.c
 src/execline/posix-umask.o src/execline/posix-umask.lo: src/execline/posix-umask.c
-src/execline/redirfd.o src/execline/redirfd.lo: src/execline/redirfd.c
+src/execline/redirfd.o src/execline/redirfd.lo: src/execline/redirfd.c src/include/execline/execline.h
 src/execline/runblock.o src/execline/runblock.lo: src/execline/runblock.c src/include/execline/execline.h
 src/execline/shift.o src/execline/shift.lo: src/execline/shift.c src/include/execline/execline.h
 src/execline/trap.o src/execline/trap.lo: src/execline/trap.c src/include/execline/execline.h
@@ -170,7 +170,7 @@ posix-cd: src/execline/posix-cd.o -lskarnet
 posix-umask: EXTRA_LIBS :=
 posix-umask: src/execline/posix-umask.o -lskarnet
 redirfd: EXTRA_LIBS :=
-redirfd: src/execline/redirfd.o -lskarnet
+redirfd: src/execline/redirfd.o ${LIBEXECLINE} -lskarnet
 runblock: EXTRA_LIBS :=
 runblock: src/execline/runblock.o ${LIBEXECLINE} -lskarnet
 shift: EXTRA_LIBS :=
