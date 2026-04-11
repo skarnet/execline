@@ -125,7 +125,7 @@ int main (int argc, char const **argv, char const *const *envp)
   if (!pids[SKALIBS_NSIG]) strerr_diefu2sys(111, "spawn ", argv[argc1 + 1]) ;
 
  loop:
-  if (iopause_g(&x, 1, 0) < 0) strerr_diefu1sys(111, "iopause") ;
+  if (iopause_g(&x, 1, 0) == -1) strerr_diefu1sys(111, "iopause") ;
   for (;;)
   {
     int r = selfpipe_read() ;
