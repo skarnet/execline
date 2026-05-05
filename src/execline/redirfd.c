@@ -10,7 +10,7 @@
 
 #include <execline/execline.h>
 
-#define USAGE "redirfd -[ r | w | u | a | x ] [ -N | -n ] [ -b ] [ -v ] [ -E | -e ] fd file prog..."
+#define USAGE "redirfd -[ r | w | u | a | x ] [ -N | -n ] [ -b ] [ -f ] [ -E | -e ] fd|var file prog..."
 #define dieusage() strerr_dieusage(100, USAGE)
 
 enum golb_e
@@ -23,7 +23,7 @@ enum golb_e
   GOLB_EXCL = 0x0020,
   GOLB_NONBLOCK = 0x0040,
   GOLB_CHANGEMODE = 0x0100,
-  GOLB_VAR = 0x0200,
+  GOLB_OPEN = 0x0200,
   GOLB_AUTOIMPORT = 0x0400,
 } ;
 
@@ -39,7 +39,7 @@ int main (int argc, char const *const *argv)
     { .so = 'N', .lo = "block", .clear = GOLB_NONBLOCK, .set = 0 },
     { .so = 'n', .lo = "nonblock", .clear = 0, .set = GOLB_NONBLOCK },
     { .so = 'b', .lo = "switch-block", .clear = 0, .set = GOLB_CHANGEMODE },
-    { .so = 'v', .lo = "variable", .clear = 0, .set = GOLB_VAR },
+    { .so = 'f', .lo = "open", .clear = 0, .set = GOLB_OPEN },
     { .so = 'e', .lo = "no-autoimport", .clear = GOLB_AUTOIMPORT, .set = 0 },
     { .so = 'E', .lo = "autoimport", .clear = 0, .set = GOLB_AUTOIMPORT },
     { .so = 0, .lo = "no-read", .clear = GOLB_READ, .set = 0 },
@@ -66,7 +66,7 @@ int main (int argc, char const *const *argv)
   argc -= golc ; argv += golc ;
   if (argc < 3) dieusage() ;
   if (!(wgolb & (GOLB_READ | GOLB_WRITE))) dieusage() ;
-  if (!(wgolb & GOLB_VAR))
+  if (!(wgolb & GOLB_OPEN))
     if (!uint0_scan(argv[0], &fdto)) dieusage() ;
 
   flags =
@@ -90,7 +90,7 @@ int main (int argc, char const *const *argv)
   if (wgolb & GOLB_CHANGEMODE)
     if ((wgolb & GOLB_NONBLOCK ? ndelay_off(fd) : ndelay_on(fd)) == -1)
       strerr_diefu1sys(111, "change blocking mode") ;
-  if (wgolb & GOLB_VAR)
+  if (wgolb & GOLB_OPEN)
   {
     char fmt[UINT_FMT] ;
     fmt[uint_fmt(fmt, fd)] = 0 ;
