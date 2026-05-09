@@ -2,8 +2,8 @@
 
 /bin/multisubstitute
 {
-  importas -i HOME HOME
-  importas -i LOGNAME LOGNAME
+  importas -Si HOME
+  importas -Si LOGNAME
 }
 /bin/export USER ${LOGNAME}
 /bin/s6-envdir /etc/env-startup
