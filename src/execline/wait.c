@@ -4,9 +4,6 @@
 
 #include <sys/wait.h>
 #include <errno.h>
-#ifdef EXECLINE_PEDANTIC_POSIX
-#include <locale.h>
-#endif
 
 #include <skalibs/types.h>
 #include <skalibs/envexec.h>
@@ -17,6 +14,10 @@
 
 #include <execline/config.h>
 #include <execline/execline.h>
+
+#ifdef EXECLINE_PEDANTIC_POSIX
+#include <locale.h>
+#endif
 
 #define USAGE "wait [ -I | -i ] [ -a | -o ] [ -r | -t timeout ] { pids... } [ prog... ]"
 #define dieusage() strerr_dieusage(100, USAGE)
