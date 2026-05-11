@@ -28,7 +28,7 @@ executes a program.
 
 <pre>
      redirfd [ -r | -w | -u | -a | -x ] [ -n ] [ -b ] <em>fd</em> <em>file</em> <em>prog...</em><br>
-     redirfd [ -r | -w | -u | -a | -x ] [ -n ] [ -b ] [ -f ] [ -e | -E ] <em>var</em> <em>file</em> <em>prog...</em><br>
+     redirfd -f [ -r | -w | -u | -a | -x ] [ -n ] [ -b ] [ -e | -E ] <em>var</em> <em>file</em> <em>prog...</em><br>
 </pre>
 
 <p>
@@ -37,7 +37,7 @@ to <em>file</em>, then execs into <em>prog...</em>.
 </p>
 
 <p>
-When run with the <tt>-v</tt> option, the first argument is instead
+When run with the <tt>-f</tt> option, the first argument is instead
 interpreted as an environment variable. <tt>redirfd</tt> opens <em>file</em>,
 stores the obtained file descriptor into environment variable <em>var</em>,
 then execs into <em>prog...</em>.
