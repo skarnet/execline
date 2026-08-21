@@ -118,7 +118,7 @@ tgz: distclean
 
 strip: $(ALL_LIBS) $(ALL_BINS)
 ifneq ($(strip $(STATIC_LIBS)),)
-	exec $(STRIP) -x -R .note -R .comment $(STATIC_LIBS)
+	exec $(STRIP) $(STRIP_ARGS_STATIC_LIBS) $(STATIC_LIBS)
 endif
 ifneq ($(strip $(ALL_BINS)$(SHARED_LIBS)),)
 	exec $(STRIP) -R .note -R .comment $(ALL_BINS) $(SHARED_LIBS)

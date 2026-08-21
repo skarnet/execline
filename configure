@@ -394,6 +394,15 @@ if test "$target" != "$(cat $sysdeps/target)" ; then
   exit 1
 fi
 
+
+#default to GNU strip
+strip_args_static_libs="-x -R .note -R .comment"
+echo "Checking for llvm-strip ..."
+if "${cross}strip" -V 2>&1 | grep -q '^llvm-strip'; then
+  echo "  ... yes. Adjusting strip args for static libs"
+  strip_args_static_libs="--strip-unneeded"
+fi
+
 echo "Shared libraries will be named ..."
 libc="${target##*-}"
 if test "${libc##darwin}" != "$libc" ; then
@@ -495,6 +504,7 @@ LDFLAGS_SHARED := $LDFLAGS_SHARED
 LDFLAGS_NOSHARED :=$LDFLAGS_NOSHARED
 CROSS_COMPILE := $cross
 SHLIB_EXT := ${shlibext}
+STRIP_ARGS_STATIC_LIBS := $strip_args_static_libs
 
 vpath lib%.a$vpaths
 vpath lib%.${shlibext}$vpathd
