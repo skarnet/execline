@@ -4,16 +4,23 @@
 #include <regex.h>
 #include <fnmatch.h>
 
+#include <skalibs/uint64.h>
 #include <skalibs/gccattributes.h>
 #include <skalibs/types.h>
-#include <skalibs/sgetopt.h>
-#include <skalibs/strerr.h>
-#include <skalibs/exec.h>
+#include <skalibs/envexec.h>
 
 #include <execline/execline.h>
 
-#define USAGE "case [ -s | -S ] [ -e | -E ] [ -n | -N ] [ -i ] value { re1 { prog1... } re2 { prog2... } ... } progdefault... "
+#define USAGE "case [ -s | -S ] [ -e | -E ] [ -n | -N ] [ -I | -i ] value { re1 { prog1... } re2 { prog2... } ... } progdefault... "
 #define dieusage() strerr_dieusage(100, USAGE)
+
+enum golb_e
+{
+  GOLB_SHELL = 0x01,
+  GOLB_BRE = 0x02,
+  GOLB_SUB = 0x04,
+  GOLB_ICASE = 0x08,
+} ;
 
 static void case_execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n) gccattr_noreturn ;
 static void case_execit (char const *const *argv, char const *expr, char const *s, regmatch_t const *pmatch, size_t n)
@@ -48,57 +55,50 @@ static void case_execit (char const *const *argv, char const *expr, char const *
 
 int main (int argc, char const **argv, char const *const *envp)
 {
-  int flagshell = 0 ;
-  int flagextended = 1 ;
-  int flagnosub = 1 ;
-  int flagicase = 0 ;
+  static gol_bool const rgolb[] =
+  {
+    { .so = 'S', .lo = "noshell", .clear = GOLB_SHELL, .set = 0 },
+    { .so = 's', .lo = "shell", .clear = 0, .set = GOLB_SHELL },
+    { .so = 'E', .lo = "ere", .clear = GOLB_BRE, .set = 0 },
+    { .so = 'e', .lo = "bre", .clear = 0, .set = GOLB_BRE },
+    { .so = 'n', .lo = "nosub", .clear = GOLB_SUB, .set = 0 },
+    { .so = 'N', .lo = "sub", .clear = 0, .set = GOLB_SUB },
+    { .so = 'I', .lo = "noicase", .clear = GOLB_ICASE, .set = 0 },
+    { .so = 'i', .lo = "icase", .clear = 0, .set = GOLB_ICASE },
+  } ;
+  uint64_t wgolb = 0 ;
   int argc1 ;
   unsigned int i = 0 ;
   char const *s ;
   PROG = "case" ;
+
   {
-    subgetopt l = SUBGETOPT_ZERO ;
-    for (;;)
-    {
-      int opt = subgetopt_r(argc, argv, "sSeEnNi", &l) ;
-      if (opt == -1) break ;
-      switch (opt)
-      {
-        case 's' : flagshell = 1 ; break ;
-        case 'S' : flagshell = 0 ; break ;
-        case 'e' : flagextended = 0 ; break ;
-        case 'E' : flagextended = 1 ; break ;
-        case 'N' : flagnosub = 0 ; break ;
-        case 'n' : flagnosub = 1 ; break ;
-        case 'i' : flagicase = 1 ; break ;
-        default : dieusage() ;
-      }
-    }
-    argc -= l.ind ; argv += l.ind ;
+    unsigned int golc = gol_main(argc, argv, rgolb, sizeof(rgolb)/sizeof(gol_bool), 0, 0, &wgolb, 0) ;
+    argc -= golc ; argv += golc ;
   }
   if (argc-- < 2) dieusage() ;
   s = *argv++ ;
 
   argc1 = el_semicolon(argv) ;
-  if (argc1 >= argc) strerr_dief1x(100, "unterminated case block") ;
+  if (argc1 >= argc) strerr_dief(100, "unterminated case block") ;
 
   while (i < argc1)
   {
     char const *expr = argv[i++] ;
     int argc2 ;
-    if (i == argc1) strerr_dief1x(100, "malformed case block") ;
+    if (i == argc1) strerr_dief(100, "malformed case block") ;
     argc2 = el_semicolon(argv + i) ;
-    if (i + argc2 >= argc1) strerr_dief1x(100, "unterminated regex block") ;
-    if (flagshell)
+    if (i + argc2 >= argc1) strerr_dief(100, "unterminated regex block") ;
+    if (wgolb & GOLB_SHELL)
     {
-      int r = fnmatch(expr, s, (flagextended ? 0 : FNM_NOESCAPE) | (flagicase ? FNM_PERIOD : 0) | (flagnosub ? 0 : FNM_PATHNAME)) ;
+      int r = fnmatch(expr, s, (wgolb & GOLB_BRE ? FNM_NOESCAPE : 0) | (wgolb & GOLB_ICASE ? FNM_PERIOD : 0) | (wgolb & GOLB_SUB ? FNM_PATHNAME : 0)) ;
       if (!r)
       {
         argv[i + argc2] = 0 ;
         xexec0(argv + i) ;
       }
       else if (r != FNM_NOMATCH)
-        strerr_warnw2x("invalid fnmatch pattern: ", expr) ;
+        strerr_warnw("invalid fnmatch pattern: ", expr) ;
     }
     else
     {
@@ -111,27 +111,27 @@ int main (int argc, char const **argv, char const *const *envp)
         memcpy(tmp + 1, expr, len) ;
         tmp[1+len] = '$' ;
         tmp[2+len] = 0 ;
-        r = regcomp(&re, tmp, (flagextended ? REG_EXTENDED : 0) | (flagicase ? REG_ICASE : 0) | (flagnosub ? REG_NOSUB : 0)) ;
+        r = regcomp(&re, tmp, (wgolb & GOLB_BRE ? 0 : REG_EXTENDED) | (wgolb & GOLB_ICASE ? REG_ICASE : 0) | (wgolb & GOLB_SUB ? 0 : REG_NOSUB)) ;
         if (r)
         {
           char buf[256] ;
           regerror(r, &re, buf, 256) ;
-          strerr_diefu4x(r == REG_ESPACE ? 111 : 100, "regcomp \"^", argv[i], "$\": ", buf) ;
+          strerr_diefu(r == REG_ESPACE ? 111 : 100, "regcomp \"^", argv[i-1], "$\": ", buf) ;
         }
       }
       {
-        regmatch_t pmatch[re.re_nsub && !flagnosub ? re.re_nsub + 1 : 1] ;
+        regmatch_t pmatch[re.re_nsub && (wgolb & GOLB_SUB) ? re.re_nsub + 1 : 1] ;
         int r = regexec(&re, s, re.re_nsub + 1, pmatch, 0) ;
         if (!r)
         {
           argv[i + argc2] = 0 ;
-          case_execit(argv + i, expr, s, pmatch, flagnosub ? 0 : 1 + re.re_nsub) ;
+          case_execit(argv + i, expr, s, pmatch, wgolb & GOLB_SUB ? 1 + re.re_nsub : 0) ;
         }
         if (r != REG_NOMATCH)
         {
           char buf[256] ;
           regerror(r, &re, buf, 256) ;
-          strerr_diefu6x(111, "match string \"", s, "\" against regex \"", expr, "\": ", buf) ;
+          strerr_diefu(111, "match string \"", s, "\" against regex \"", expr, "\": ", buf) ;
         }
       }
       regfree(&re) ;
