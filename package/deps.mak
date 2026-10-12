@@ -8,6 +8,7 @@ src/execline/case.o src/execline/case.lo: src/execline/case.c src/include/execli
 src/execline/cd.o src/execline/cd.lo: src/execline/cd.c
 src/execline/define.o src/execline/define.lo: src/execline/define.c src/include-local/exlsn.h
 src/execline/dollarat.o src/execline/dollarat.lo: src/execline/dollarat.c
+src/execline/dollarsharp.o src/execline/dollarsharp.lo: src/execline/dollarsharp.c
 src/execline/elgetopt.o src/execline/elgetopt.lo: src/execline/elgetopt.c src/include/execline/execline.h
 src/execline/elgetpositionals.o src/execline/elgetpositionals.lo: src/execline/elgetpositionals.c src/include-local/exlsn.h
 src/execline/elglob.o src/execline/elglob.lo: src/execline/elglob.c src/include-local/exlsn.h
@@ -49,7 +50,7 @@ src/execline/trap.o src/execline/trap.lo: src/execline/trap.c src/include/execli
 src/execline/tryexec.o src/execline/tryexec.lo: src/execline/tryexec.c src/include/execline/execline.h
 src/execline/umask.o src/execline/umask.lo: src/execline/umask.c
 src/execline/unexport.o src/execline/unexport.lo: src/execline/unexport.c
-src/execline/wait.o src/execline/wait.lo: src/execline/wait.c src/include/execline/config.h src/include/execline/execline.h
+src/execline/wait.o src/execline/wait.lo: src/execline/wait.c src/include/execline/execline.h
 src/execline/withstdinas.o src/execline/withstdinas.lo: src/execline/withstdinas.c src/include/execline/execline.h
 src/libexecline/el_execsequence.o src/libexecline/el_execsequence.lo: src/libexecline/el_execsequence.c src/include/execline/execline.h
 src/libexecline/el_forx_pidinfo.o src/libexecline/el_forx_pidinfo.lo: src/libexecline/el_forx_pidinfo.c src/include/execline/execline.h
@@ -93,6 +94,8 @@ define: EXTRA_LIBS :=
 define: src/execline/define.o ${LIBEXECLINE} -lskarnet
 dollarat: EXTRA_LIBS :=
 dollarat: src/execline/dollarat.o -lskarnet
+dollarsharp: EXTRA_LIBS :=
+dollarsharp: src/execline/dollarsharp.o -lskarnet
 elgetopt: EXTRA_LIBS :=
 elgetopt: src/execline/elgetopt.o ${LIBEXECLINE} -lskarnet
 elgetpositionals: EXTRA_LIBS :=

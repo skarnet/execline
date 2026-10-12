@@ -27,6 +27,10 @@ been removed, due to POSIX relaxing requirements on intrinsic utilities. </li>
  <li> The <a href="cd.html">cd</a> binary is now what was previously <tt>execline-cd</tt>. </li>
  <li> The <a href="umask.html">umask</a> binary is now what was previously <tt>posix-umask</tt>,
 (without locale support, not that it had much to start with) </li>
+ <li> <a href="loopwhilex"><tt>loopwhilex -x ""</tt></a> now loops forever. The <tt>-n</tt>
+option has been removed. </li>
+ <li> <a href="wait.html"><tt>wait</tt></a> has slightly different options. When given a
+non-empty list of pids, it <em>only</em> waits for these pids and doesn't touch the others. </li>
 </ul>
 
 <h2> in 2.9.9.2 </h2>

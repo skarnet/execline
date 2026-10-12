@@ -30,7 +30,7 @@
 </p>
 
 <pre>
-     wait [ -I | -i ] [ -a | -o ] [ -r | -t <em>timeout</em> ] { [ <em>pids...</em> ] } <em>prog...</em>
+     wait [ -a | -o ] [ -u ] [ -t <em>timeout</em> ] { [ <em>pids...</em> ] } <em>prog...</em>
 </pre>
 
 <ul>
@@ -40,36 +40,49 @@ and unquotes it. </li>
  <li> <tt>wait</tt> waits for every child whose pid is
 listed in <em>pids...</em>. If <em>pids...</em> is an
 empty list, it waits for every child process it has. </li>
- <li><tt>wait</tt> then execs into <em>prog...</em>. </li>
+ <li> <tt>wait</tt> then execs into <em>prog...</em>. </li>
 </ul>
 
 <h2> Options </h2>
 
 <ul>
- <li> <tt>-r</tt>&nbsp;: equivalent to <tt>-t&nbsp;0</tt>. Do not
-pause: only reap processes that are already dead when <tt>wait</tt>
-is invoked. </li>
  <li> <tt>-t</tt>&nbsp;<em>timeout</em>&nbsp;: wait for a maximum
 of <em>timeout</em> milliseconds. If there still are living processes
 among <em>pids...</em> (or among <tt>wait</tt>'s children if
 <em>pids...</em> is an empty list), after <em>timeout</em>
-milliseconds, they will not be reaped. </li>
- <li> <tt>-I</tt>&nbsp;: loose. If <tt>wait</tt> times out while
-waiting for children to die, it will still
-exec into <em>prog...</em>. This is the default. </li>
- <li> <tt>-i</tt>&nbsp;: strict. If <tt>wait</tt> times out, it
-will print an error message and exit 99. </li>
+milliseconds, they will not be waited for. In particular, <tt>-t0</tt>
+tells <tt>wait</tt> to perform a single reaping pass on current zombies
+and immediately exec into <em>prog...</em>. </li>
  <li> <tt>-o</tt>&nbsp;: wait for <em>one</em> of the listed
 <em>pids</em> &mdash; exec into <em>prog</em> as soon as one of the
 listed children dies. (If no pid is listed, wait for one child to die.)
-The <tt>!</tt> environment variable will be set to the
-pid that died, and the <tt>?</tt> environment variable will contain an
-<a href="exitcodes.html">approximation</a> of its exit code. If no
-listed child has died before <tt>wait</tt> has to exec (either because
-it timed out or it has no suitable children left), the <tt>?</tt> and
-<tt>!</tt> environment variables are unset. </li>
 <li> <tt>-a</tt>&nbsp;: wait for <em>all</em> of the listed <em>pids</em>.
-Do not touch the <tt>!</tt> or <tt>?</tt> variables. This is the default. </li>
+This is the default. </li>
+ <li> <tt>-u</tt>&nbsp;: do not export the result in the environment,
+even if <tt>wait</tt> succeeds. </li>
+</ul>
+
+<h2> Environment variables </h2>
+
+<p>
+ If the <tt>-u</tt> option has been given, <tt>wait</tt> execs into <em>prog...</em>
+with the <tt>!</tt> and <tt>?</tt> environment variables unset. Same thing if an
+error occurred before <tt>wait</tt> could successfully reap a zombie.
+</p>
+
+<p>
+ Otherwise, the <tt>!</tt> environment variable is set to the pid of a reapt zombie,
+and the <tt>?</tt> environment variable is set to its exit code. Here is how <tt>wait</tt>
+decides what pid to report:
+</p>
+
+<ul>
+ <li> If the <tt>-o</tt> option has been given, <tt>!</tt> is set to the pid of <em>the<em>
+one zombie that has just been reapt. </li>
+ <li> Otherwise, if <tt>wait</tt> has been given an empty list of pids (meaning it should
+wait for all of its children), then <tt>!</tt> is set to the pid of the last child it has
+waited for. If there were no children, <tt>!</tt> and <tt>?</tt> are unset. </li>
+ <li> Otherwise, <tt>!</tt> is set to the <em>last</em> pid in the list provided to <tt>wait</tt>. </li>
 </ul>
 
 <h2> Notes </h2>

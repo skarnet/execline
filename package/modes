@@ -4,6 +4,7 @@ case			0755
 cd			0755
 define			0755
 dollarat		0755
+dollarsharp		0755
 elgetopt		0755
 elgetpositionals	0755
 elglob			0755

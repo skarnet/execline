@@ -9,6 +9,9 @@ In 2.10.0.0
  - execline-umask and posix-cd removed.
  - loopwhilex -n option removed.
  - loopwhilex -x "" now loops forever.
+ - wait has been rewritten, its options and behaviour have changed a bit.
+In particular, it does not reap unlisted zombies anymore (that was the
+point of the rewrite).
 
 
 In 2.9.9.2
