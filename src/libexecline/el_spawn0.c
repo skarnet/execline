@@ -8,5 +8,6 @@
 pid_t el_spawn0 (char const *prog, char const *const *argv, char const *const *envp)
 {
   if (!argv[0]) argv = el_trueargv ;
+  if (!prog) prog = argv[0] ;
   return cspawn(prog, argv, envp, 0, 0, 0) ;
 }
